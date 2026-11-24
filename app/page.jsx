@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import PilotReview from "./pilot-review";
+import CollectionHealth from "./collection-health";
 import AssessmentHistory from "./assessment-history";
 import ModelConnection from "./model-connection";
 export default function Page() {
@@ -30,6 +31,7 @@ export default function Page() {
       <p>
         Review PostgreSQL read privileges associated with terminated employees.
       </p>
+      <CollectionHealth runs={runs} />
       <ModelConnection runs={runs} />
       {error && <p role="alert">{error}</p>}
       {runs?.length === 0 && (
@@ -46,9 +48,11 @@ export default function Page() {
           <p>
             {a.policy_version} · Submitted by {a.submitted_by || "Unrecorded"} ·
             Collected {new Date(a.collected_at).toLocaleString()} ·{" "}
-            {Date.now() - Date.parse(a.collected_at) > 86400000
-              ? "Stale evidence"
-              : "Within 24-hour window"}
+            {Date.parse(a.collected_at) > Date.now()
+              ? "Future timestamp"
+              : Date.now() - Date.parse(a.collected_at) > 86400000
+                ? "Stale evidence"
+                : "Within 24-hour window"}
           </p>
           <PilotReview run={a} />
           <AssessmentHistory source={a.source} />
