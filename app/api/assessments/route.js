@@ -1,29 +1,10 @@
-import { timingSafeEqual, createHash } from "node:crypto";
+import { authorized, requireOperator } from "../../../lib/auth.mjs";
 import { latest, saveAssessment } from "../../../lib/store.mjs";
 import { policy } from "../../../relay/offboarding.mjs";
 export const dynamic = "force-dynamic";
-function authorized(req, expected) {
-  const digest = (s) => createHash("sha256").update(s).digest();
-  return (
-    expected &&
-    timingSafeEqual(
-      digest(expected),
-      digest(req.headers.get("authorization") || ""),
-    )
-  );
-}
 export async function GET(req) {
-  const secret = process.env.OPERATOR_PASSWORD;
-  if (
-    !authorized(
-      req,
-      secret && "Basic " + Buffer.from("operator:" + secret).toString("base64"),
-    )
-  )
-    return new Response(null, {
-      status: 401,
-      headers: { "WWW-Authenticate": 'Basic realm="ComplyOS"' },
-    });
+  const denied = requireOperator(req);
+  if (denied) return denied;
   return Response.json(await latest(), {
     headers: { "Cache-Control": "no-store" },
   });

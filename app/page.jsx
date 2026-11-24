@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
+import ModelConnection from "./model-connection";
 export default function Page() {
   const [runs, setRuns] = useState(null),
     [error, setError] = useState("");
@@ -27,6 +28,7 @@ export default function Page() {
       <p>
         Review PostgreSQL read privileges associated with terminated employees.
       </p>
+      <ModelConnection runs={runs} />
       {error && <p role="alert">{error}</p>}
       {runs?.length === 0 && (
         <article>
