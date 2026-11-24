@@ -5,12 +5,12 @@ export const dynamic = "force-dynamic";
 const reply = (data, status = 200) =>
   Response.json(data, { status, headers: { "Cache-Control": "no-store" } });
 export async function GET(req) {
-  const denied = await requireOperator(req);
+  const denied = await requireOperator(req, { ai: true });
   if (denied) return denied;
   return reply({ providers: Object.keys(providers()) });
 }
 export async function POST(req) {
-  const denied = await requireOperator(req);
+  const denied = await requireOperator(req, { ai: true });
   if (denied) return denied;
   if (req.headers.get("content-type") !== "application/json")
     return reply({ error: "JSON required" }, 415);

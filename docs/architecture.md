@@ -51,7 +51,7 @@ flowchart LR
 
 ## Remaining work in dependency order
 
-1. **Pilot identity and isolation.** Add enterprise OIDC, operator roles and certificate enrollment to the named-identity workflow. Prove isolation with two independent organizations and overlapping external IDs.
+1. **Pilot identity and isolation.** Add enterprise OIDC and certificate enrollment to the named-identity workflow. Prove isolation with two independent organizations and overlapping external IDs.
 2. **Connector SDK and persistent graph.** Normalize observations and identity links, retain validity and provenance, and integrate HR, Entra, PostgreSQL, AWS and GitHub. Demonstrate that a second access path keeps an incident open.
 3. **Policy and incident lifecycle.** Version company SOPs, regulatory sources, applicability and reviewer decisions. Correlate repeated observations while retaining unknown or partial coverage.
 4. **Approved remediation and verification.** Persist approvals, action receipts, idempotency keys and reconciliation work before external writes. Inject a crash after execution and verify recovery using independent evidence.

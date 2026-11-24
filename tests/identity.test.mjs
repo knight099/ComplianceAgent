@@ -11,7 +11,8 @@ test("independent identities, source binding and revocation persist in PostgreSQ
     for (const file of [
       "001-assurance.sql",
       "002-identities.sql",
-      "002-identities.sql",
+      "003-operator-permissions.sql",
+      "003-operator-permissions.sql",
     ])
       await db.exec(readFileSync("migrations/" + file, "utf8"));
     const a = await issue(db, "operator", "alice"),
@@ -20,6 +21,7 @@ test("independent identities, source binding and revocation persist in PostgreSQ
     assert.deepEqual(await identify(db, "relay", "Bearer " + r), {
       name: "private",
       source: "finance",
+      ai_enabled: false,
     });
     assert.equal(await identify(db, "operator", basic("alice", r)), null);
     assert.equal(await identify(db, "operator", basic("ben", a)), null);

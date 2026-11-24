@@ -7,17 +7,21 @@ export default function ModelConnection({ runs }) {
     [key, setKey] = useState(""),
     [id, pick] = useState(""),
     [busy, lock] = useState(false),
+    [restricted, restrict] = useState(false),
     [message, show] = useState("");
   useEffect(() => {
     if (!runs) return;
     let active = true;
     fetch("/api/ai")
       .then(async (r) => {
+        if (r.status === 403) return { restricted: true, providers: [] };
         if (!r.ok) throw Error();
         return r.json();
       })
       .then((data) => {
         if (active) {
+          restrict(Boolean(data.restricted));
+          if (data.restricted) setKey("");
           list(data.providers);
           select((prev) =>
             data.providers.includes(prev) ? prev : data.providers[0] || "",
@@ -60,7 +64,7 @@ export default function ModelConnection({ runs }) {
       lock(false);
     }
   }
-  if (!runs) return null;
+  if (!runs || restricted) return null;
   return (
     <details>
       <summary>AI model connection</summary>
