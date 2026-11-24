@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import PilotReview from "./pilot-review";
+import AssessmentHistory from "./assessment-history";
 import ModelConnection from "./model-connection";
 export default function Page() {
   const [runs, setRuns] = useState(null),
@@ -50,6 +51,7 @@ export default function Page() {
               : "Within 24-hour window"}
           </p>
           <PilotReview run={a} />
+          <AssessmentHistory source={a.source} />
           {!a.results.length && (
             <p>No terminated employees in the submitted scope.</p>
           )}

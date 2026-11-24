@@ -14,3 +14,9 @@ For a change made by an authorized administrator, record its timestamp in the re
 
 
 When a PostgreSQL check finds retained access, expand the employee result to see table-level SELECT grant paths. Each chain starts with the mapped role and ends at the relation. Review parallel chains individually and collect again after a change. The relay samples up to 513 traversal states, follows up to eight membership edges, and displays up to 32 paths. A limit indicator marks potentially incomplete explanations. Column-level grants, superuser privileges, and implicit system privileges can produce a retained decision without a displayed table grant path. Older observations remain readable with their original evidence.
+
+## Compare collection history
+
+Open **Compare assessments** on the source, choose an earlier and later collection, and select **Compare**. Expand a result to inspect both evidence records and their assessment references. The comparison joins on employee ID and resource and verifies that the mapped role and policy version are consistent. A missing check, unknown decision, changed mapping or policy, or later snapshot outside the 24-hour freshness window yields **Unverified**. An earlier snapshot may be historical. The displayed review time and collection timestamps establish when a conclusion applied.
+
+**Access retained** can include removed paths when another grant survives. **Verified no scoped grant** requires an earlier retained decision followed by a fresh negative PostgreSQL check. Deltas for individual table grant paths require complete path evidence in both snapshots. Column privileges and other access mechanisms retain the scope described above.

@@ -1,6 +1,6 @@
 # ComplyOS
 
-ComplyOS checks whether terminated employees retain PostgreSQL read privileges. A customer-side relay correlates an HR extract with explicitly mapped database roles and sends scoped observations to a private control plane. The dashboard opens with an empty inventory and shows the latest assessment for each configured source.
+ComplyOS checks whether terminated employees retain PostgreSQL read privileges. A customer-side relay correlates an HR extract with explicitly mapped database roles and sends scoped observations to a private control plane. The dashboard opens with an empty inventory and shows the latest assessment for each configured source. Open Compare assessments to inspect changes between two collections.
 
 ## Start the control plane
 
