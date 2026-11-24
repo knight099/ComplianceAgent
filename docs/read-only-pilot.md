@@ -26,3 +26,11 @@ Open **Compare assessments** on the source, choose an earlier and later collecti
 The dashboard lists previously observed sources and sources assigned to active named relay credentials. **Awaiting first collection** means an enrolled source has never submitted an assessment. Shared-credential installations can list a source only after its first report. A collection becomes **Overdue** after 24 hours. A future timestamp requires a relay clock check. Refresh the dashboard to recalculate these states.
 
 For each source, compare observation time with receipt time to spot delayed delivery. The latest observation supplies the counts even if an older buffered report arrives later. Unknown includes incomplete evidence and identity mapping issues; database failures count checks where the relay recorded a PostgreSQL collection error. Zero evaluated checks can occur when the submitted HR scope has no terminated employees. These metrics describe evidence delivery and coverage; they do not measure legal compliance or endpoint uptime.
+
+### Automated collection alerts
+
+Compose starts a monitor that checks collection health every minute and persists alerts in PostgreSQL. For a host deployment, run `node scripts/migrate.mjs` and then supervise `node scripts/collection-monitor.mjs` with the control-plane database connection. Use `--once` for a single scheduled sweep.
+
+The dashboard shows open alerts, the last successful sweep and the latest 20 recoveries. A monitor timestamp older than three minutes flags delayed monitoring. A source gets at most one open freshness alert and one open database-failure alert. A later current assessment clears a freshness alert. Database-failure recovery also requires a fresh assessment with known decisions covering every failed employee, role and resource recorded during the incident. Missing scope, empty reports and unresolved mappings keep the alert open. A retained grant can confirm collection recovery; the separate access review still shows the grant. A source removed from enrollment without new evidence has no verified recovery. Alerts are delivered in the dashboard; no external notification destination is configured.
+
+Each sweep evaluates the latest observation per source. A transient failure followed by recovery between sweeps may appear only in assessment history.

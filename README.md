@@ -74,3 +74,5 @@ Each issue command prints a generated secret once. Deliver it through your secre
 In named mode, a **reviewer** can read assessments and an **analyst** can also list model providers, test connections and request AI summaries. To issue a review-only credential, run `node scripts/identity.mjs issue operator alice reviewer`. Change an existing credential with `node scripts/identity.mjs set-role operator alice analyst` or substitute `reviewer`. Changes take effect on the next API request. Existing operator credentials, issuance without a role, and shared operator mode retain analyst access for compatibility.
 
 [Run a read-only pilot and reconcile the results](docs/read-only-pilot.md)
+
+[Configure the collection alert monitor](docs/read-only-pilot.md#automated-collection-alerts)

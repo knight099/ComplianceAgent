@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import PilotReview from "./pilot-review";
 import CollectionHealth from "./collection-health";
+import CollectionAlerts from "./collection-alerts";
 import AssessmentHistory from "./assessment-history";
 import ModelConnection from "./model-connection";
 export default function Page() {
@@ -31,6 +32,7 @@ export default function Page() {
       <p>
         Review PostgreSQL read privileges associated with terminated employees.
       </p>
+      <CollectionAlerts runs={runs} />
       <CollectionHealth runs={runs} />
       <ModelConnection runs={runs} />
       {error && <p role="alert">{error}</p>}

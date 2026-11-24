@@ -13,6 +13,14 @@ services:
     volumes: ["evidence:/app/.data"]
     depends_on:
       db: {condition: service_healthy}
+  collection-monitor:
+    build: .
+    environment:
+      DATABASE_URL: postgres://complyos:${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD}@db/complyos
+    command: ["node", "scripts/collection-monitor.mjs"]
+    restart: unless-stopped
+    depends_on:
+      app: {condition: service_started}
   db:
     image: postgres:17-alpine
     environment:
