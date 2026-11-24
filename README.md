@@ -55,3 +55,16 @@ export AI_ENDPOINTS='{"OpenAI":"https://api.openai.com/v1/chat/completions","Int
 Replace the example URL with the full chat-completions endpoint. The provider must accept a model and messages and return text in `choices[0].message.content`. The server uses bearer authentication when a key is supplied. Private keyless models can leave the key blank. Loopback HTTP is supported for local inference; inside a container loopback refers to that container. Endpoints using other protocols or authentication schemes need a compatible gateway. Test calls may incur provider charges.
 
 [Current and planned architecture diagrams, module inventory and remaining roadmap](docs/architecture.md)
+
+## Individual operator and relay credentials
+
+For a dedicated organization, set `AUTH_MODE=named` on the app and run the migrations. Recreate the Compose app after changing modes. Named mode authenticates each request against PostgreSQL and disables the shared credentials. Existing deployments default to `shared` for compatibility.
+
+Run these commands on the control-plane host with administrative database access (or prefix each with `docker compose exec app`):
+
+```sh
+node scripts/identity.mjs issue operator alice
+node scripts/identity.mjs issue relay payments-relay payments-primary
+```
+
+Each issue command prints a generated secret once. Deliver it through your secret manager. An operator signs in with the issued name and secret. To remove that operator’s access, run `node scripts/identity.mjs revoke operator alice`. A relay uses its secret as `RELAY_TOKEN` and submits only the source named at issuance. To revoke it, run `node scripts/identity.mjs revoke relay payments-relay`. Revocation applies to subsequent requests. For rotation, issue a distinct name, deploy its credential, verify access, then revoke the previous name. Prior assessments retain their original submitter attribution; assessments predating this feature show “Unrecorded”.

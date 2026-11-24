@@ -1,18 +1,17 @@
-import { authorized, requireOperator } from "../../../lib/auth.mjs";
+import { authenticate, requireOperator } from "../../../lib/auth.mjs";
 import { latest, saveAssessment } from "../../../lib/store.mjs";
 import { policy } from "../../../relay/offboarding.mjs";
 export const dynamic = "force-dynamic";
 export async function GET(req) {
-  const denied = requireOperator(req);
+  const denied = await requireOperator(req);
   if (denied) return denied;
   return Response.json(await latest(), {
     headers: { "Cache-Control": "no-store" },
   });
 }
 export async function POST(req) {
-  const secret = process.env.RELAY_TOKEN;
-  if (!authorized(req, secret && "Bearer " + secret))
-    return new Response(null, { status: 403 });
+  const relay = await authenticate(req, "relay");
+  if (!relay) return new Response(null, { status: 403 });
   const chunks = [];
   let bytes = 0;
   for await (const part of req.body || []) {
@@ -44,6 +43,8 @@ export async function POST(req) {
   } catch {
     return new Response("Invalid assessment", { status: 400 });
   }
-  await saveAssessment(a);
+  if (relay.source !== null && a.source !== relay.source)
+    return new Response(null, { status: 403 });
+  await saveAssessment(a, relay.name);
   return Response.json({ id: a.id });
 }

@@ -4,9 +4,10 @@ services:
     ports: ["127.0.0.1:3000:3000"]
     environment:
       DATABASE_URL: postgres://complyos:${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD}@db/complyos
-      OPERATOR_PASSWORD: ${OPERATOR_PASSWORD:?set OPERATOR_PASSWORD}
+      AUTH_MODE: ${AUTH_MODE:-shared}
+      OPERATOR_PASSWORD: ${OPERATOR_PASSWORD:-}
       AI_ENDPOINTS: ${AI_ENDPOINTS:-}
-      RELAY_TOKEN: ${RELAY_TOKEN:?set RELAY_TOKEN}
+      RELAY_TOKEN: ${RELAY_TOKEN:-}
       DEVICE_KEYS_FILE: /app/.data/devices.json
     command: ["sh","-c","node scripts/migrate.mjs && exec node node_modules/next/dist/bin/next start -H 0.0.0.0"]
     volumes: ["evidence:/app/.data"]

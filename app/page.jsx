@@ -42,8 +42,8 @@ export default function Page() {
         <article key={a.id}>
           <h2>{a.source}</h2>
           <p>
-            {a.policy_version} · Collected{" "}
-            {new Date(a.collected_at).toLocaleString()} ·{" "}
+            {a.policy_version} · Submitted by {a.submitted_by || "Unrecorded"} ·
+            Collected {new Date(a.collected_at).toLocaleString()} ·{" "}
             {Date.now() - Date.parse(a.collected_at) > 86400000
               ? "Stale evidence"
               : "Within 24-hour window"}
