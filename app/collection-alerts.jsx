@@ -64,6 +64,59 @@ export default function CollectionAlerts({ runs }) {
           ))}
         </details>
       )}
+      {data.webhooks &&
+        (data.webhooks.pending_count > 0 ||
+          data.webhooks.acknowledged.length > 0) && (
+          <details>
+            <summary>
+              Webhook deliveries · {data.webhooks.pending_count} pending
+            </summary>
+            <p>Up to 20 pending events and the latest 20 acknowledgments.</p>
+            <div className="scroll">
+              <table>
+                <thead>
+                  <tr>
+                    {[
+                      "Source",
+                      "Transition",
+                      "Delivery status",
+                      "Attempts",
+                      "Last result",
+                      "Timing",
+                      "Event ID",
+                    ].map((h) => (
+                      <th key={h}>{h}</th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {[
+                    ...data.webhooks.pending,
+                    ...data.webhooks.acknowledged,
+                  ].map((j) => (
+                    <tr key={j.event_id}>
+                      <td>{j.source}</td>
+                      <td>{j.transition}</td>
+                      <td>{j.status || "Acknowledged"}</td>
+                      <td>{j.attempts}</td>
+                      <td>{j.attempt_result || "—"}</td>
+                      <td>
+                        {j.delivered_at
+                          ? "Acknowledged " +
+                            new Date(j.delivered_at).toLocaleString()
+                          : j.status === "Waiting for opening"
+                            ? "After opening acknowledgment"
+                            : "Eligible from " +
+                              new Date(j.available_at).toLocaleString()}
+                      </td>
+                      <td>{j.event_id}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </details>
+        )}
     </article>
   );
 }

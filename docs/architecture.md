@@ -55,5 +55,5 @@ flowchart LR
 2. **Connector SDK and persistent graph.** Normalize observations and identity links, retain validity and provenance, and integrate HR, Entra, PostgreSQL, AWS and GitHub. Demonstrate that a second access path keeps an incident open.
 3. **Policy and incident lifecycle.** Version company SOPs, regulatory sources, applicability and reviewer decisions. Correlate repeated observations while retaining unknown or partial coverage.
 4. **Approved remediation and verification.** Persist approvals, action receipts, idempotency keys and reconciliation work before external writes. Inject a crash after execution and verify recovery using independent evidence.
-5. **Evidence and operations.** Add signed retention, as-of replay, backup/restore verification, webhook delivery monitoring, CI security checks and load testing in a customer-authorized pilot.
+5. **Evidence and operations.** Add signed retention, as-of replay, backup/restore verification, receiver-side alert routing, CI security checks and load testing in a customer-authorized pilot.
 6. **AI expansion.** Add reviewed legal-source retrieval, evidence citations, model evaluation, per-user managed credentials and native provider protocols as required. Current interoperability is the chat-completions HTTP contract.
