@@ -2,16 +2,43 @@ import { randomUUID } from "node:crypto";
 export const policy = "hr.postgres.offboarding/v1";
 // Catalog-only check. A reachable SET ROLE can retain access even after login inheritance is revoked.
 export const privilegeQuery = `
-WITH target AS (SELECT c.oid,c.relowner,c.relacl FROM pg_catalog.pg_class c
+WITH RECURSIVE target AS (SELECT c.oid,c.relowner,c.relacl FROM pg_catalog.pg_class c
  JOIN pg_catalog.pg_namespace n ON n.oid=c.relnamespace
  WHERE n.nspname=$2 AND c.relname=$3 AND c.relkind IN ('r','p')),
  principal AS (SELECT oid FROM pg_catalog.pg_roles WHERE rolname=$1),
  reachable AS (SELECT r.oid,r.rolname FROM pg_catalog.pg_roles r,principal p
- WHERE r.oid=p.oid OR pg_catalog.pg_has_role(p.oid,r.oid,'SET'))
+ WHERE r.oid=p.oid OR pg_catalog.pg_has_role(p.oid,r.oid,'SET')),
+ table_acl AS (
+ SELECT DISTINCT a.grantee FROM target t
+ CROSS JOIN LATERAL pg_catalog.aclexplode(coalesce(t.relacl,pg_catalog.acldefault('r',t.relowner))) a
+ WHERE a.privilege_type='SELECT'
+ ),
+ -- Follow zero or more SET edges, then zero or more inherited edges.
+ walk(id,roles,ids,set_chain,inherit_chain) AS (
+ SELECT r.oid, ARRAY[r.rolname::text], ARRAY[r.oid], true, true
+ FROM pg_catalog.pg_roles r JOIN principal p ON p.oid=r.oid
+ UNION ALL
+ SELECT g.oid, w.roles || g.rolname::text, w.ids || g.oid,
+        w.set_chain AND m.set_option, (w.set_chain OR w.inherit_chain) AND m.inherit_option
+ FROM walk w JOIN pg_catalog.pg_auth_members m ON m.member=w.id
+ JOIN pg_catalog.pg_roles g ON g.oid=m.roleid
+ WHERE NOT g.oid=ANY(w.ids) AND cardinality(w.ids)<9
+ AND ((w.set_chain AND m.set_option) OR ((w.set_chain OR w.inherit_chain) AND m.inherit_option))
+ ),
+ sampled AS MATERIALIZED (SELECT * FROM walk LIMIT 513),
+ witnesses AS (
+ SELECT DISTINCT w.roles FROM sampled w JOIN table_acl a ON a.grantee=w.id
+ UNION SELECT ARRAY[p.rolname::text,'PUBLIC'] FROM pg_catalog.pg_roles p
+ JOIN principal ON principal.oid=p.oid WHERE EXISTS(SELECT FROM table_acl WHERE grantee=0)
+ )
 SELECT EXISTS(SELECT FROM target) AS resource_known, EXISTS(SELECT FROM principal) AS identity_known,
  ARRAY(SELECT r.rolname FROM reachable r,target t WHERE pg_catalog.has_any_column_privilege(r.oid,t.oid,'SELECT') ORDER BY r.rolname) AS readable_as,
- ARRAY(SELECT DISTINCT coalesce(g.rolname,'PUBLIC') FROM target t CROSS JOIN LATERAL pg_catalog.aclexplode(coalesce(t.relacl,pg_catalog.acldefault('r',t.relowner))) a
- LEFT JOIN pg_catalog.pg_roles g ON g.oid=a.grantee WHERE a.privilege_type='SELECT' AND (a.grantee=0 OR EXISTS(SELECT FROM reachable r WHERE pg_catalog.pg_has_role(r.oid,a.grantee,'USAGE')))) AS grantees`;
+ ARRAY(SELECT DISTINCT coalesce(g.rolname,'PUBLIC') FROM table_acl a
+ LEFT JOIN pg_catalog.pg_roles g ON g.oid=a.grantee WHERE (a.grantee=0 OR EXISTS(SELECT FROM reachable r WHERE pg_catalog.pg_has_role(r.oid,a.grantee,'USAGE')))) AS grantees,
+ (SELECT coalesce(jsonb_agg(roles ORDER BY roles),'[]'::jsonb)
+ FROM (SELECT roles FROM witnesses ORDER BY roles LIMIT 32) shown) AS paths,
+ ((SELECT count(*) FROM sampled)>=513 OR EXISTS(SELECT FROM sampled WHERE cardinality(ids)=9)
+ OR (SELECT count(*) FROM witnesses)>32) AS path_limit_reached`;
 export async function assess(feed, query, now = new Date()) {
   const text = (x) => typeof x === "string" && x.trim().length > 0;
   if (
@@ -77,6 +104,8 @@ export async function assess(feed, query, now = new Date()) {
             Object.assign(evidence, {
               readableAs: fact.readable_as,
               tableGrantees: fact.grantees,
+              tableGrantPaths: fact.paths,
+              pathLimitReached: fact.path_limit_reached,
             });
           }
         } catch {

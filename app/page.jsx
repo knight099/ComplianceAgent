@@ -59,6 +59,39 @@ export default function Page() {
                 {r.employee_id} · {r.resource} · {r.decision}
               </summary>
               <p>Mapped database role: {r.role_name || "Unknown"}</p>
+              {Array.isArray(r.evidence?.tableGrantPaths) &&
+                r.evidence.tableGrantPaths.every(
+                  (path) =>
+                    Array.isArray(path) &&
+                    path.every((role) => typeof role === "string"),
+                ) &&
+                typeof r.evidence.schema === "string" &&
+                typeof r.evidence.table === "string" &&
+                r.decision === "RETAINED" && (
+                  <section>
+                    <h3>Table SELECT grant paths</h3>
+                    {r.evidence.tableGrantPaths.length ? (
+                      <ul>
+                        {r.evidence.tableGrantPaths.map((path) => (
+                          <li key={JSON.stringify(path)}>
+                            {path.join(" → ")} → {r.evidence.schema}.
+                            {r.evidence.table}
+                          </li>
+                        ))}
+                      </ul>
+                    ) : (
+                      <p>
+                        PostgreSQL reported a readable role. No table-level
+                        grant path was recorded.
+                      </p>
+                    )}
+                    {r.evidence.pathLimitReached && (
+                      <p>
+                        Traversal limit reached. Additional paths may exist.
+                      </p>
+                    )}
+                  </section>
+                )}
               <pre>{JSON.stringify(r.evidence, null, 2)}</pre>
             </details>
           ))}

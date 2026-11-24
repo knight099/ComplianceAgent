@@ -27,7 +27,7 @@ flowchart LR
 
 | Module | Available today | Evidence or limitation |
 |---|---|---|
-| HR and database correlation | Stable employee IDs and explicit PostgreSQL role mappings, inherited and switchable roles, table and column SELECT checks | Decision per employee and scoped relation. Missing mappings, stale HR evidence and unavailable sources yield UNKNOWN. |
+| HR and database correlation | Stable employee IDs and explicit PostgreSQL role mappings, inherited and switchable roles, bounded table-grant path explanations, table and column SELECT checks | Decision per employee and scoped relation. Missing mappings, stale HR evidence and unavailable sources yield UNKNOWN. |
 | Customer relay | Read-only catalog queries, encrypted local queue, destination binding, retry with original ID | Restart, receipt mismatch and repeat delivery covered by tests. One-shot collector and flush commands require external scheduling. |
 | Control plane | Authenticated intake, transactional result writes, per-source latest assessment and freshness | One organization per installation. Named operators and source-scoped relays support independent revocation; shared credentials remain a compatibility mode. |
 | Evidence collection | Signed endpoint bundles and CLI evidence imports | Separate evidence records. These observations do not currently affect the offboarding decision. |
