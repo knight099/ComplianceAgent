@@ -16,6 +16,8 @@ services:
   collection-monitor:
     build: .
     environment:
+      ALERT_WEBHOOK_URL: ${ALERT_WEBHOOK_URL:-}
+      ALERT_WEBHOOK_SECRET: ${ALERT_WEBHOOK_SECRET:-}
       DATABASE_URL: postgres://complyos:${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD}@db/complyos
     command: ["node", "scripts/collection-monitor.mjs"]
     restart: unless-stopped

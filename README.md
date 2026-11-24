@@ -76,3 +76,5 @@ In named mode, a **reviewer** can read assessments and an **analyst** can also l
 [Run a read-only pilot and reconcile the results](docs/read-only-pilot.md)
 
 [Configure the collection alert monitor](docs/read-only-pilot.md#automated-collection-alerts)
+
+[Enable signed webhook notifications for collection alerts](docs/read-only-pilot.md#deliver-transitions-to-an-approved-webhook)
