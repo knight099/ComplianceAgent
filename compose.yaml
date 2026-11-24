@@ -1,0 +1,28 @@
+services:
+  app:
+    build: .
+    ports: ["127.0.0.1:3000:3000"]
+    environment:
+      DATABASE_URL: postgres://complyos:${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD}@db/complyos
+      OPERATOR_PASSWORD: ${OPERATOR_PASSWORD:?set OPERATOR_PASSWORD}
+      RELAY_TOKEN: ${RELAY_TOKEN:?set RELAY_TOKEN}
+      DEVICE_KEYS_FILE: /app/.data/devices.json
+    command: ["sh","-c","node scripts/migrate.mjs && exec node node_modules/next/dist/bin/next start -H 0.0.0.0"]
+    volumes: ["evidence:/app/.data"]
+    depends_on:
+      db: {condition: service_healthy}
+  db:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_USER: complyos
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U complyos"]
+      interval: 3s
+      timeout: 3s
+      retries: 10
+    volumes: ["postgres:/var/lib/postgresql/data"]
+
+volumes:
+  postgres:
+  evidence:
