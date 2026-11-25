@@ -1,5 +1,7 @@
 # **ComplyOS 2.0 — Detailed System Architecture Design**
 
+[Architecture implementation checklist](architecture-checklist.md)
+
 [Architecture visual gallery](complyos-2-visual-gallery.md)
 
 **Product:** Enterprise Agentic Compliance and Regulatory Control Assurance Platform\

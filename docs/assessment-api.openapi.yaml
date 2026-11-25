@@ -1,0 +1,46 @@
+openapi: 3.1.0
+info:
+  title: ComplyOS assessment reads
+  version: 1.0.0
+paths:
+  /api/v1/assessments:
+    get:
+      operationId: listLatestAssessments
+      summary: Latest assessment per source in this installation
+      security:
+        - operator: []
+      responses:
+        '200':
+          description: Latest runs, newest collection first. An empty installation returns an empty array.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  required: [id, source, collected_at, policy_version, organization_id, results]
+                  properties:
+                    id: {type: string, format: uuid}
+                    source: {type: string}
+                    collected_at: {type: string, format: date-time}
+                    policy_version: {type: string}
+                    organization_id: {type: string, const: installation}
+                    results:
+                      type: array
+                      items:
+                        type: object
+                        required: [employee_id, role_name, resource, decision, evidence]
+                        properties:
+                          employee_id: {type: string}
+                          role_name: {type: string}
+                          resource: {type: string}
+                          decision: {enum: [RETAINED, NO_SCOPED_GRANT, UNKNOWN]}
+                          evidence: {type: object}
+                          projected_paths:
+                            type: [array, 'null']
+                            items: {type: array, items: {type: string}}
+        '401':
+          description: Operator authentication required
+components:
+  securitySchemes:
+    operator: {type: http, scheme: basic}

@@ -10,7 +10,7 @@ export default function Page() {
     [error, setError] = useState("");
   async function load() {
     try {
-      const r = await fetch("/api/assessments", { cache: "no-store" });
+      const r = await fetch("/api/v1/assessments", { cache: "no-store" });
       if (!r.ok) throw Error("Access review unavailable (" + r.status + ").");
       setRuns(await r.json());
       setError("");

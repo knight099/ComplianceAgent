@@ -1,5 +1,7 @@
 # ComplyOS 2.0 implementation plan
 
+[Architecture implementation checklist](architecture-checklist.md)
+
 The [system design](complyos-2-system-design.md) defines the target. Weeks are overlapping estimates from kickoff. The [architecture and module inventory](architecture.md) records the implemented baseline and the [pilot runbook](read-only-pilot.md) describes the workflow available today.
 
 ## Delivery phases
@@ -19,6 +21,6 @@ The [system design](complyos-2-system-design.md) defines the target. Weeks are o
 1. **HR intake implemented.** CSV exports use configurable columns and the existing JSON assessment contract. Automated tests cover equivalent assessments, duplicate IDs, missing mappings and shared roles.
 2. **Directory correlation implemented for the offboarding relay.** The optional read-only Entra adapter records exact employee-ID match evidence and collection time. Tests cover pagination, duplicates, missing identities and partial visibility. Authorized live-tenant validation remains open.
 3. **Access report implemented for PostgreSQL.** The local relay report compares scoped read privileges with reviewed business-role expectations and time-bound exceptions. The Reports page displays observations, policy references and grant evidence. Production policy approval, centralized report history and additional data sources remain open.
-4. **Foundation in parallel.** Migrate assessment reads behind the versioned API and enforce organization scope through storage and authorization before enabling shared deployments. Run the phase 1 compatibility and isolation checks.
+4. **Platform foundation.** The operations workspace now reads the installation namespace through the [versioned assessments API](assessment-api.openapi.yaml). The next step is organization membership for operators and relays, followed by organization-scoped storage and authorization across the remaining routes. Run the phase 1 compatibility and isolation checks.
 
 Use HR, Entra and PostgreSQL offboarding as the first end-to-end acceptance case. Extend the same graph to role transfers and excessive sensitive-data access. Introduce approved writes in a controlled environment after the workflow recovery and verification gates pass. The enterprise pilot starts in read-only mode.

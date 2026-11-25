@@ -1,5 +1,7 @@
 # ComplyOS
 
+[Architecture implementation checklist](docs/architecture-checklist.md)
+
 ComplyOS checks whether terminated employees retain PostgreSQL read privileges. A customer-side relay correlates an HR extract with explicitly mapped database roles and sends scoped observations to a private control plane. The overview at `/` presents the illustrative enterprise dashboard. The operator workspace at `/operations` opens with an empty inventory and shows the latest assessment for each configured source. Open Compare assessments to inspect changes between two collections.
 
 [Dashboard design system](docs/design-system.md)

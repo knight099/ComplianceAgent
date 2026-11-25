@@ -1,14 +1,8 @@
-import { authenticate, requireOperator } from "../../../lib/auth.mjs";
-import { latest, saveAssessment } from "../../../lib/store.mjs";
+import { authenticate } from "../../../lib/auth.mjs";
+import { saveAssessment } from "../../../lib/store.mjs";
 import { parseAssessment } from "../../../packages/connector-sdk/contract.mjs";
 export const dynamic = "force-dynamic";
-export async function GET(req) {
-  const denied = await requireOperator(req);
-  if (denied) return denied;
-  return Response.json(await latest(), {
-    headers: { "Cache-Control": "no-store" },
-  });
-}
+export { GET } from "../v1/assessments/route.js";
 export async function POST(req) {
   const relay = await authenticate(req, "relay");
   if (!relay) return new Response(null, { status: 403 });
