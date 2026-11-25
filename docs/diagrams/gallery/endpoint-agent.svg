@@ -1,0 +1,142 @@
+<svg width="929pt" height="509pt"
+ viewBox="0.00 0.00 929.20 509.20" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(21.6 487.6)">
+<title>G</title>
+<polygon fill="#171b23" stroke="transparent" points="-21.6,21.6 -21.6,-487.6 907.6,-487.6 907.6,21.6 -21.6,21.6"/>
+<g id="clust1" class="cluster">
+<title>cluster_Collection</title>
+<path fill="#171b23" stroke="#47597c" d="M20,-120C20,-120 176,-120 176,-120 182,-120 188,-126 188,-132 188,-132 188,-406 188,-406 188,-412 182,-418 176,-418 176,-418 20,-418 20,-418 14,-418 8,-412 8,-406 8,-406 8,-132 8,-132 8,-126 14,-120 20,-120"/>
+<text text-anchor="middle" x="98" y="-402.8" font-family="DejaVu Sans" font-size="14.00" fill="#dbe5ff">Evidence collection</text>
+</g>
+<g id="clust2" class="cluster">
+<title>cluster_Management</title>
+<path fill="#171b23" stroke="#47597c" d="M208,-327C208,-327 866,-327 866,-327 872,-327 878,-333 878,-339 878,-339 878,-406 878,-406 878,-412 872,-418 866,-418 866,-418 208,-418 208,-418 202,-418 196,-412 196,-406 196,-406 196,-339 196,-339 196,-333 202,-327 208,-327"/>
+<text text-anchor="middle" x="537" y="-402.8" font-family="DejaVu Sans" font-size="14.00" fill="#dbe5ff">Agent management</text>
+</g>
+<!-- Supervisor -->
+<g id="node1" class="node">
+<title>Supervisor</title>
+<path fill="#252e42" stroke="#6475a2" d="M617,-466C617,-466 421,-466 421,-466 415,-466 409,-460 409,-454 409,-454 409,-438 409,-438 409,-432 415,-426 421,-426 421,-426 617,-426 617,-426 623,-426 629,-432 629,-438 629,-438 629,-454 629,-454 629,-460 623,-466 617,-466"/>
+<text text-anchor="middle" x="519" y="-449.4" font-family="DejaVu Sans" font-size="12.00" fill="#f6f8ff">Agent Supervisor</text>
+<text text-anchor="middle" x="519" y="-436.4" font-family="DejaVu Sans" font-size="12.00" fill="#f6f8ff">Lifecycle · Configuration · Health</text>
+</g>
+<!-- Collection -->
+<!-- Supervisor&#45;&gt;Collection -->
+<g id="edge4" class="edge">
+<title>Supervisor&#45;&gt;Collection</title>
+<path fill="none" stroke="#a1abc2" d="M408.75,-435.9C313.82,-428.06 192,-418 192,-418 192,-418 191.24,-415.65 190.04,-411.91"/>
+<polygon fill="#a1abc2" stroke="#a1abc2" points="192.15,-411.04 188,-405.55 187.82,-412.44 192.15,-411.04"/>
+</g>
+<!-- Management -->
+<!-- Supervisor&#45;&gt;Management -->
+<g id="edge5" class="edge">
+<title>Supervisor&#45;&gt;Management</title>
+<path fill="none" stroke="#a1abc2" d="M629.02,-436.16C713.61,-429.36 820.56,-420.77 848.23,-418.54"/>
+<polygon fill="#a1abc2" stroke="#a1abc2" points="848.7,-420.79 855,-418 848.34,-416.25 848.7,-420.79"/>
+</g>
+<!-- Scheduler -->
+<g id="node3" class="node">
+<title>Scheduler</title>
+<path fill="#252e42" stroke="#6475a2" d="M143.5,-381C143.5,-381 34.5,-381 34.5,-381 28.5,-381 22.5,-375 22.5,-369 22.5,-369 22.5,-353 22.5,-353 22.5,-347 28.5,-341 34.5,-341 34.5,-341 143.5,-341 143.5,-341 149.5,-341 155.5,-347 155.5,-353 155.5,-353 155.5,-369 155.5,-369 155.5,-375 149.5,-381 143.5,-381"/>
+<text text-anchor="middle" x="89" y="-364.4" font-family="DejaVu Sans" font-size="12.00" fill="#f6f8ff">Scheduler</text>
+<text text-anchor="middle" x="89" y="-351.4" font-family="DejaVu Sans" font-size="12.00" fill="#f6f8ff">Periodic collection</text>
+</g>
+<!-- Runtime -->
+<g id="node4" class="node">
+<title>Runtime</title>
+<path fill="#252e42" stroke="#6475a2" d="M147.5,-312C147.5,-312 34.5,-312 34.5,-312 28.5,-312 22.5,-306 22.5,-300 22.5,-300 22.5,-284 22.5,-284 22.5,-278 28.5,-272 34.5,-272 34.5,-272 147.5,-272 147.5,-272 153.5,-272 159.5,-278 159.5,-284 159.5,-284 159.5,-300 159.5,-300 159.5,-306 153.5,-312 147.5,-312"/>
+<text text-anchor="middle" x="91" y="-295.4" font-family="DejaVu Sans" font-size="12.00" fill="#f6f8ff">Collector Runtime</text>
+<text text-anchor="middle" x="91" y="-282.4" font-family="DejaVu Sans" font-size="12.00" fill="#f6f8ff">OS&#45;specific plugins</text>
+</g>
+<!-- Scheduler&#45;&gt;Runtime -->
+<g id="edge1" class="edge">
+<title>Scheduler&#45;&gt;Runtime</title>
+<path fill="none" stroke="#a1abc2" d="M89.57,-340.98C89.77,-334.11 90.01,-326.23 90.23,-318.87"/>
+<polygon fill="#a1abc2" stroke="#a1abc2" points="92.5,-318.87 90.42,-312.3 87.96,-318.73 92.5,-318.87"/>
+</g>
+<!-- Processor -->
+<g id="node5" class="node">
+<title>Processor</title>
+<path fill="#252e42" stroke="#6475a2" d="M156,-243C156,-243 40,-243 40,-243 34,-243 28,-237 28,-231 28,-231 28,-215 28,-215 28,-209 34,-203 40,-203 40,-203 156,-203 156,-203 162,-203 168,-209 168,-215 168,-215 168,-231 168,-231 168,-237 162,-243 156,-243"/>
+<text text-anchor="middle" x="98" y="-226.4" font-family="DejaVu Sans" font-size="12.00" fill="#f6f8ff">Evidence Processor</text>
+<text text-anchor="middle" x="98" y="-213.4" font-family="DejaVu Sans" font-size="12.00" fill="#f6f8ff">Normalize and sign</text>
+</g>
+<!-- Runtime&#45;&gt;Processor -->
+<g id="edge2" class="edge">
+<title>Runtime&#45;&gt;Processor</title>
+<path fill="none" stroke="#a1abc2" d="M92.99,-271.98C93.71,-265.11 94.53,-257.23 95.3,-249.87"/>
+<polygon fill="#a1abc2" stroke="#a1abc2" points="97.57,-250 95.98,-243.3 93.05,-249.53 97.57,-250"/>
+</g>
+<!-- Spool -->
+<g id="node6" class="node">
+<title>Spool</title>
+<path fill="#252e42" stroke="#6475a2" d="M158,-174C158,-174 46,-174 46,-174 40,-174 34,-168 34,-162 34,-162 34,-146 34,-146 34,-140 40,-134 46,-134 46,-134 158,-134 158,-134 164,-134 170,-140 170,-146 170,-146 170,-162 170,-162 170,-168 164,-174 158,-174"/>
+<text text-anchor="middle" x="102" y="-157.4" font-family="DejaVu Sans" font-size="12.00" fill="#f6f8ff">Encrypted Spool</text>
+<text text-anchor="middle" x="102" y="-144.4" font-family="DejaVu Sans" font-size="12.00" fill="#f6f8ff">Offline persistence</text>
+</g>
+<!-- Processor&#45;&gt;Spool -->
+<g id="edge3" class="edge">
+<title>Processor&#45;&gt;Spool</title>
+<path fill="none" stroke="#a1abc2" d="M99.14,-202.98C99.55,-196.11 100.02,-188.23 100.46,-180.87"/>
+<polygon fill="#a1abc2" stroke="#a1abc2" points="102.73,-180.92 100.85,-174.3 98.19,-180.65 102.73,-180.92"/>
+</g>
+<!-- Transport -->
+<g id="node12" class="node">
+<title>Transport</title>
+<path fill="#252e42" stroke="#6475a2" d="M410.5,-105C410.5,-105 233.5,-105 233.5,-105 227.5,-105 221.5,-99 221.5,-93 221.5,-93 221.5,-77 221.5,-77 221.5,-71 227.5,-65 233.5,-65 233.5,-65 410.5,-65 410.5,-65 416.5,-65 422.5,-71 422.5,-77 422.5,-77 422.5,-93 422.5,-93 422.5,-99 416.5,-105 410.5,-105"/>
+<text text-anchor="middle" x="322" y="-88.4" font-family="DejaVu Sans" font-size="12.00" fill="#f6f8ff">Transport Layer</text>
+<text text-anchor="middle" x="322" y="-75.4" font-family="DejaVu Sans" font-size="12.00" fill="#f6f8ff">mTLS · gRPC · HTTPS fallback</text>
+</g>
+<!-- Spool&#45;&gt;Transport -->
+<g id="edge6" class="edge">
+<title>Spool&#45;&gt;Transport</title>
+<path fill="none" stroke="#a1abc2" d="M164.45,-133.98C192.09,-125.56 224.68,-115.64 253.03,-107"/>
+<polygon fill="#a1abc2" stroke="#a1abc2" points="253.83,-109.14 259.39,-105.07 252.51,-104.79 253.83,-109.14"/>
+</g>
+<!-- Management&#45;&gt;Transport -->
+<g id="edge7" class="edge">
+<title>Management&#45;&gt;Transport</title>
+<path fill="none" stroke="#a1abc2" d="M855,-327C855,-327 490.33,-162.11 364.27,-105.11"/>
+</g>
+<!-- Policy -->
+<g id="node8" class="node">
+<title>Policy</title>
+<path fill="#252e42" stroke="#6475a2" d="M834,-381C834,-381 704,-381 704,-381 698,-381 692,-375 692,-369 692,-369 692,-353 692,-353 692,-347 698,-341 704,-341 704,-341 834,-341 834,-341 840,-341 846,-347 846,-353 846,-353 846,-369 846,-369 846,-375 840,-381 834,-381"/>
+<text text-anchor="middle" x="769" y="-364.4" font-family="DejaVu Sans" font-size="12.00" fill="#f6f8ff">Policy Manager</text>
+<text text-anchor="middle" x="769" y="-351.4" font-family="DejaVu Sans" font-size="12.00" fill="#f6f8ff">Signed configurations</text>
+</g>
+<!-- Identity -->
+<g id="node9" class="node">
+<title>Identity</title>
+<path fill="#252e42" stroke="#6475a2" d="M661.5,-381C661.5,-381 536.5,-381 536.5,-381 530.5,-381 524.5,-375 524.5,-369 524.5,-369 524.5,-353 524.5,-353 524.5,-347 530.5,-341 536.5,-341 536.5,-341 661.5,-341 661.5,-341 667.5,-341 673.5,-347 673.5,-353 673.5,-353 673.5,-369 673.5,-369 673.5,-375 667.5,-381 661.5,-381"/>
+<text text-anchor="middle" x="599" y="-364.4" font-family="DejaVu Sans" font-size="12.00" fill="#f6f8ff">Identity Manager</text>
+<text text-anchor="middle" x="599" y="-351.4" font-family="DejaVu Sans" font-size="12.00" fill="#f6f8ff">Keys and certificates</text>
+</g>
+<!-- Executor -->
+<g id="node10" class="node">
+<title>Executor</title>
+<path fill="#252e42" stroke="#6475a2" d="M494,-381C494,-381 366,-381 366,-381 360,-381 354,-375 354,-369 354,-369 354,-353 354,-353 354,-347 360,-341 366,-341 366,-341 494,-341 494,-341 500,-341 506,-347 506,-353 506,-353 506,-369 506,-369 506,-375 500,-381 494,-381"/>
+<text text-anchor="middle" x="430" y="-364.4" font-family="DejaVu Sans" font-size="12.00" fill="#f6f8ff">Action Executor</text>
+<text text-anchor="middle" x="430" y="-351.4" font-family="DejaVu Sans" font-size="12.00" fill="#f6f8ff">Restricted operations</text>
+</g>
+<!-- Updates -->
+<g id="node11" class="node">
+<title>Updates</title>
+<path fill="#252e42" stroke="#6475a2" d="M323.5,-381C323.5,-381 222.5,-381 222.5,-381 216.5,-381 210.5,-375 210.5,-369 210.5,-369 210.5,-353 210.5,-353 210.5,-347 216.5,-341 222.5,-341 222.5,-341 323.5,-341 323.5,-341 329.5,-341 335.5,-347 335.5,-353 335.5,-353 335.5,-369 335.5,-369 335.5,-375 329.5,-381 323.5,-381"/>
+<text text-anchor="middle" x="273" y="-364.4" font-family="DejaVu Sans" font-size="12.00" fill="#f6f8ff">Update Manager</text>
+<text text-anchor="middle" x="273" y="-351.4" font-family="DejaVu Sans" font-size="12.00" fill="#f6f8ff">Signed releases</text>
+</g>
+<!-- Gateway -->
+<g id="node13" class="node">
+<title>Gateway</title>
+<path fill="#252e42" stroke="#6475a2" d="M401,-36C401,-36 243,-36 243,-36 237,-36 231,-30 231,-24 231,-24 231,-12 231,-12 231,-6 237,0 243,0 243,0 401,0 401,0 407,0 413,-6 413,-12 413,-12 413,-24 413,-24 413,-30 407,-36 401,-36"/>
+<text text-anchor="middle" x="322" y="-14.9" font-family="DejaVu Sans" font-size="12.00" fill="#f6f8ff">ComplyOS Agent Gateway</text>
+</g>
+<!-- Transport&#45;&gt;Gateway -->
+<g id="edge8" class="edge">
+<title>Transport&#45;&gt;Gateway</title>
+<path fill="none" stroke="#a1abc2" d="M322,-64.85C322,-57.85 322,-49.86 322,-42.53"/>
+<polygon fill="#a1abc2" stroke="#a1abc2" points="324.28,-42.52 322,-36.02 319.73,-42.52 324.28,-42.52"/>
+</g>
+</g>
+</svg>

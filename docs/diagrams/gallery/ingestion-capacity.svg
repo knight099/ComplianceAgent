@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 438" width="720" height="438" role="img" aria-labelledby="title" font-family="system-ui, sans-serif">
+<title id="title">Enterprise ingestion capacity example</title>
+<rect x="0" y="0" width="720" height="438" rx="10" fill="#181c24" stroke="#394152"/>
+<text x="28" y="44" font-size="23" fill="#f3f5fc" font-weight="650">Enterprise ingestion capacity example</text>
+<rect x="28" y="69" width="324" height="66" rx="10" fill="#222835" stroke="#41495c"/>
+<text x="42" y="92" font-size="15" fill="#b5bece" font-weight="400">Managed endpoints</text>
+<text x="42" y="119" font-size="22" fill="#f3f5fc" font-weight="650">10,000</text>
+<rect x="368" y="69" width="324" height="66" rx="10" fill="#222835" stroke="#41495c"/>
+<text x="382" y="92" font-size="15" fill="#b5bece" font-weight="400">Facts per scan</text>
+<text x="382" y="119" font-size="22" fill="#f3f5fc" font-weight="650">30</text>
+<rect x="28" y="147" width="324" height="66" rx="10" fill="#222835" stroke="#41495c"/>
+<text x="42" y="170" font-size="15" fill="#b5bece" font-weight="400">Scan interval</text>
+<text x="42" y="197" font-size="22" fill="#f3f5fc" font-weight="650">15 minutes</text>
+<rect x="368" y="147" width="324" height="66" rx="10" fill="#222835" stroke="#41495c"/>
+<text x="382" y="170" font-size="15" fill="#b5bece" font-weight="400">Average bytes per fact</text>
+<text x="382" y="197" font-size="22" fill="#f3f5fc" font-weight="650">500</text>
+<path d="M28,231 H692" fill="none" stroke="#41495c" stroke-width="2"/>
+<text x="28" y="264" font-size="16" fill="#b5bece" font-weight="400">Observations per day</text>
+<text x="28" y="299" font-size="26" fill="#f3f5fc" font-weight="650">28,800,000</text>
+<text x="368" y="264" font-size="16" fill="#b5bece" font-weight="400">Average observations/sec</text>
+<text x="368" y="299" font-size="26" fill="#f3f5fc" font-weight="650">333.3</text>
+<text x="28" y="336" font-size="16" fill="#b5bece" font-weight="400">Raw data per day</text>
+<text x="28" y="371" font-size="26" fill="#f3f5fc" font-weight="650">14.40 GB</text>
+<text x="368" y="336" font-size="16" fill="#b5bece" font-weight="400">Raw data per 30 days</text>
+<text x="368" y="371" font-size="26" fill="#f3f5fc" font-weight="650">432.0 GB</text>
+<text x="28" y="420" font-size="14" fill="#b5bece" font-weight="400">Raw estimates exclude overhead and additional integrations.</text>
+</svg>

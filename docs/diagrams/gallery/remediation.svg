@@ -1,0 +1,110 @@
+<svg width="287pt" height="625pt"
+ viewBox="0.00 0.00 287.20 625.20" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(21.6 603.6)">
+<title>G</title>
+<polygon fill="#171b23" stroke="transparent" points="-21.6,21.6 -21.6,-603.6 265.6,-603.6 265.6,21.6 -21.6,21.6"/>
+<!-- Detected -->
+<g id="node1" class="node">
+<title>Detected</title>
+<path fill="#252e42" stroke="#6475a2" d="M172,-582C172,-582 66,-582 66,-582 60,-582 54,-576 54,-570 54,-570 54,-558 54,-558 54,-552 60,-546 66,-546 66,-546 172,-546 172,-546 178,-546 184,-552 184,-558 184,-558 184,-570 184,-570 184,-576 178,-582 172,-582"/>
+<text text-anchor="middle" x="119" y="-560.9" font-family="DejaVu Sans" font-size="12.00" fill="#f6f8ff">Incident detected</text>
+</g>
+<!-- Plan -->
+<g id="node2" class="node">
+<title>Plan</title>
+<path fill="#252e42" stroke="#6475a2" d="M200,-515C200,-515 38,-515 38,-515 32,-515 26,-509 26,-503 26,-503 26,-491 26,-491 26,-485 32,-479 38,-479 38,-479 200,-479 200,-479 206,-479 212,-485 212,-491 212,-491 212,-503 212,-503 212,-509 206,-515 200,-515"/>
+<text text-anchor="middle" x="119" y="-493.9" font-family="DejaVu Sans" font-size="12.00" fill="#f6f8ff">Generate remediation plan</text>
+</g>
+<!-- Detected&#45;&gt;Plan -->
+<g id="edge1" class="edge">
+<title>Detected&#45;&gt;Plan</title>
+<path fill="none" stroke="#a1abc2" d="M119,-545.92C119,-538.52 119,-529.72 119,-521.7"/>
+<polygon fill="#a1abc2" stroke="#a1abc2" points="121.28,-521.69 119,-515.19 116.73,-521.69 121.28,-521.69"/>
+</g>
+<!-- Impact -->
+<g id="node3" class="node">
+<title>Impact</title>
+<path fill="#252e42" stroke="#6475a2" d="M208,-448C208,-448 30,-448 30,-448 24,-448 18,-442 18,-436 18,-436 18,-424 18,-424 18,-418 24,-412 30,-412 30,-412 208,-412 208,-412 214,-412 220,-418 220,-424 220,-424 220,-436 220,-436 220,-442 214,-448 208,-448"/>
+<text text-anchor="middle" x="119" y="-426.9" font-family="DejaVu Sans" font-size="12.00" fill="#f6f8ff">Simulate impact / blast radius</text>
+</g>
+<!-- Plan&#45;&gt;Impact -->
+<g id="edge2" class="edge">
+<title>Plan&#45;&gt;Impact</title>
+<path fill="none" stroke="#a1abc2" d="M119,-478.92C119,-471.52 119,-462.72 119,-454.7"/>
+<polygon fill="#a1abc2" stroke="#a1abc2" points="121.28,-454.69 119,-448.19 116.73,-454.69 121.28,-454.69"/>
+</g>
+<!-- Policy -->
+<g id="node4" class="node">
+<title>Policy</title>
+<path fill="#252e42" stroke="#6475a2" d="M200.5,-381C200.5,-381 37.5,-381 37.5,-381 31.5,-381 25.5,-375 25.5,-369 25.5,-369 25.5,-357 25.5,-357 25.5,-351 31.5,-345 37.5,-345 37.5,-345 200.5,-345 200.5,-345 206.5,-345 212.5,-351 212.5,-357 212.5,-357 212.5,-369 212.5,-369 212.5,-375 206.5,-381 200.5,-381"/>
+<text text-anchor="middle" x="119" y="-359.9" font-family="DejaVu Sans" font-size="12.00" fill="#f6f8ff">Validate against OPA policy</text>
+</g>
+<!-- Impact&#45;&gt;Policy -->
+<g id="edge3" class="edge">
+<title>Impact&#45;&gt;Policy</title>
+<path fill="none" stroke="#a1abc2" d="M119,-411.92C119,-404.52 119,-395.72 119,-387.7"/>
+<polygon fill="#a1abc2" stroke="#a1abc2" points="121.28,-387.69 119,-381.19 116.73,-387.69 121.28,-387.69"/>
+</g>
+<!-- Approval -->
+<g id="node5" class="node">
+<title>Approval</title>
+<path fill="#252e42" stroke="#6475a2" d="M202,-314C202,-314 36,-314 36,-314 30,-314 24,-308 24,-302 24,-302 24,-290 24,-290 24,-284 30,-278 36,-278 36,-278 202,-278 202,-278 208,-278 214,-284 214,-290 214,-290 214,-302 214,-302 214,-308 208,-314 202,-314"/>
+<text text-anchor="middle" x="119" y="-292.9" font-family="DejaVu Sans" font-size="12.00" fill="#f6f8ff">Authorized human approval</text>
+</g>
+<!-- Policy&#45;&gt;Approval -->
+<g id="edge4" class="edge">
+<title>Policy&#45;&gt;Approval</title>
+<path fill="none" stroke="#a1abc2" d="M119,-344.92C119,-337.52 119,-328.72 119,-320.7"/>
+<polygon fill="#a1abc2" stroke="#a1abc2" points="121.28,-320.69 119,-314.19 116.73,-320.69 121.28,-320.69"/>
+</g>
+<!-- Refresh -->
+<g id="node6" class="node">
+<title>Refresh</title>
+<path fill="#252e42" stroke="#6475a2" d="M226,-247C226,-247 12,-247 12,-247 6,-247 0,-241 0,-235 0,-235 0,-223 0,-223 0,-217 6,-211 12,-211 12,-211 226,-211 226,-211 232,-211 238,-217 238,-223 238,-223 238,-235 238,-235 238,-241 232,-247 226,-247"/>
+<text text-anchor="middle" x="119" y="-225.9" font-family="DejaVu Sans" font-size="12.00" fill="#f6f8ff">Refresh evidence and preconditions</text>
+</g>
+<!-- Approval&#45;&gt;Refresh -->
+<g id="edge5" class="edge">
+<title>Approval&#45;&gt;Refresh</title>
+<path fill="none" stroke="#a1abc2" d="M119,-277.92C119,-270.52 119,-261.72 119,-253.7"/>
+<polygon fill="#a1abc2" stroke="#a1abc2" points="121.28,-253.69 119,-247.19 116.73,-253.69 121.28,-253.69"/>
+</g>
+<!-- Execute -->
+<g id="node7" class="node">
+<title>Execute</title>
+<path fill="#252e42" stroke="#6475a2" d="M214.5,-180C214.5,-180 23.5,-180 23.5,-180 17.5,-180 11.5,-174 11.5,-168 11.5,-168 11.5,-156 11.5,-156 11.5,-150 17.5,-144 23.5,-144 23.5,-144 214.5,-144 214.5,-144 220.5,-144 226.5,-150 226.5,-156 226.5,-156 226.5,-168 226.5,-168 226.5,-174 220.5,-180 214.5,-180"/>
+<text text-anchor="middle" x="119" y="-158.9" font-family="DejaVu Sans" font-size="12.00" fill="#f6f8ff">Execute typed connector action</text>
+</g>
+<!-- Refresh&#45;&gt;Execute -->
+<g id="edge6" class="edge">
+<title>Refresh&#45;&gt;Execute</title>
+<path fill="none" stroke="#a1abc2" d="M119,-210.92C119,-203.52 119,-194.72 119,-186.7"/>
+<polygon fill="#a1abc2" stroke="#a1abc2" points="121.28,-186.69 119,-180.19 116.73,-186.69 121.28,-186.69"/>
+</g>
+<!-- Verify -->
+<g id="node8" class="node">
+<title>Verify</title>
+<path fill="#252e42" stroke="#6475a2" d="M214,-113C214,-113 24,-113 24,-113 18,-113 12,-107 12,-101 12,-101 12,-89 12,-89 12,-83 18,-77 24,-77 24,-77 214,-77 214,-77 220,-77 226,-83 226,-89 226,-89 226,-101 226,-101 226,-107 220,-113 214,-113"/>
+<text text-anchor="middle" x="119" y="-91.9" font-family="DejaVu Sans" font-size="12.00" fill="#f6f8ff">Collect independent verification</text>
+</g>
+<!-- Execute&#45;&gt;Verify -->
+<g id="edge7" class="edge">
+<title>Execute&#45;&gt;Verify</title>
+<path fill="none" stroke="#a1abc2" d="M119,-143.92C119,-136.52 119,-127.72 119,-119.7"/>
+<polygon fill="#a1abc2" stroke="#a1abc2" points="121.28,-119.69 119,-113.19 116.73,-119.69 121.28,-119.69"/>
+</g>
+<!-- Close -->
+<g id="node9" class="node">
+<title>Close</title>
+<path fill="#252e42" stroke="#6475a2" d="M222,-36C222,-36 16,-36 16,-36 10,-36 4,-30 4,-24 4,-24 4,-12 4,-12 4,-6 10,0 16,0 16,0 222,0 222,0 228,0 234,-6 234,-12 234,-12 234,-24 234,-24 234,-30 228,-36 222,-36"/>
+<text text-anchor="middle" x="119" y="-14.9" font-family="DejaVu Sans" font-size="12.00" fill="#f6f8ff">Close incident and retain evidence</text>
+</g>
+<!-- Verify&#45;&gt;Close -->
+<g id="edge8" class="edge">
+<title>Verify&#45;&gt;Close</title>
+<path fill="none" stroke="#a1abc2" d="M119,-76.98C119,-66.89 119,-53.94 119,-42.84"/>
+<polygon fill="#a1abc2" stroke="#a1abc2" points="121.28,-42.71 119,-36.21 116.73,-42.71 121.28,-42.71"/>
+<text text-anchor="middle" x="181.5" y="-54" font-family="DejaVu Sans" font-size="10.00" fill="#dbe5ff">Expected state confirmed</text>
+</g>
+</g>
+</svg>

@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 476" width="720" height="476" role="img" aria-labelledby="title" font-family="system-ui, sans-serif">
+<title id="title">ComplyOS V1</title>
+<rect x="0" y="0" width="720" height="476" rx="10" fill="#181c24" stroke="#394152"/>
+<text x="28" y="44" font-size="23" fill="#f3f5fc" font-weight="650">ComplyOS V1</text>
+<text x="28" y="76" font-size="17" fill="#b5bece" font-weight="400">Identity-to-data regulatory control assurance</text>
+<rect x="28" y="100" width="324" height="76" rx="10" fill="#222835" stroke="#41495c"/>
+<text x="42" y="128" font-size="18" fill="#f3f5fc" font-weight="650">Enterprise graph</text>
+<text x="42" y="149" font-size="14" fill="#b5bece" font-weight="400">Identity and sensitive data</text>
+<text x="42" y="166" font-size="14" fill="#b5bece" font-weight="400">relationships</text>
+<rect x="368" y="100" width="324" height="76" rx="10" fill="#222835" stroke="#41495c"/>
+<text x="382" y="128" font-size="18" fill="#f3f5fc" font-weight="650">Private relay</text>
+<text x="382" y="152" font-size="14" fill="#b5bece" font-weight="400">Secure enterprise system connectivity</text>
+<rect x="28" y="188" width="324" height="76" rx="10" fill="#222835" stroke="#41495c"/>
+<text x="42" y="216" font-size="18" fill="#f3f5fc" font-weight="650">Five connectors</text>
+<text x="42" y="240" font-size="14" fill="#b5bece" font-weight="400">HR, Entra, AWS, PostgreSQL and GitHub</text>
+<rect x="368" y="188" width="324" height="76" rx="10" fill="#222835" stroke="#41495c"/>
+<text x="382" y="216" font-size="18" fill="#f3f5fc" font-weight="650">Incident engine</text>
+<text x="382" y="240" font-size="14" fill="#b5bece" font-weight="400">Offboarding and excessive access</text>
+<rect x="28" y="276" width="324" height="76" rx="10" fill="#222835" stroke="#41495c"/>
+<text x="42" y="304" font-size="18" fill="#f3f5fc" font-weight="650">AI investigator</text>
+<text x="42" y="328" font-size="14" fill="#b5bece" font-weight="400">Evidence-grounded root cause analysis</text>
+<rect x="368" y="276" width="324" height="76" rx="10" fill="#222835" stroke="#41495c"/>
+<text x="382" y="304" font-size="18" fill="#f3f5fc" font-weight="650">Safe remediation</text>
+<text x="382" y="328" font-size="14" fill="#b5bece" font-weight="400">Approval, execution and verification</text>
+<rect x="28" y="364" width="324" height="76" rx="10" fill="#222835" stroke="#41495c"/>
+<text x="42" y="392" font-size="18" fill="#f3f5fc" font-weight="650">Regulatory packs</text>
+<text x="42" y="416" font-size="14" fill="#b5bece" font-weight="400">Reviewed DPDP and internal controls</text>
+<rect x="368" y="364" width="324" height="76" rx="10" fill="#222835" stroke="#41495c"/>
+<text x="382" y="392" font-size="18" fill="#f3f5fc" font-weight="650">Evidence vault</text>
+<text x="382" y="416" font-size="14" fill="#b5bece" font-weight="400">Historical audit reconstruction</text>
+</svg>

@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 670" width="720" height="670" role="img" aria-labelledby="title" font-family="system-ui, sans-serif">
+<title id="title">ComplyOS</title>
+<rect x="0" y="0" width="720" height="670" rx="10" fill="#181c24" stroke="#394152"/>
+<text x="28" y="44" font-size="23" fill="#f3f5fc" font-weight="650">ComplyOS</text>
+<rect x="24" y="64" width="180" height="574" rx="10" fill="#222835" stroke="#41495c"/>
+<rect x="32" y="76" width="164" height="34" rx="5" fill="#364569" stroke="none"/>
+<text x="44" y="99" font-size="16" fill="#f3f5fc" font-weight="400">Overview</text>
+<text x="44" y="139" font-size="16" fill="#f3f5fc" font-weight="400">Incidents</text>
+<text x="44" y="179" font-size="16" fill="#f3f5fc" font-weight="400">Enterprise graph</text>
+<text x="44" y="219" font-size="16" fill="#f3f5fc" font-weight="400">Regulations</text>
+<text x="44" y="259" font-size="16" fill="#f3f5fc" font-weight="400">Policies</text>
+<text x="44" y="299" font-size="16" fill="#f3f5fc" font-weight="400">Remediation</text>
+<text x="44" y="339" font-size="16" fill="#f3f5fc" font-weight="400">Integrations</text>
+<text x="44" y="379" font-size="16" fill="#f3f5fc" font-weight="400">Agent fleet</text>
+<text x="44" y="419" font-size="16" fill="#f3f5fc" font-weight="400">Evidence</text>
+<text x="44" y="459" font-size="16" fill="#f3f5fc" font-weight="400">Reports</text>
+<text x="44" y="499" font-size="16" fill="#f3f5fc" font-weight="400">AI Copilot</text>
+<text x="44" y="539" font-size="16" fill="#f3f5fc" font-weight="400">Settings</text>
+<text x="226" y="96" font-size="24" fill="#f3f5fc" font-weight="650">Compliance overview</text>
+<text x="226" y="122" font-size="15" fill="#b5bece" font-weight="400">Illustrative enterprise workspace</text>
+<rect x="226" y="144" width="226" height="68" rx="10" fill="#222835" stroke="#41495c"/>
+<text x="240" y="167" font-size="15" fill="#b5bece" font-weight="400">Controls passing</text>
+<text x="240" y="197" font-size="25" fill="#7de2ae" font-weight="650">82%</text>
+<rect x="462" y="144" width="226" height="68" rx="10" fill="#222835" stroke="#41495c"/>
+<text x="476" y="167" font-size="15" fill="#b5bece" font-weight="400">Open incidents</text>
+<text x="476" y="197" font-size="25" fill="#f3939e" font-weight="650">24</text>
+<rect x="226" y="222" width="226" height="68" rx="10" fill="#222835" stroke="#41495c"/>
+<text x="240" y="245" font-size="15" fill="#b5bece" font-weight="400">Evidence coverage</text>
+<text x="240" y="275" font-size="25" fill="#f3f5fc" font-weight="650">91%</text>
+<rect x="462" y="222" width="226" height="68" rx="10" fill="#222835" stroke="#41495c"/>
+<text x="476" y="245" font-size="15" fill="#b5bece" font-weight="400">Pending approvals</text>
+<text x="476" y="275" font-size="25" fill="#ffc18c" font-weight="650">8</text>
+<rect x="226" y="300" width="462" height="158" rx="10" fill="#222835" stroke="#41495c"/>
+<text x="242" y="326" font-size="19" fill="#f3f5fc" font-weight="650">Control results</text>
+<text x="242" y="352" font-size="14" fill="#f3f5fc" font-weight="400">Passing</text>
+<rect x="322" y="343" width="285" height="7" rx="3" fill="#343d50" stroke="none"/>
+<rect x="322" y="343" width="233.7" height="7" rx="3" fill="#7de2ae" stroke="none"/>
+<text x="630" y="352" font-size="14" fill="#f3f5fc" font-weight="400">82%</text>
+<text x="242" y="378" font-size="14" fill="#f3f5fc" font-weight="400">Failing</text>
+<rect x="322" y="369" width="285" height="7" rx="3" fill="#343d50" stroke="none"/>
+<rect x="322" y="369" width="22.8" height="7" rx="3" fill="#f3939e" stroke="none"/>
+<text x="630" y="378" font-size="14" fill="#f3f5fc" font-weight="400">8%</text>
+<text x="242" y="404" font-size="14" fill="#f3f5fc" font-weight="400">Unknown</text>
+<rect x="322" y="395" width="285" height="7" rx="3" fill="#343d50" stroke="none"/>
+<rect x="322" y="395" width="19.95" height="7" rx="3" fill="#a6b5ce" stroke="none"/>
+<text x="630" y="404" font-size="14" fill="#f3f5fc" font-weight="400">7%</text>
+<text x="242" y="430" font-size="14" fill="#f3f5fc" font-weight="400">Exception</text>
+<rect x="322" y="421" width="285" height="7" rx="3" fill="#343d50" stroke="none"/>
+<rect x="322" y="421" width="8.55" height="7" rx="3" fill="#ffc18c" stroke="none"/>
+<text x="630" y="430" font-size="14" fill="#f3f5fc" font-weight="400">3%</text>
+<rect x="226" y="470" width="462" height="168" rx="10" fill="#222835" stroke="#41495c"/>
+<text x="242" y="498" font-size="19" fill="#f3f5fc" font-weight="650">Priority incidents</text>
+<text x="242" y="523" font-size="14" fill="#f3f5fc" font-weight="400">Terminated user retains access</text>
+<text x="242" y="540" font-size="13" fill="#b5bece" font-weight="400">IAM · PostgreSQL</text>
+<text x="242" y="563" font-size="14" fill="#f3f5fc" font-weight="400">Unapproved KYC permissions</text>
+<text x="242" y="580" font-size="13" fill="#b5bece" font-weight="400">HRMS · AWS</text>
+<text x="242" y="603" font-size="14" fill="#f3f5fc" font-weight="400">Endpoint evidence stale</text>
+<text x="242" y="620" font-size="13" fill="#b5bece" font-weight="400">14 devices</text>
+</svg>

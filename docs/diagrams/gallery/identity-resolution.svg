@@ -1,0 +1,73 @@
+<svg width="492pt" height="301pt"
+ viewBox="0.00 0.00 491.70 301.20" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(21.6 279.6)">
+<title>G</title>
+<polygon fill="#171b23" stroke="transparent" points="-21.6,21.6 -21.6,-279.6 470.1,-279.6 470.1,21.6 -21.6,21.6"/>
+<g id="clust1" class="cluster">
+<title>cluster_Sources</title>
+<path fill="#171b23" stroke="#47597c" d="M20,-8C20,-8 228,-8 228,-8 234,-8 240,-14 240,-20 240,-20 240,-238 240,-238 240,-244 234,-250 228,-250 228,-250 20,-250 20,-250 14,-250 8,-244 8,-238 8,-238 8,-20 8,-20 8,-14 14,-8 20,-8"/>
+<text text-anchor="middle" x="124" y="-234.8" font-family="DejaVu Sans" font-size="14.00" fill="#dbe5ff">Source identities</text>
+</g>
+<!-- Sources -->
+<!-- Person -->
+<g id="node8" class="node">
+<title>Person</title>
+<path fill="#252e42" stroke="#6475a2" d="M436.5,-144C436.5,-144 265.5,-144 265.5,-144 259.5,-144 253.5,-138 253.5,-132 253.5,-132 253.5,-103 253.5,-103 253.5,-97 259.5,-91 265.5,-91 265.5,-91 436.5,-91 436.5,-91 442.5,-91 448.5,-97 448.5,-103 448.5,-103 448.5,-132 448.5,-132 448.5,-138 442.5,-144 436.5,-144"/>
+<text text-anchor="middle" x="351" y="-127.4" font-family="DejaVu Sans" font-size="12.00" fill="#f6f8ff">Canonical Employee Identity</text>
+<text text-anchor="middle" x="351" y="-114.4" font-family="DejaVu Sans" font-size="12.00" fill="#f6f8ff">person_001 · EMP104</text>
+<text text-anchor="middle" x="351" y="-101.4" font-family="DejaVu Sans" font-size="12.00" fill="#f6f8ff">Verified identity mappings</text>
+</g>
+<!-- Sources&#45;&gt;Person -->
+<g id="edge5" class="edge">
+<title>Sources&#45;&gt;Person</title>
+<path fill="none" stroke="#a1abc2" d="M240,-183.77C254.91,-175 279.36,-160.62 301.53,-147.59"/>
+<polygon fill="#a1abc2" stroke="#a1abc2" points="302.91,-149.41 307.36,-144.16 300.61,-145.49 302.91,-149.41"/>
+</g>
+<!-- HR -->
+<g id="node2" class="node">
+<title>HR</title>
+<path fill="#252e42" stroke="#6475a2" d="M195.5,-213C195.5,-213 146.5,-213 146.5,-213 140.5,-213 134.5,-207 134.5,-201 134.5,-201 134.5,-185 134.5,-185 134.5,-179 140.5,-173 146.5,-173 146.5,-173 195.5,-173 195.5,-173 201.5,-173 207.5,-179 207.5,-185 207.5,-185 207.5,-201 207.5,-201 207.5,-207 201.5,-213 195.5,-213"/>
+<text text-anchor="middle" x="171" y="-196.4" font-family="DejaVu Sans" font-size="12.00" fill="#f6f8ff">HRMS</text>
+<text text-anchor="middle" x="171" y="-183.4" font-family="DejaVu Sans" font-size="12.00" fill="#f6f8ff">EMP104</text>
+</g>
+<!-- AWS -->
+<g id="node4" class="node">
+<title>AWS</title>
+<path fill="#252e42" stroke="#6475a2" d="M202.5,-137.5C202.5,-137.5 139.5,-137.5 139.5,-137.5 133.5,-137.5 127.5,-131.5 127.5,-125.5 127.5,-125.5 127.5,-109.5 127.5,-109.5 127.5,-103.5 133.5,-97.5 139.5,-97.5 139.5,-97.5 202.5,-97.5 202.5,-97.5 208.5,-97.5 214.5,-103.5 214.5,-109.5 214.5,-109.5 214.5,-125.5 214.5,-125.5 214.5,-131.5 208.5,-137.5 202.5,-137.5"/>
+<text text-anchor="middle" x="171" y="-120.9" font-family="DejaVu Sans" font-size="12.00" fill="#f6f8ff">AWS IAM</text>
+<text text-anchor="middle" x="171" y="-107.9" font-family="DejaVu Sans" font-size="12.00" fill="#f6f8ff">rahul&#45;prod</text>
+</g>
+<!-- HR&#45;&gt;AWS -->
+<!-- Entra -->
+<g id="node3" class="node">
+<title>Entra</title>
+<path fill="#252e42" stroke="#6475a2" d="M104,-213C104,-213 34,-213 34,-213 28,-213 22,-207 22,-201 22,-201 22,-185 22,-185 22,-179 28,-173 34,-173 34,-173 104,-173 104,-173 110,-173 116,-179 116,-185 116,-185 116,-201 116,-201 116,-207 110,-213 104,-213"/>
+<text text-anchor="middle" x="69" y="-196.4" font-family="DejaVu Sans" font-size="12.00" fill="#f6f8ff">Entra ID</text>
+<text text-anchor="middle" x="69" y="-183.4" font-family="DejaVu Sans" font-size="12.00" fill="#f6f8ff">rahul@corp</text>
+</g>
+<!-- GitHub -->
+<g id="node5" class="node">
+<title>GitHub</title>
+<path fill="#252e42" stroke="#6475a2" d="M97,-137.5C97,-137.5 39,-137.5 39,-137.5 33,-137.5 27,-131.5 27,-125.5 27,-125.5 27,-109.5 27,-109.5 27,-103.5 33,-97.5 39,-97.5 39,-97.5 97,-97.5 97,-97.5 103,-97.5 109,-103.5 109,-109.5 109,-109.5 109,-125.5 109,-125.5 109,-131.5 103,-137.5 97,-137.5"/>
+<text text-anchor="middle" x="68" y="-120.9" font-family="DejaVu Sans" font-size="12.00" fill="#f6f8ff">GitHub</text>
+<text text-anchor="middle" x="68" y="-107.9" font-family="DejaVu Sans" font-size="12.00" fill="#f6f8ff">rahul&#45;dev</text>
+</g>
+<!-- Entra&#45;&gt;GitHub -->
+<!-- Postgres -->
+<g id="node6" class="node">
+<title>Postgres</title>
+<path fill="#252e42" stroke="#6475a2" d="M207,-62C207,-62 135,-62 135,-62 129,-62 123,-56 123,-50 123,-50 123,-34 123,-34 123,-28 129,-22 135,-22 135,-22 207,-22 207,-22 213,-22 219,-28 219,-34 219,-34 219,-50 219,-50 219,-56 213,-62 207,-62"/>
+<text text-anchor="middle" x="171" y="-45.4" font-family="DejaVu Sans" font-size="12.00" fill="#f6f8ff">PostgreSQL</text>
+<text text-anchor="middle" x="171" y="-32.4" font-family="DejaVu Sans" font-size="12.00" fill="#f6f8ff">rsharma_rw</text>
+</g>
+<!-- AWS&#45;&gt;Postgres -->
+<!-- Saviynt -->
+<g id="node7" class="node">
+<title>Saviynt</title>
+<path fill="#252e42" stroke="#6475a2" d="M91,-62C91,-62 45,-62 45,-62 39,-62 33,-56 33,-50 33,-50 33,-34 33,-34 33,-28 39,-22 45,-22 45,-22 91,-22 91,-22 97,-22 103,-28 103,-34 103,-34 103,-50 103,-50 103,-56 97,-62 91,-62"/>
+<text text-anchor="middle" x="68" y="-45.4" font-family="DejaVu Sans" font-size="12.00" fill="#f6f8ff">Saviynt</text>
+<text text-anchor="middle" x="68" y="-32.4" font-family="DejaVu Sans" font-size="12.00" fill="#f6f8ff">E00104</text>
+</g>
+<!-- GitHub&#45;&gt;Saviynt -->
+</g>
+</svg>

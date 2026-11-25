@@ -1,0 +1,105 @@
+<svg width="329pt" height="566pt"
+ viewBox="0.00 0.00 329.20 566.20" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(21.6 544.6)">
+<title>G</title>
+<polygon fill="#171b23" stroke="transparent" points="-21.6,21.6 -21.6,-544.6 307.6,-544.6 307.6,21.6 -21.6,21.6"/>
+<!-- Tenant -->
+<g id="node1" class="node">
+<title>Tenant</title>
+<path fill="#252e42" stroke="#6475a2" d="M245,-523C245,-523 41,-523 41,-523 35,-523 29,-517 29,-511 29,-511 29,-495 29,-495 29,-489 35,-483 41,-483 41,-483 245,-483 245,-483 251,-483 257,-489 257,-495 257,-495 257,-511 257,-511 257,-517 251,-523 245,-523"/>
+<text text-anchor="middle" x="143" y="-506.4" font-family="DejaVu Sans" font-size="12.00" fill="#f6f8ff">Create enterprise tenant</text>
+<text text-anchor="middle" x="143" y="-493.4" font-family="DejaVu Sans" font-size="12.00" fill="#f6f8ff">Organization, industry, jurisdiction</text>
+</g>
+<!-- Identity -->
+<g id="node2" class="node">
+<title>Identity</title>
+<path fill="#252e42" stroke="#6475a2" d="M265,-454C265,-454 21,-454 21,-454 15,-454 9,-448 9,-442 9,-442 9,-426 9,-426 9,-420 15,-414 21,-414 21,-414 265,-414 265,-414 271,-414 277,-420 277,-426 277,-426 277,-442 277,-442 277,-448 271,-454 265,-454"/>
+<text text-anchor="middle" x="143" y="-437.4" font-family="DejaVu Sans" font-size="12.00" fill="#f6f8ff">Configure enterprise identity</text>
+<text text-anchor="middle" x="143" y="-424.4" font-family="DejaVu Sans" font-size="12.00" fill="#f6f8ff">SSO, administrators, compliance officers</text>
+</g>
+<!-- Tenant&#45;&gt;Identity -->
+<g id="edge1" class="edge">
+<title>Tenant&#45;&gt;Identity</title>
+<path fill="none" stroke="#a1abc2" d="M143,-482.98C143,-476.11 143,-468.23 143,-460.87"/>
+<polygon fill="#a1abc2" stroke="#a1abc2" points="145.28,-460.8 143,-454.3 140.73,-460.8 145.28,-460.8"/>
+</g>
+<!-- Applicability -->
+<g id="node3" class="node">
+<title>Applicability</title>
+<path fill="#252e42" stroke="#6475a2" d="M248,-385C248,-385 38,-385 38,-385 32,-385 26,-379 26,-373 26,-373 26,-357 26,-357 26,-351 32,-345 38,-345 38,-345 248,-345 248,-345 254,-345 260,-351 260,-357 260,-357 260,-373 260,-373 260,-379 254,-385 248,-385"/>
+<text text-anchor="middle" x="143" y="-368.4" font-family="DejaVu Sans" font-size="12.00" fill="#f6f8ff">Determine regulatory applicability</text>
+<text text-anchor="middle" x="143" y="-355.4" font-family="DejaVu Sans" font-size="12.00" fill="#f6f8ff">DPDP, RBI, SEBI, SOC 2, ISO 27001</text>
+</g>
+<!-- Identity&#45;&gt;Applicability -->
+<g id="edge2" class="edge">
+<title>Identity&#45;&gt;Applicability</title>
+<path fill="none" stroke="#a1abc2" d="M143,-413.98C143,-407.11 143,-399.23 143,-391.87"/>
+<polygon fill="#a1abc2" stroke="#a1abc2" points="145.28,-391.8 143,-385.3 140.73,-391.8 145.28,-391.8"/>
+</g>
+<!-- Connect -->
+<g id="node4" class="node">
+<title>Connect</title>
+<path fill="#252e42" stroke="#6475a2" d="M268,-316C268,-316 18,-316 18,-316 12,-316 6,-310 6,-304 6,-304 6,-288 6,-288 6,-282 12,-276 18,-276 18,-276 268,-276 268,-276 274,-276 280,-282 280,-288 280,-288 280,-304 280,-304 280,-310 274,-316 268,-316"/>
+<text text-anchor="middle" x="143" y="-299.4" font-family="DejaVu Sans" font-size="12.00" fill="#f6f8ff">Connect enterprise systems</text>
+<text text-anchor="middle" x="143" y="-286.4" font-family="DejaVu Sans" font-size="12.00" fill="#f6f8ff">OAuth, API keys, cloud roles, private relay</text>
+</g>
+<!-- Applicability&#45;&gt;Connect -->
+<g id="edge3" class="edge">
+<title>Applicability&#45;&gt;Connect</title>
+<path fill="none" stroke="#a1abc2" d="M143,-344.98C143,-338.11 143,-330.23 143,-322.87"/>
+<polygon fill="#a1abc2" stroke="#a1abc2" points="145.28,-322.8 143,-316.3 140.73,-322.8 145.28,-322.8"/>
+</g>
+<!-- Discovery -->
+<g id="node5" class="node">
+<title>Discovery</title>
+<path fill="#252e42" stroke="#6475a2" d="M274,-247C274,-247 12,-247 12,-247 6,-247 0,-241 0,-235 0,-235 0,-219 0,-219 0,-213 6,-207 12,-207 12,-207 274,-207 274,-207 280,-207 286,-213 286,-219 286,-219 286,-235 286,-235 286,-241 280,-247 274,-247"/>
+<text text-anchor="middle" x="143" y="-230.4" font-family="DejaVu Sans" font-size="12.00" fill="#f6f8ff">Discover assets and identities</text>
+<text text-anchor="middle" x="143" y="-217.4" font-family="DejaVu Sans" font-size="12.00" fill="#f6f8ff">Employees, accounts, databases, resources</text>
+</g>
+<!-- Connect&#45;&gt;Discovery -->
+<g id="edge4" class="edge">
+<title>Connect&#45;&gt;Discovery</title>
+<path fill="none" stroke="#a1abc2" d="M143,-275.98C143,-269.11 143,-261.23 143,-253.87"/>
+<polygon fill="#a1abc2" stroke="#a1abc2" points="145.28,-253.8 143,-247.3 140.73,-253.8 145.28,-253.8"/>
+</g>
+<!-- Baselines -->
+<g id="node6" class="node">
+<title>Baselines</title>
+<path fill="#252e42" stroke="#6475a2" d="M269,-178C269,-178 17,-178 17,-178 11,-178 5,-172 5,-166 5,-166 5,-150 5,-150 5,-144 11,-138 17,-138 17,-138 269,-138 269,-138 275,-138 281,-144 281,-150 281,-150 281,-166 281,-166 281,-172 275,-178 269,-178"/>
+<text text-anchor="middle" x="143" y="-161.4" font-family="DejaVu Sans" font-size="12.00" fill="#f6f8ff">Establish approved baselines</text>
+<text text-anchor="middle" x="143" y="-148.4" font-family="DejaVu Sans" font-size="12.00" fill="#f6f8ff">Access policies, classifications, exceptions</text>
+</g>
+<!-- Discovery&#45;&gt;Baselines -->
+<g id="edge5" class="edge">
+<title>Discovery&#45;&gt;Baselines</title>
+<path fill="none" stroke="#a1abc2" d="M143,-206.98C143,-200.11 143,-192.23 143,-184.87"/>
+<polygon fill="#a1abc2" stroke="#a1abc2" points="145.28,-184.8 143,-178.3 140.73,-184.8 145.28,-184.8"/>
+</g>
+<!-- Assessment -->
+<g id="node7" class="node">
+<title>Assessment</title>
+<path fill="#252e42" stroke="#6475a2" d="M254,-109C254,-109 32,-109 32,-109 26,-109 20,-103 20,-97 20,-97 20,-81 20,-81 20,-75 26,-69 32,-69 32,-69 254,-69 254,-69 260,-69 266,-75 266,-81 266,-81 266,-97 266,-97 266,-103 260,-109 254,-109"/>
+<text text-anchor="middle" x="143" y="-92.4" font-family="DejaVu Sans" font-size="12.00" fill="#f6f8ff">Run initial compliance assessment</text>
+<text text-anchor="middle" x="143" y="-79.4" font-family="DejaVu Sans" font-size="12.00" fill="#f6f8ff">Violations, unknowns, coverage gaps</text>
+</g>
+<!-- Baselines&#45;&gt;Assessment -->
+<g id="edge6" class="edge">
+<title>Baselines&#45;&gt;Assessment</title>
+<path fill="none" stroke="#a1abc2" d="M143,-137.98C143,-131.11 143,-123.23 143,-115.87"/>
+<polygon fill="#a1abc2" stroke="#a1abc2" points="145.28,-115.8 143,-109.3 140.73,-115.8 145.28,-115.8"/>
+</g>
+<!-- Monitoring -->
+<g id="node8" class="node">
+<title>Monitoring</title>
+<path fill="#252e42" stroke="#6475a2" d="M272,-40C272,-40 14,-40 14,-40 8,-40 2,-34 2,-28 2,-28 2,-12 2,-12 2,-6 8,0 14,0 14,0 272,0 272,0 278,0 284,-6 284,-12 284,-12 284,-28 284,-28 284,-34 278,-40 272,-40"/>
+<text text-anchor="middle" x="143" y="-23.4" font-family="DejaVu Sans" font-size="12.00" fill="#f6f8ff">Enable continuous monitoring</text>
+<text text-anchor="middle" x="143" y="-10.4" font-family="DejaVu Sans" font-size="12.00" fill="#f6f8ff">Events, scheduled scans and investigations</text>
+</g>
+<!-- Assessment&#45;&gt;Monitoring -->
+<g id="edge7" class="edge">
+<title>Assessment&#45;&gt;Monitoring</title>
+<path fill="none" stroke="#a1abc2" d="M143,-68.98C143,-62.11 143,-54.23 143,-46.87"/>
+<polygon fill="#a1abc2" stroke="#a1abc2" points="145.28,-46.8 143,-40.3 140.73,-46.8 145.28,-46.8"/>
+</g>
+</g>
+</svg>

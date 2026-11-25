@@ -1,0 +1,96 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 1210" width="720" height="1210" role="img" aria-labelledby="title" font-family="system-ui, sans-serif">
+<title id="title">High-level system architecture</title>
+<rect x="0" y="0" width="720" height="1210" rx="10" fill="#181c24" stroke="#394152"/>
+<text x="28" y="44" font-size="23" fill="#f3f5fc" font-weight="650">High-level system architecture</text>
+<text x="28" y="76" font-size="16" fill="#aebfff" font-weight="650">Presentation layer</text>
+<rect x="28" y="90" width="327" height="52" rx="10" fill="#252e42" stroke="#41495c"/>
+<text x="40" y="122" font-size="15" fill="#f3f5fc" font-weight="650">Compliance Dashboard</text>
+<rect x="365" y="90" width="327" height="52" rx="10" fill="#252e42" stroke="#41495c"/>
+<text x="377" y="122" font-size="15" fill="#f3f5fc" font-weight="650">Auditor Portal</text>
+<rect x="28" y="151" width="327" height="52" rx="10" fill="#252e42" stroke="#41495c"/>
+<text x="40" y="183" font-size="15" fill="#f3f5fc" font-weight="650">AI Copilot</text>
+<rect x="365" y="151" width="327" height="52" rx="10" fill="#252e42" stroke="#41495c"/>
+<text x="377" y="183" font-size="15" fill="#f3f5fc" font-weight="650">Administration</text>
+<path d="M360,205 V222 m-4,-5 l4,5 l4,-5" fill="none" stroke="#8698b8" stroke-width="2"/>
+<rect x="28" y="224" width="664" height="52" rx="10" fill="#252e42" stroke="#41495c"/>
+<text x="40" y="246" font-size="15" fill="#f3f5fc" font-weight="650">API Gateway / Control Plane</text>
+<text x="40" y="265" font-size="13" fill="#c0cadd" font-weight="400">OIDC · RBAC · Tenant isolation · Rate limits</text>
+<path d="M360,278 V295 m-4,-5 l4,5 l4,-5" fill="none" stroke="#8698b8" stroke-width="2"/>
+<text x="28" y="313" font-size="16" fill="#aebfff" font-weight="650">Core domain services</text>
+<rect x="28" y="327" width="327" height="52" rx="10" fill="#252e42" stroke="#41495c"/>
+<text x="40" y="349" font-size="15" fill="#f3f5fc" font-weight="650">Identity Resolution</text>
+<text x="40" y="368" font-size="13" fill="#c0cadd" font-weight="400">Cross-system identities</text>
+<rect x="365" y="327" width="327" height="52" rx="10" fill="#252e42" stroke="#41495c"/>
+<text x="377" y="349" font-size="15" fill="#f3f5fc" font-weight="650">Compliance Graph</text>
+<text x="377" y="368" font-size="13" fill="#c0cadd" font-weight="400">Entities and relationships</text>
+<rect x="28" y="388" width="327" height="52" rx="10" fill="#252e42" stroke="#41495c"/>
+<text x="40" y="410" font-size="15" fill="#f3f5fc" font-weight="650">Policy Engine</text>
+<text x="40" y="429" font-size="13" fill="#c0cadd" font-weight="400">OPA / Rego</text>
+<rect x="365" y="388" width="327" height="52" rx="10" fill="#252e42" stroke="#41495c"/>
+<text x="377" y="410" font-size="15" fill="#f3f5fc" font-weight="650">Regulatory Intelligence</text>
+<text x="377" y="429" font-size="13" fill="#c0cadd" font-weight="400">Obligations and controls</text>
+<rect x="28" y="449" width="327" height="52" rx="10" fill="#252e42" stroke="#41495c"/>
+<text x="40" y="471" font-size="15" fill="#f3f5fc" font-weight="650">Incident Engine</text>
+<text x="40" y="490" font-size="13" fill="#c0cadd" font-weight="400">Detection and correlation</text>
+<rect x="365" y="449" width="327" height="52" rx="10" fill="#252e42" stroke="#41495c"/>
+<text x="377" y="471" font-size="15" fill="#f3f5fc" font-weight="650">AI Investigation</text>
+<text x="377" y="490" font-size="13" fill="#c0cadd" font-weight="400">Grounded reasoning</text>
+<rect x="28" y="510" width="327" height="52" rx="10" fill="#252e42" stroke="#41495c"/>
+<text x="40" y="532" font-size="15" fill="#f3f5fc" font-weight="650">Remediation Engine</text>
+<text x="40" y="551" font-size="13" fill="#c0cadd" font-weight="400">Durable workflows</text>
+<rect x="365" y="510" width="327" height="52" rx="10" fill="#252e42" stroke="#41495c"/>
+<text x="377" y="532" font-size="15" fill="#f3f5fc" font-weight="650">Evidence Engine</text>
+<text x="377" y="551" font-size="13" fill="#c0cadd" font-weight="400">Verification and audit</text>
+<path d="M360,564 V581 m-4,-5 l4,5 l4,-5" fill="none" stroke="#8698b8" stroke-width="2"/>
+<rect x="28" y="583" width="664" height="52" rx="10" fill="#3d3027" stroke="#41495c"/>
+<text x="40" y="605" font-size="15" fill="#f3f5fc" font-weight="650">Event Bus + Workflow Orchestrator</text>
+<text x="40" y="624" font-size="13" fill="#c0cadd" font-weight="400">NATS JetStream · Temporal</text>
+<path d="M360,637 V654 m-4,-5 l4,5 l4,-5" fill="none" stroke="#8698b8" stroke-width="2"/>
+<text x="28" y="672" font-size="16" fill="#aebfff" font-weight="650">Persistence layer</text>
+<rect x="28" y="686" width="158" height="52" rx="10" fill="#252e42" stroke="#41495c"/>
+<text x="40" y="708" font-size="15" fill="#f3f5fc" font-weight="650">PostgreSQL</text>
+<text x="40" y="727" font-size="13" fill="#c0cadd" font-weight="400">State and graph</text>
+<rect x="196" y="686" width="158" height="52" rx="10" fill="#252e42" stroke="#41495c"/>
+<text x="208" y="708" font-size="15" fill="#f3f5fc" font-weight="650">Object Store</text>
+<text x="208" y="727" font-size="13" fill="#c0cadd" font-weight="400">Evidence</text>
+<rect x="364" y="686" width="158" height="52" rx="10" fill="#252e42" stroke="#41495c"/>
+<text x="376" y="708" font-size="15" fill="#f3f5fc" font-weight="650">Redis</text>
+<text x="376" y="727" font-size="13" fill="#c0cadd" font-weight="400">Cache</text>
+<rect x="532" y="686" width="158" height="52" rx="10" fill="#252e42" stroke="#41495c"/>
+<text x="544" y="708" font-size="15" fill="#f3f5fc" font-weight="650">pgvector</text>
+<text x="544" y="727" font-size="13" fill="#c0cadd" font-weight="400">Regulations</text>
+<path d="M360,740 V757 m-4,-5 l4,5 l4,-5" fill="none" stroke="#8698b8" stroke-width="2"/>
+<rect x="28" y="759" width="664" height="52" rx="10" fill="#213b3c" stroke="#41495c"/>
+<text x="40" y="781" font-size="15" fill="#f3f5fc" font-weight="650">Integration &amp; Agent Gateway</text>
+<text x="40" y="800" font-size="13" fill="#c0cadd" font-weight="400">Webhooks · HTTPS · gRPC · mTLS</text>
+<path d="M360,834 V813 m-4,5 l4,-5 l4,5" fill="none" stroke="#78c5b4" stroke-width="2"/>
+<text x="373" y="831" font-size="13" fill="#b5bece" font-weight="400">Secure outbound communication</text>
+<text x="28" y="855" font-size="16" fill="#aebfff" font-weight="650">Enterprise data plane</text>
+<rect x="28" y="869" width="327" height="52" rx="10" fill="#223831" stroke="#41495c"/>
+<text x="40" y="901" font-size="15" fill="#f3f5fc" font-weight="650">Enterprise Relay</text>
+<rect x="365" y="869" width="327" height="52" rx="10" fill="#223831" stroke="#41495c"/>
+<text x="377" y="901" font-size="15" fill="#f3f5fc" font-weight="650">Endpoint Agents</text>
+<rect x="28" y="930" width="327" height="52" rx="10" fill="#223831" stroke="#41495c"/>
+<text x="40" y="962" font-size="15" fill="#f3f5fc" font-weight="650">Cloud Connectors</text>
+<rect x="365" y="930" width="327" height="52" rx="10" fill="#223831" stroke="#41495c"/>
+<text x="377" y="962" font-size="15" fill="#f3f5fc" font-weight="650">CI/CD Scanners</text>
+<text x="28" y="995" font-size="16" fill="#aebfff" font-weight="650">Enterprise systems</text>
+<rect x="28" y="1009" width="214" height="52" rx="10" fill="#252e42" stroke="#41495c"/>
+<text x="40" y="1041" font-size="15" fill="#f3f5fc" font-weight="650">HRMS</text>
+<rect x="252" y="1009" width="214" height="52" rx="10" fill="#252e42" stroke="#41495c"/>
+<text x="264" y="1041" font-size="15" fill="#f3f5fc" font-weight="650">IAM / IGA</text>
+<rect x="476" y="1009" width="214" height="52" rx="10" fill="#252e42" stroke="#41495c"/>
+<text x="488" y="1041" font-size="15" fill="#f3f5fc" font-weight="650">Databases</text>
+<rect x="28" y="1070" width="214" height="52" rx="10" fill="#252e42" stroke="#41495c"/>
+<text x="40" y="1102" font-size="15" fill="#f3f5fc" font-weight="650">AWS / Azure</text>
+<rect x="252" y="1070" width="214" height="52" rx="10" fill="#252e42" stroke="#41495c"/>
+<text x="264" y="1102" font-size="15" fill="#f3f5fc" font-weight="650">GitHub / GitLab</text>
+<rect x="476" y="1070" width="214" height="52" rx="10" fill="#252e42" stroke="#41495c"/>
+<text x="488" y="1102" font-size="15" fill="#f3f5fc" font-weight="650">Endpoints</text>
+<rect x="28" y="1131" width="214" height="52" rx="10" fill="#252e42" stroke="#41495c"/>
+<text x="40" y="1163" font-size="15" fill="#f3f5fc" font-weight="650">Internal APIs</text>
+<rect x="252" y="1131" width="214" height="52" rx="10" fill="#252e42" stroke="#41495c"/>
+<text x="264" y="1163" font-size="15" fill="#f3f5fc" font-weight="650">Jira / ITSM</text>
+<rect x="476" y="1131" width="214" height="52" rx="10" fill="#252e42" stroke="#41495c"/>
+<text x="488" y="1163" font-size="15" fill="#f3f5fc" font-weight="650">Kubernetes</text>
+</svg>

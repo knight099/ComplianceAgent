@@ -1,0 +1,134 @@
+<svg width="715pt" height="501pt"
+ viewBox="0.00 0.00 714.70 501.20" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(21.6 479.6)">
+<title>G</title>
+<polygon fill="#171b23" stroke="transparent" points="-21.6,21.6 -21.6,-479.6 693.1,-479.6 693.1,21.6 -21.6,21.6"/>
+<g id="clust1" class="cluster">
+<title>cluster_Agents</title>
+<path fill="#171b23" stroke="#47597c" d="M20,-116C20,-116 339,-116 339,-116 345,-116 351,-122 351,-128 351,-128 351,-333 351,-333 351,-339 345,-345 339,-345 339,-345 20,-345 20,-345 14,-345 8,-339 8,-333 8,-333 8,-128 8,-128 8,-122 14,-116 20,-116"/>
+<text text-anchor="middle" x="179.5" y="-329.8" font-family="DejaVu Sans" font-size="14.00" fill="#dbe5ff">Specialized agents</text>
+</g>
+<!-- Trigger -->
+<g id="node1" class="node">
+<title>Trigger</title>
+<path fill="#252e42" stroke="#6475a2" d="M423.5,-458C423.5,-458 250.5,-458 250.5,-458 244.5,-458 238.5,-452 238.5,-446 238.5,-446 238.5,-434 238.5,-434 238.5,-428 244.5,-422 250.5,-422 250.5,-422 423.5,-422 423.5,-422 429.5,-422 435.5,-428 435.5,-434 435.5,-434 435.5,-446 435.5,-446 435.5,-452 429.5,-458 423.5,-458"/>
+<text text-anchor="middle" x="337" y="-436.9" font-family="DejaVu Sans" font-size="12.00" fill="#f6f8ff">User Query / Incident Trigger</text>
+</g>
+<!-- Supervisor -->
+<g id="node2" class="node">
+<title>Supervisor</title>
+<path fill="#252e42" stroke="#6475a2" d="M464,-393C464,-393 210,-393 210,-393 204,-393 198,-387 198,-381 198,-381 198,-365 198,-365 198,-359 204,-353 210,-353 210,-353 464,-353 464,-353 470,-353 476,-359 476,-365 476,-365 476,-381 476,-381 476,-387 470,-393 464,-393"/>
+<text text-anchor="middle" x="337" y="-376.4" font-family="DejaVu Sans" font-size="12.00" fill="#f6f8ff">AI Supervisor</text>
+<text text-anchor="middle" x="337" y="-363.4" font-family="DejaVu Sans" font-size="12.00" fill="#f6f8ff">Context · Routing · Budgets · Authorization</text>
+</g>
+<!-- Trigger&#45;&gt;Supervisor -->
+<g id="edge5" class="edge">
+<title>Trigger&#45;&gt;Supervisor</title>
+<path fill="none" stroke="#a1abc2" d="M337,-421.92C337,-415.13 337,-407.16 337,-399.69"/>
+<polygon fill="#a1abc2" stroke="#a1abc2" points="339.28,-399.52 337,-393.02 334.73,-399.52 339.28,-399.52"/>
+</g>
+<!-- Agents -->
+<!-- Supervisor&#45;&gt;Agents -->
+<g id="edge6" class="edge">
+<title>Supervisor&#45;&gt;Agents</title>
+<path fill="none" stroke="#a1abc2" d="M337,-352.75C337,-352.44 337,-352.13 337,-351.82"/>
+<polygon fill="#a1abc2" stroke="#a1abc2" points="339.28,-351.5 337,-345 334.73,-351.5 339.28,-351.5"/>
+</g>
+<!-- Gateway -->
+<g id="node10" class="node">
+<title>Gateway</title>
+<path fill="#252e42" stroke="#6475a2" d="M628.5,-239C628.5,-239 387.5,-239 387.5,-239 381.5,-239 375.5,-233 375.5,-227 375.5,-227 375.5,-211 375.5,-211 375.5,-205 381.5,-199 387.5,-199 387.5,-199 628.5,-199 628.5,-199 634.5,-199 640.5,-205 640.5,-211 640.5,-211 640.5,-227 640.5,-227 640.5,-233 634.5,-239 628.5,-239"/>
+<text text-anchor="middle" x="508" y="-222.4" font-family="DejaVu Sans" font-size="12.00" fill="#f6f8ff">Authorized Tool Gateway</text>
+<text text-anchor="middle" x="508" y="-209.4" font-family="DejaVu Sans" font-size="12.00" fill="#f6f8ff">Schemas · RBAC · Tenant context · Audit</text>
+</g>
+<!-- Agents&#45;&gt;Gateway -->
+<g id="edge7" class="edge">
+<title>Agents&#45;&gt;Gateway</title>
+<path fill="none" stroke="#a1abc2" d="M351,-281.52C373.12,-272.85 417.34,-255.52 453.22,-241.46"/>
+<polygon fill="#a1abc2" stroke="#a1abc2" points="454.17,-243.54 459.39,-239.05 452.51,-239.3 454.17,-243.54"/>
+</g>
+<!-- Investigator -->
+<g id="node4" class="node">
+<title>Investigator</title>
+<path fill="#252e42" stroke="#6475a2" d="M306.5,-308C306.5,-308 213.5,-308 213.5,-308 207.5,-308 201.5,-302 201.5,-296 201.5,-296 201.5,-280 201.5,-280 201.5,-274 207.5,-268 213.5,-268 213.5,-268 306.5,-268 306.5,-268 312.5,-268 318.5,-274 318.5,-280 318.5,-280 318.5,-296 318.5,-296 318.5,-302 312.5,-308 306.5,-308"/>
+<text text-anchor="middle" x="260" y="-291.4" font-family="DejaVu Sans" font-size="12.00" fill="#f6f8ff">Investigator</text>
+<text text-anchor="middle" x="260" y="-278.4" font-family="DejaVu Sans" font-size="12.00" fill="#f6f8ff">Trace violations</text>
+</g>
+<!-- Risk -->
+<g id="node6" class="node">
+<title>Risk</title>
+<path fill="#252e42" stroke="#6475a2" d="M311,-239C311,-239 209,-239 209,-239 203,-239 197,-233 197,-227 197,-227 197,-211 197,-211 197,-205 203,-199 209,-199 209,-199 311,-199 311,-199 317,-199 323,-205 323,-211 323,-211 323,-227 323,-227 323,-233 317,-239 311,-239"/>
+<text text-anchor="middle" x="260" y="-222.4" font-family="DejaVu Sans" font-size="12.00" fill="#f6f8ff">Risk Analyst</text>
+<text text-anchor="middle" x="260" y="-209.4" font-family="DejaVu Sans" font-size="12.00" fill="#f6f8ff">Explain exposure</text>
+</g>
+<!-- Investigator&#45;&gt;Risk -->
+<!-- Regulatory -->
+<g id="node5" class="node">
+<title>Regulatory</title>
+<path fill="#252e42" stroke="#6475a2" d="M155,-308C155,-308 37,-308 37,-308 31,-308 25,-302 25,-296 25,-296 25,-280 25,-280 25,-274 31,-268 37,-268 37,-268 155,-268 155,-268 161,-268 167,-274 167,-280 167,-280 167,-296 167,-296 167,-302 161,-308 155,-308"/>
+<text text-anchor="middle" x="96" y="-291.4" font-family="DejaVu Sans" font-size="12.00" fill="#f6f8ff">Regulatory Agent</text>
+<text text-anchor="middle" x="96" y="-278.4" font-family="DejaVu Sans" font-size="12.00" fill="#f6f8ff">Retrieve obligations</text>
+</g>
+<!-- Planner -->
+<g id="node7" class="node">
+<title>Planner</title>
+<path fill="#252e42" stroke="#6475a2" d="M158.5,-239C158.5,-239 33.5,-239 33.5,-239 27.5,-239 21.5,-233 21.5,-227 21.5,-227 21.5,-211 21.5,-211 21.5,-205 27.5,-199 33.5,-199 33.5,-199 158.5,-199 158.5,-199 164.5,-199 170.5,-205 170.5,-211 170.5,-211 170.5,-227 170.5,-227 170.5,-233 164.5,-239 158.5,-239"/>
+<text text-anchor="middle" x="96" y="-222.4" font-family="DejaVu Sans" font-size="12.00" fill="#f6f8ff">Remediation Planner</text>
+<text text-anchor="middle" x="96" y="-209.4" font-family="DejaVu Sans" font-size="12.00" fill="#f6f8ff">Propose safe actions</text>
+</g>
+<!-- Regulatory&#45;&gt;Planner -->
+<!-- Evidence -->
+<g id="node8" class="node">
+<title>Evidence</title>
+<path fill="#252e42" stroke="#6475a2" d="M324.5,-170C324.5,-170 197.5,-170 197.5,-170 191.5,-170 185.5,-164 185.5,-158 185.5,-158 185.5,-142 185.5,-142 185.5,-136 191.5,-130 197.5,-130 197.5,-130 324.5,-130 324.5,-130 330.5,-130 336.5,-136 336.5,-142 336.5,-142 336.5,-158 336.5,-158 336.5,-164 330.5,-170 324.5,-170"/>
+<text text-anchor="middle" x="261" y="-153.4" font-family="DejaVu Sans" font-size="12.00" fill="#f6f8ff">Evidence Analyst</text>
+<text text-anchor="middle" x="261" y="-140.4" font-family="DejaVu Sans" font-size="12.00" fill="#f6f8ff">Assess completeness</text>
+</g>
+<!-- Risk&#45;&gt;Evidence -->
+<!-- Reporting -->
+<g id="node9" class="node">
+<title>Reporting</title>
+<path fill="#252e42" stroke="#6475a2" d="M155.5,-170C155.5,-170 34.5,-170 34.5,-170 28.5,-170 22.5,-164 22.5,-158 22.5,-158 22.5,-142 22.5,-142 22.5,-136 28.5,-130 34.5,-130 34.5,-130 155.5,-130 155.5,-130 161.5,-130 167.5,-136 167.5,-142 167.5,-142 167.5,-158 167.5,-158 167.5,-164 161.5,-170 155.5,-170"/>
+<text text-anchor="middle" x="95" y="-153.4" font-family="DejaVu Sans" font-size="12.00" fill="#f6f8ff">Report Agent</text>
+<text text-anchor="middle" x="95" y="-140.4" font-family="DejaVu Sans" font-size="12.00" fill="#f6f8ff">Generate narratives</text>
+</g>
+<!-- Planner&#45;&gt;Reporting -->
+<!-- Tools -->
+<g id="node11" class="node">
+<title>Tools</title>
+<path fill="#252e42" stroke="#6475a2" d="M659.5,-170C659.5,-170 376.5,-170 376.5,-170 370.5,-170 364.5,-164 364.5,-158 364.5,-158 364.5,-142 364.5,-142 364.5,-136 370.5,-130 376.5,-130 376.5,-130 659.5,-130 659.5,-130 665.5,-130 671.5,-136 671.5,-142 671.5,-142 671.5,-158 671.5,-158 671.5,-164 665.5,-170 659.5,-170"/>
+<text text-anchor="middle" x="518" y="-153.4" font-family="DejaVu Sans" font-size="12.00" fill="#f6f8ff">Graph queries · Evidence search · Policy lookup</text>
+<text text-anchor="middle" x="518" y="-140.4" font-family="DejaVu Sans" font-size="12.00" fill="#f6f8ff">Regulation RAG · Action preview · Ticket lookup</text>
+</g>
+<!-- Gateway&#45;&gt;Tools -->
+<g id="edge8" class="edge">
+<title>Gateway&#45;&gt;Tools</title>
+<path fill="none" stroke="#a1abc2" d="M510.84,-198.98C511.86,-192.11 513.04,-184.23 514.14,-176.87"/>
+<polygon fill="#a1abc2" stroke="#a1abc2" points="516.41,-177.07 515.12,-170.3 511.91,-176.39 516.41,-177.07"/>
+</g>
+<!-- Validation -->
+<g id="node12" class="node">
+<title>Validation</title>
+<path fill="#252e42" stroke="#6475a2" d="M611.5,-101C611.5,-101 424.5,-101 424.5,-101 418.5,-101 412.5,-95 412.5,-89 412.5,-89 412.5,-77 412.5,-77 412.5,-71 418.5,-65 424.5,-65 424.5,-65 611.5,-65 611.5,-65 617.5,-65 623.5,-71 623.5,-77 623.5,-77 623.5,-89 623.5,-89 623.5,-95 617.5,-101 611.5,-101"/>
+<text text-anchor="middle" x="518" y="-79.9" font-family="DejaVu Sans" font-size="12.00" fill="#f6f8ff">Deterministic Output Validation</text>
+</g>
+<!-- Tools&#45;&gt;Validation -->
+<g id="edge9" class="edge">
+<title>Tools&#45;&gt;Validation</title>
+<path fill="none" stroke="#a1abc2" d="M518,-129.85C518,-122.85 518,-114.86 518,-107.53"/>
+<polygon fill="#a1abc2" stroke="#a1abc2" points="520.28,-107.52 518,-101.02 515.73,-107.52 520.28,-107.52"/>
+</g>
+<!-- Answer -->
+<g id="node13" class="node">
+<title>Answer</title>
+<path fill="#252e42" stroke="#6475a2" d="M619,-36C619,-36 417,-36 417,-36 411,-36 405,-30 405,-24 405,-24 405,-12 405,-12 405,-6 411,0 417,0 417,0 619,0 619,0 625,0 631,-6 631,-12 631,-12 631,-24 631,-24 631,-30 625,-36 619,-36"/>
+<text text-anchor="middle" x="518" y="-14.9" font-family="DejaVu Sans" font-size="12.00" fill="#f6f8ff">Grounded Answer / Proposed Plan</text>
+</g>
+<!-- Validation&#45;&gt;Answer -->
+<g id="edge10" class="edge">
+<title>Validation&#45;&gt;Answer</title>
+<path fill="none" stroke="#a1abc2" d="M518,-64.78C518,-57.98 518,-50.04 518,-42.71"/>
+<polygon fill="#a1abc2" stroke="#a1abc2" points="520.28,-42.69 518,-36.19 515.73,-42.69 520.28,-42.69"/>
+</g>
+</g>
+</svg>

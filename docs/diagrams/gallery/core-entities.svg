@@ -1,0 +1,185 @@
+<svg width="457pt" height="704pt"
+ viewBox="0.00 0.00 457.20 704.20" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(21.6 682.6)">
+<title>G</title>
+<polygon fill="#171b23" stroke="transparent" points="-21.6,21.6 -21.6,-682.6 435.6,-682.6 435.6,21.6 -21.6,21.6"/>
+<!-- Tenants -->
+<g id="node1" class="node">
+<title>Tenants</title>
+<path fill="#252e42" stroke="#6475a2" d="M211.5,-661C211.5,-661 109.5,-661 109.5,-661 103.5,-661 97.5,-655 97.5,-649 97.5,-649 97.5,-633 97.5,-633 97.5,-627 103.5,-621 109.5,-621 109.5,-621 211.5,-621 211.5,-621 217.5,-621 223.5,-627 223.5,-633 223.5,-633 223.5,-649 223.5,-649 223.5,-655 217.5,-661 211.5,-661"/>
+<text text-anchor="middle" x="160.5" y="-644.4" font-family="DejaVu Sans" font-size="12.00" fill="#f6f8ff">TENANTS</text>
+<text text-anchor="middle" x="160.5" y="-631.4" font-family="DejaVu Sans" font-size="12.00" fill="#f6f8ff">tenant_id · name</text>
+</g>
+<!-- Connectors -->
+<g id="node2" class="node">
+<title>Connectors</title>
+<path fill="#252e42" stroke="#6475a2" d="M177,-592C177,-592 32,-592 32,-592 26,-592 20,-586 20,-580 20,-580 20,-564 20,-564 20,-558 26,-552 32,-552 32,-552 177,-552 177,-552 183,-552 189,-558 189,-564 189,-564 189,-580 189,-580 189,-586 183,-592 177,-592"/>
+<text text-anchor="middle" x="104.5" y="-575.4" font-family="DejaVu Sans" font-size="12.00" fill="#f6f8ff">CONNECTORS</text>
+<text text-anchor="middle" x="104.5" y="-562.4" font-family="DejaVu Sans" font-size="12.00" fill="#f6f8ff">connector_id · tenant_id</text>
+</g>
+<!-- Tenants&#45;&gt;Connectors -->
+<g id="edge1" class="edge">
+<title>Tenants&#45;&gt;Connectors</title>
+<path fill="none" stroke="#a1abc2" d="M144.6,-620.98C137.1,-612 128.16,-601.31 120.63,-592.3"/>
+</g>
+<!-- Agents -->
+<g id="node3" class="node">
+<title>Agents</title>
+<path fill="#252e42" stroke="#6475a2" d="M292.5,-523C292.5,-523 174.5,-523 174.5,-523 168.5,-523 162.5,-517 162.5,-511 162.5,-511 162.5,-495 162.5,-495 162.5,-489 168.5,-483 174.5,-483 174.5,-483 292.5,-483 292.5,-483 298.5,-483 304.5,-489 304.5,-495 304.5,-495 304.5,-511 304.5,-511 304.5,-517 298.5,-523 292.5,-523"/>
+<text text-anchor="middle" x="233.5" y="-506.4" font-family="DejaVu Sans" font-size="12.00" fill="#f6f8ff">AGENTS</text>
+<text text-anchor="middle" x="233.5" y="-493.4" font-family="DejaVu Sans" font-size="12.00" fill="#f6f8ff">agent_id · tenant_id</text>
+</g>
+<!-- Tenants&#45;&gt;Agents -->
+<g id="edge2" class="edge">
+<title>Tenants&#45;&gt;Agents</title>
+<path fill="none" stroke="#a1abc2" d="M175.34,-620.75C185.63,-607.4 197.5,-592 197.5,-592 197.5,-592 215.1,-548.98 225.69,-523.09"/>
+</g>
+<!-- Entities -->
+<g id="node4" class="node">
+<title>Entities</title>
+<path fill="#252e42" stroke="#6475a2" d="M132.5,-523C132.5,-523 44.5,-523 44.5,-523 38.5,-523 32.5,-517 32.5,-511 32.5,-511 32.5,-495 32.5,-495 32.5,-489 38.5,-483 44.5,-483 44.5,-483 132.5,-483 132.5,-483 138.5,-483 144.5,-489 144.5,-495 144.5,-495 144.5,-511 144.5,-511 144.5,-517 138.5,-523 132.5,-523"/>
+<text text-anchor="middle" x="88.5" y="-506.4" font-family="DejaVu Sans" font-size="12.00" fill="#f6f8ff">ENTITIES</text>
+<text text-anchor="middle" x="88.5" y="-493.4" font-family="DejaVu Sans" font-size="12.00" fill="#f6f8ff">entity_id · type</text>
+</g>
+<!-- Connectors&#45;&gt;Entities -->
+<g id="edge3" class="edge">
+<title>Connectors&#45;&gt;Entities</title>
+<path fill="none" stroke="#a1abc2" d="M99.96,-551.98C97.81,-543 95.26,-532.31 93.11,-523.3"/>
+</g>
+<!-- Observations -->
+<g id="node5" class="node">
+<title>Observations</title>
+<path fill="#252e42" stroke="#6475a2" d="M291.5,-454C291.5,-454 175.5,-454 175.5,-454 169.5,-454 163.5,-448 163.5,-442 163.5,-442 163.5,-426 163.5,-426 163.5,-420 169.5,-414 175.5,-414 175.5,-414 291.5,-414 291.5,-414 297.5,-414 303.5,-420 303.5,-426 303.5,-426 303.5,-442 303.5,-442 303.5,-448 297.5,-454 291.5,-454"/>
+<text text-anchor="middle" x="233.5" y="-437.4" font-family="DejaVu Sans" font-size="12.00" fill="#f6f8ff">OBSERVATIONS</text>
+<text text-anchor="middle" x="233.5" y="-424.4" font-family="DejaVu Sans" font-size="12.00" fill="#f6f8ff">source · timestamp</text>
+</g>
+<!-- Agents&#45;&gt;Observations -->
+<g id="edge4" class="edge">
+<title>Agents&#45;&gt;Observations</title>
+<path fill="none" stroke="#a1abc2" d="M233.5,-482.98C233.5,-474 233.5,-463.31 233.5,-454.3"/>
+</g>
+<!-- Entities&#45;&gt;Observations -->
+<g id="edge5" class="edge">
+<title>Entities&#45;&gt;Observations</title>
+<path fill="none" stroke="#a1abc2" d="M129.66,-482.98C149.26,-473.93 172.63,-463.13 192.23,-454.07"/>
+</g>
+<!-- Relationships -->
+<g id="node6" class="node">
+<title>Relationships</title>
+<path fill="#252e42" stroke="#6475a2" d="M133,-454C133,-454 12,-454 12,-454 6,-454 0,-448 0,-442 0,-442 0,-426 0,-426 0,-420 6,-414 12,-414 12,-414 133,-414 133,-414 139,-414 145,-420 145,-426 145,-426 145,-442 145,-442 145,-448 139,-454 133,-454"/>
+<text text-anchor="middle" x="72.5" y="-437.4" font-family="DejaVu Sans" font-size="12.00" fill="#f6f8ff">RELATIONSHIPS</text>
+<text text-anchor="middle" x="72.5" y="-424.4" font-family="DejaVu Sans" font-size="12.00" fill="#f6f8ff">source_id · target_id</text>
+</g>
+<!-- Entities&#45;&gt;Relationships -->
+<g id="edge6" class="edge">
+<title>Entities&#45;&gt;Relationships</title>
+<path fill="none" stroke="#a1abc2" d="M83.96,-482.98C81.81,-474 79.26,-463.31 77.11,-454.3"/>
+</g>
+<!-- Evidence -->
+<g id="node7" class="node">
+<title>Evidence</title>
+<path fill="#252e42" stroke="#6475a2" d="M206.5,-385C206.5,-385 98.5,-385 98.5,-385 92.5,-385 86.5,-379 86.5,-373 86.5,-373 86.5,-357 86.5,-357 86.5,-351 92.5,-345 98.5,-345 98.5,-345 206.5,-345 206.5,-345 212.5,-345 218.5,-351 218.5,-357 218.5,-357 218.5,-373 218.5,-373 218.5,-379 212.5,-385 206.5,-385"/>
+<text text-anchor="middle" x="152.5" y="-368.4" font-family="DejaVu Sans" font-size="12.00" fill="#f6f8ff">EVIDENCE</text>
+<text text-anchor="middle" x="152.5" y="-355.4" font-family="DejaVu Sans" font-size="12.00" fill="#f6f8ff">hash · storage_uri</text>
+</g>
+<!-- Observations&#45;&gt;Evidence -->
+<g id="edge7" class="edge">
+<title>Observations&#45;&gt;Evidence</title>
+<path fill="none" stroke="#a1abc2" d="M210.51,-413.98C199.56,-404.93 186.5,-394.13 175.55,-385.07"/>
+</g>
+<!-- Relationships&#45;&gt;Evidence -->
+<g id="edge8" class="edge">
+<title>Relationships&#45;&gt;Evidence</title>
+<path fill="none" stroke="#a1abc2" d="M95.21,-413.98C106.02,-404.93 118.92,-394.13 129.73,-385.07"/>
+</g>
+<!-- Evaluations -->
+<g id="node9" class="node">
+<title>Evaluations</title>
+<path fill="#252e42" stroke="#6475a2" d="M276.5,-316C276.5,-316 180.5,-316 180.5,-316 174.5,-316 168.5,-310 168.5,-304 168.5,-304 168.5,-288 168.5,-288 168.5,-282 174.5,-276 180.5,-276 180.5,-276 276.5,-276 276.5,-276 282.5,-276 288.5,-282 288.5,-288 288.5,-288 288.5,-304 288.5,-304 288.5,-310 282.5,-316 276.5,-316"/>
+<text text-anchor="middle" x="228.5" y="-299.4" font-family="DejaVu Sans" font-size="12.00" fill="#f6f8ff">EVALUATIONS</text>
+<text text-anchor="middle" x="228.5" y="-286.4" font-family="DejaVu Sans" font-size="12.00" fill="#f6f8ff">policy_id · result</text>
+</g>
+<!-- Evidence&#45;&gt;Evaluations -->
+<g id="edge9" class="edge">
+<title>Evidence&#45;&gt;Evaluations</title>
+<path fill="none" stroke="#a1abc2" d="M174.08,-344.98C184.34,-335.93 196.59,-325.13 206.87,-316.07"/>
+</g>
+<!-- Policies -->
+<g id="node8" class="node">
+<title>Policies</title>
+<path fill="#252e42" stroke="#6475a2" d="M362,-385C362,-385 249,-385 249,-385 243,-385 237,-379 237,-373 237,-373 237,-357 237,-357 237,-351 243,-345 249,-345 249,-345 362,-345 362,-345 368,-345 374,-351 374,-357 374,-357 374,-373 374,-373 374,-379 368,-385 362,-385"/>
+<text text-anchor="middle" x="305.5" y="-368.4" font-family="DejaVu Sans" font-size="12.00" fill="#f6f8ff">POLICIES</text>
+<text text-anchor="middle" x="305.5" y="-355.4" font-family="DejaVu Sans" font-size="12.00" fill="#f6f8ff">control_id · version</text>
+</g>
+<!-- Policies&#45;&gt;Evaluations -->
+<g id="edge10" class="edge">
+<title>Policies&#45;&gt;Evaluations</title>
+<path fill="none" stroke="#a1abc2" d="M283.64,-344.98C273.24,-335.93 260.82,-325.13 250.41,-316.07"/>
+</g>
+<!-- Incidents -->
+<g id="node10" class="node">
+<title>Incidents</title>
+<path fill="#252e42" stroke="#6475a2" d="M276,-247C276,-247 181,-247 181,-247 175,-247 169,-241 169,-235 169,-235 169,-219 169,-219 169,-213 175,-207 181,-207 181,-207 276,-207 276,-207 282,-207 288,-213 288,-219 288,-219 288,-235 288,-235 288,-241 282,-247 276,-247"/>
+<text text-anchor="middle" x="228.5" y="-230.4" font-family="DejaVu Sans" font-size="12.00" fill="#f6f8ff">INCIDENTS</text>
+<text text-anchor="middle" x="228.5" y="-217.4" font-family="DejaVu Sans" font-size="12.00" fill="#f6f8ff">severity · status</text>
+</g>
+<!-- Evaluations&#45;&gt;Incidents -->
+<g id="edge11" class="edge">
+<title>Evaluations&#45;&gt;Incidents</title>
+<path fill="none" stroke="#a1abc2" d="M228.5,-275.98C228.5,-267 228.5,-256.31 228.5,-247.3"/>
+</g>
+<!-- Plans -->
+<g id="node11" class="node">
+<title>Plans</title>
+<path fill="#252e42" stroke="#6475a2" d="M344,-178C344,-178 217,-178 217,-178 211,-178 205,-172 205,-166 205,-166 205,-150 205,-150 205,-144 211,-138 217,-138 217,-138 344,-138 344,-138 350,-138 356,-144 356,-150 356,-150 356,-166 356,-166 356,-172 350,-178 344,-178"/>
+<text text-anchor="middle" x="280.5" y="-161.4" font-family="DejaVu Sans" font-size="12.00" fill="#f6f8ff">REMEDIATION PLANS</text>
+<text text-anchor="middle" x="280.5" y="-148.4" font-family="DejaVu Sans" font-size="12.00" fill="#f6f8ff">incident_id · state</text>
+</g>
+<!-- Incidents&#45;&gt;Plans -->
+<g id="edge12" class="edge">
+<title>Incidents&#45;&gt;Plans</title>
+<path fill="none" stroke="#a1abc2" d="M243.26,-206.98C250.23,-198 258.53,-187.31 265.52,-178.3"/>
+</g>
+<!-- Approvals -->
+<g id="node12" class="node">
+<title>Approvals</title>
+<path fill="#252e42" stroke="#6475a2" d="M230.5,-109C230.5,-109 122.5,-109 122.5,-109 116.5,-109 110.5,-103 110.5,-97 110.5,-97 110.5,-81 110.5,-81 110.5,-75 116.5,-69 122.5,-69 122.5,-69 230.5,-69 230.5,-69 236.5,-69 242.5,-75 242.5,-81 242.5,-81 242.5,-97 242.5,-97 242.5,-103 236.5,-109 230.5,-109"/>
+<text text-anchor="middle" x="176.5" y="-92.4" font-family="DejaVu Sans" font-size="12.00" fill="#f6f8ff">APPROVALS</text>
+<text text-anchor="middle" x="176.5" y="-79.4" font-family="DejaVu Sans" font-size="12.00" fill="#f6f8ff">plan_id · approver</text>
+</g>
+<!-- Incidents&#45;&gt;Approvals -->
+<g id="edge13" class="edge">
+<title>Incidents&#45;&gt;Approvals</title>
+<path fill="none" stroke="#a1abc2" d="M215.27,-206.75C206.09,-193.4 195.5,-178 195.5,-178 195.5,-178 186.21,-134.98 180.62,-109.09"/>
+</g>
+<!-- Plans&#45;&gt;Approvals -->
+<g id="edge14" class="edge">
+<title>Plans&#45;&gt;Approvals</title>
+<path fill="none" stroke="#a1abc2" d="M250.98,-137.98C236.92,-128.93 220.16,-118.13 206.1,-109.07"/>
+</g>
+<!-- Executions -->
+<g id="node13" class="node">
+<title>Executions</title>
+<path fill="#252e42" stroke="#6475a2" d="M402,-109C402,-109 273,-109 273,-109 267,-109 261,-103 261,-97 261,-97 261,-81 261,-81 261,-75 267,-69 273,-69 273,-69 402,-69 402,-69 408,-69 414,-75 414,-81 414,-81 414,-97 414,-97 414,-103 408,-109 402,-109"/>
+<text text-anchor="middle" x="337.5" y="-92.4" font-family="DejaVu Sans" font-size="12.00" fill="#f6f8ff">ACTION EXECUTIONS</text>
+<text text-anchor="middle" x="337.5" y="-79.4" font-family="DejaVu Sans" font-size="12.00" fill="#f6f8ff">action_id · outcome</text>
+</g>
+<!-- Plans&#45;&gt;Executions -->
+<g id="edge15" class="edge">
+<title>Plans&#45;&gt;Executions</title>
+<path fill="none" stroke="#a1abc2" d="M296.68,-137.98C304.32,-129 313.41,-118.31 321.08,-109.3"/>
+</g>
+<!-- Verifications -->
+<g id="node14" class="node">
+<title>Verifications</title>
+<path fill="#252e42" stroke="#6475a2" d="M397,-40C397,-40 278,-40 278,-40 272,-40 266,-34 266,-28 266,-28 266,-12 266,-12 266,-6 272,0 278,0 278,0 397,0 397,0 403,0 409,-6 409,-12 409,-12 409,-28 409,-28 409,-34 403,-40 397,-40"/>
+<text text-anchor="middle" x="337.5" y="-23.4" font-family="DejaVu Sans" font-size="12.00" fill="#f6f8ff">VERIFICATIONS</text>
+<text text-anchor="middle" x="337.5" y="-10.4" font-family="DejaVu Sans" font-size="12.00" fill="#f6f8ff">action_id · evidence</text>
+</g>
+<!-- Executions&#45;&gt;Verifications -->
+<g id="edge16" class="edge">
+<title>Executions&#45;&gt;Verifications</title>
+<path fill="none" stroke="#a1abc2" d="M337.5,-68.98C337.5,-60 337.5,-49.31 337.5,-40.3"/>
+</g>
+</g>
+</svg>

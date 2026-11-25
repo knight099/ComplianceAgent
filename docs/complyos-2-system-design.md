@@ -1,5 +1,7 @@
 # **ComplyOS 2.0 — Detailed System Architecture Design**
 
+[Architecture visual gallery](complyos-2-visual-gallery.md)
+
 **Product:** Enterprise Agentic Compliance and Regulatory Control Assurance Platform\
 **Architecture:** Hybrid SaaS / Self-hosted, event-driven, agent-based\
 **Design objective:** Continuously discover, evaluate, investigate, remediate and verify enterprise compliance violations across organizational systems.
@@ -589,14 +591,14 @@ flowchart TB
     Employee --- Role
     Employee --- Account
     Employee --- Device
-    Account -->|HAS_GRANT| Entitlement
-    Account -->|ASSUMES| AWSRole
+    Account -->|HAS_ENTITLEMENT| Entitlement
+    Account -->|ASSUMES_ROLE| AWSRole
     Entitlement -->|CAN_READ| Database
     AWSRole -->|CAN_READ| Bucket
     Database --> Data
     Bucket --> Data
     Data -->|GOVERNED_BY| Control
-    Data -->|GOVERNED_BY| Obligation
+    Control -->|MAPS_TO| Obligation
 ```
 
 Illustrative graph showing two independent access paths to restricted customer data.
@@ -1327,6 +1329,8 @@ The application should have dedicated workspaces for different enterprise person
 ### **Compliance overview**
 
 Illustrative enterprise workspace.
+
+![Compliance dashboard mockup with workspace navigation, summary metrics, control results, and priority incidents](diagrams/gallery/compliance-dashboard.svg)
 
 ```mermaid
 flowchart TB

@@ -1,0 +1,69 @@
+<svg width="1013pt" height="227pt"
+ viewBox="0.00 0.00 1013.20 227.20" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(21.6 205.6)">
+<title>G</title>
+<polygon fill="#171b23" stroke="transparent" points="-21.6,21.6 -21.6,-205.6 991.6,-205.6 991.6,21.6 -21.6,21.6"/>
+<g id="clust1" class="cluster">
+<title>cluster_Customer</title>
+<path fill="#171b23" stroke="#47597c" d="M20,-8C20,-8 774,-8 774,-8 780,-8 786,-14 786,-20 786,-20 786,-164 786,-164 786,-170 780,-176 774,-176 774,-176 20,-176 20,-176 14,-176 8,-170 8,-164 8,-164 8,-20 8,-20 8,-14 14,-8 20,-8"/>
+<text text-anchor="middle" x="397" y="-160.8" font-family="DejaVu Sans" font-size="14.00" fill="#dbe5ff">Customer private network</text>
+</g>
+<!-- Control -->
+<g id="node1" class="node">
+<title>Control</title>
+<path fill="#252e42" stroke="#6475a2" d="M958,-58C958,-58 812,-58 812,-58 806,-58 800,-52 800,-46 800,-46 800,-34 800,-34 800,-28 806,-22 812,-22 812,-22 958,-22 958,-22 964,-22 970,-28 970,-34 970,-34 970,-46 970,-46 970,-52 964,-58 958,-58"/>
+<text text-anchor="middle" x="885" y="-36.9" font-family="DejaVu Sans" font-size="12.00" fill="#f6f8ff">ComplyOS Control Plane</text>
+</g>
+<!-- Customer -->
+<!-- Relay -->
+<g id="node3" class="node">
+<title>Relay</title>
+<path fill="#252e42" stroke="#6475a2" d="M591.5,-139C591.5,-139 352.5,-139 352.5,-139 346.5,-139 340.5,-133 340.5,-127 340.5,-127 340.5,-111 340.5,-111 340.5,-105 346.5,-99 352.5,-99 352.5,-99 591.5,-99 591.5,-99 597.5,-99 603.5,-105 603.5,-111 603.5,-111 603.5,-127 603.5,-127 603.5,-133 597.5,-139 591.5,-139"/>
+<text text-anchor="middle" x="472" y="-122.4" font-family="DejaVu Sans" font-size="12.00" fill="#f6f8ff">Go Enterprise Relay</text>
+<text text-anchor="middle" x="472" y="-109.4" font-family="DejaVu Sans" font-size="12.00" fill="#f6f8ff">Job runtime · Secrets · Encrypted queue</text>
+</g>
+<!-- Relay&#45;&gt;Control -->
+<g id="edge4" class="edge">
+<title>Relay&#45;&gt;Control</title>
+<path fill="none" stroke="#a1abc2" d="M574.09,-98.97C641.18,-86.46 728.22,-70.23 793.13,-58.13"/>
+<polygon fill="#a1abc2" stroke="#a1abc2" points="793.77,-60.32 799.74,-56.9 792.93,-55.85 793.77,-60.32"/>
+<text text-anchor="middle" x="742" y="-76" font-family="DejaVu Sans" font-size="10.00" fill="#dbe5ff">Outbound mTLS</text>
+</g>
+<!-- Data -->
+<g id="node4" class="node">
+<title>Data</title>
+<path fill="#252e42" stroke="#6475a2" d="M260,-58C260,-58 34,-58 34,-58 28,-58 22,-52 22,-46 22,-46 22,-34 22,-34 22,-28 28,-22 34,-22 34,-22 260,-22 260,-22 266,-22 272,-28 272,-34 272,-34 272,-46 272,-46 272,-52 266,-58 260,-58"/>
+<text text-anchor="middle" x="147" y="-36.9" font-family="DejaVu Sans" font-size="12.00" fill="#f6f8ff">PostgreSQL · Active Directory · Oracle</text>
+</g>
+<!-- Relay&#45;&gt;Data -->
+<g id="edge1" class="edge">
+<title>Relay&#45;&gt;Data</title>
+<path fill="none" stroke="#a1abc2" d="M391.66,-98.97C340.92,-86.94 275.67,-71.48 225.32,-59.56"/>
+<polygon fill="#a1abc2" stroke="#a1abc2" points="225.79,-57.33 218.94,-58.04 224.74,-61.76 225.79,-57.33"/>
+</g>
+<!-- Services -->
+<g id="node5" class="node">
+<title>Services</title>
+<path fill="#252e42" stroke="#6475a2" d="M527.5,-58C527.5,-58 302.5,-58 302.5,-58 296.5,-58 290.5,-52 290.5,-46 290.5,-46 290.5,-34 290.5,-34 290.5,-28 296.5,-22 302.5,-22 302.5,-22 527.5,-22 527.5,-22 533.5,-22 539.5,-28 539.5,-34 539.5,-34 539.5,-46 539.5,-46 539.5,-52 533.5,-58 527.5,-58"/>
+<text text-anchor="middle" x="415" y="-36.9" font-family="DejaVu Sans" font-size="12.00" fill="#f6f8ff">Internal GitLab · Saviynt · Private APIs</text>
+</g>
+<!-- Relay&#45;&gt;Services -->
+<g id="edge2" class="edge">
+<title>Relay&#45;&gt;Services</title>
+<path fill="none" stroke="#a1abc2" d="M457.91,-98.97C449.98,-88.25 440.02,-74.8 431.7,-63.56"/>
+<polygon fill="#a1abc2" stroke="#a1abc2" points="433.46,-62.11 427.76,-58.24 429.8,-64.82 433.46,-62.11"/>
+</g>
+<!-- Infrastructure -->
+<g id="node6" class="node">
+<title>Infrastructure</title>
+<path fill="#252e42" stroke="#6475a2" d="M760,-58C760,-58 570,-58 570,-58 564,-58 558,-52 558,-46 558,-46 558,-34 558,-34 558,-28 564,-22 570,-22 570,-22 760,-22 760,-22 766,-22 772,-28 772,-34 772,-34 772,-46 772,-46 772,-52 766,-58 760,-58"/>
+<text text-anchor="middle" x="665" y="-36.9" font-family="DejaVu Sans" font-size="12.00" fill="#f6f8ff">Kafka · Kubernetes · Local Vault</text>
+</g>
+<!-- Relay&#45;&gt;Infrastructure -->
+<g id="edge3" class="edge">
+<title>Relay&#45;&gt;Infrastructure</title>
+<path fill="none" stroke="#a1abc2" d="M519.71,-98.97C548.99,-87.28 586.41,-72.35 615.94,-60.57"/>
+<polygon fill="#a1abc2" stroke="#a1abc2" points="616.92,-62.63 622.12,-58.11 615.24,-58.4 616.92,-62.63"/>
+</g>
+</g>
+</svg>

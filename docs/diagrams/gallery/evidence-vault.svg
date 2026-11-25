@@ -1,0 +1,85 @@
+<svg width="337pt" height="469pt"
+ viewBox="0.00 0.00 337.20 469.20" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(21.6 447.6)">
+<title>G</title>
+<polygon fill="#171b23" stroke="transparent" points="-21.6,21.6 -21.6,-447.6 315.6,-447.6 315.6,21.6 -21.6,21.6"/>
+<!-- Source -->
+<g id="node1" class="node">
+<title>Source</title>
+<path fill="#252e42" stroke="#6475a2" d="M229.5,-426C229.5,-426 64.5,-426 64.5,-426 58.5,-426 52.5,-420 52.5,-414 52.5,-414 52.5,-402 52.5,-402 52.5,-396 58.5,-390 64.5,-390 64.5,-390 229.5,-390 229.5,-390 235.5,-390 241.5,-396 241.5,-402 241.5,-402 241.5,-414 241.5,-414 241.5,-420 235.5,-426 229.5,-426"/>
+<text text-anchor="middle" x="147" y="-404.9" font-family="DejaVu Sans" font-size="12.00" fill="#f6f8ff">Original source observation</text>
+</g>
+<!-- Canonical -->
+<g id="node2" class="node">
+<title>Canonical</title>
+<path fill="#252e42" stroke="#6475a2" d="M251,-361C251,-361 43,-361 43,-361 37,-361 31,-355 31,-349 31,-349 31,-337 31,-337 31,-331 37,-325 43,-325 43,-325 251,-325 251,-325 257,-325 263,-331 263,-337 263,-337 263,-349 263,-349 263,-355 257,-361 251,-361"/>
+<text text-anchor="middle" x="147" y="-339.9" font-family="DejaVu Sans" font-size="12.00" fill="#f6f8ff">Canonical evidence representation</text>
+</g>
+<!-- Source&#45;&gt;Canonical -->
+<g id="edge1" class="edge">
+<title>Source&#45;&gt;Canonical</title>
+<path fill="none" stroke="#a1abc2" d="M147,-389.78C147,-382.98 147,-375.04 147,-367.71"/>
+<polygon fill="#a1abc2" stroke="#a1abc2" points="149.28,-367.69 147,-361.19 144.73,-367.69 149.28,-367.69"/>
+</g>
+<!-- Integrity -->
+<g id="node3" class="node">
+<title>Integrity</title>
+<path fill="#252e42" stroke="#6475a2" d="M251.5,-296C251.5,-296 42.5,-296 42.5,-296 36.5,-296 30.5,-290 30.5,-284 30.5,-284 30.5,-272 30.5,-272 30.5,-266 36.5,-260 42.5,-260 42.5,-260 251.5,-260 251.5,-260 257.5,-260 263.5,-266 263.5,-272 263.5,-272 263.5,-284 263.5,-284 263.5,-290 257.5,-296 251.5,-296"/>
+<text text-anchor="middle" x="147" y="-274.9" font-family="DejaVu Sans" font-size="12.00" fill="#f6f8ff">Content hash and source signature</text>
+</g>
+<!-- Canonical&#45;&gt;Integrity -->
+<g id="edge2" class="edge">
+<title>Canonical&#45;&gt;Integrity</title>
+<path fill="none" stroke="#a1abc2" d="M147,-324.78C147,-317.98 147,-310.04 147,-302.71"/>
+<polygon fill="#a1abc2" stroke="#a1abc2" points="149.28,-302.69 147,-296.19 144.73,-302.69 149.28,-302.69"/>
+</g>
+<!-- Storage -->
+<g id="node4" class="node">
+<title>Storage</title>
+<path fill="#252e42" stroke="#6475a2" d="M221,-231C221,-231 73,-231 73,-231 67,-231 61,-225 61,-219 61,-219 61,-207 61,-207 61,-201 67,-195 73,-195 73,-195 221,-195 221,-195 227,-195 233,-201 233,-207 233,-207 233,-219 233,-219 233,-225 227,-231 221,-231"/>
+<text text-anchor="middle" x="147" y="-209.9" font-family="DejaVu Sans" font-size="12.00" fill="#f6f8ff">Protected object storage</text>
+</g>
+<!-- Integrity&#45;&gt;Storage -->
+<g id="edge3" class="edge">
+<title>Integrity&#45;&gt;Storage</title>
+<path fill="none" stroke="#a1abc2" d="M147,-259.78C147,-252.98 147,-245.04 147,-237.71"/>
+<polygon fill="#a1abc2" stroke="#a1abc2" points="149.28,-237.69 147,-231.19 144.73,-237.69 149.28,-237.69"/>
+</g>
+<!-- Manifest -->
+<g id="node5" class="node">
+<title>Manifest</title>
+<path fill="#252e42" stroke="#6475a2" d="M282,-166C282,-166 12,-166 12,-166 6,-166 0,-160 0,-154 0,-154 0,-142 0,-142 0,-136 6,-130 12,-130 12,-130 282,-130 282,-130 288,-130 294,-136 294,-142 294,-142 294,-154 294,-154 294,-160 288,-166 282,-166"/>
+<text text-anchor="middle" x="147" y="-144.9" font-family="DejaVu Sans" font-size="12.00" fill="#f6f8ff">Evidence manifest linked to policy evaluation</text>
+</g>
+<!-- Storage&#45;&gt;Manifest -->
+<g id="edge4" class="edge">
+<title>Storage&#45;&gt;Manifest</title>
+<path fill="none" stroke="#a1abc2" d="M147,-194.78C147,-187.98 147,-180.04 147,-172.71"/>
+<polygon fill="#a1abc2" stroke="#a1abc2" points="149.28,-172.69 147,-166.19 144.73,-172.69 149.28,-172.69"/>
+</g>
+<!-- History -->
+<g id="node6" class="node">
+<title>History</title>
+<path fill="#252e42" stroke="#6475a2" d="M244.5,-101C244.5,-101 49.5,-101 49.5,-101 43.5,-101 37.5,-95 37.5,-89 37.5,-89 37.5,-77 37.5,-77 37.5,-71 43.5,-65 49.5,-65 49.5,-65 244.5,-65 244.5,-65 250.5,-65 256.5,-71 256.5,-77 256.5,-77 256.5,-89 256.5,-89 256.5,-95 250.5,-101 244.5,-101"/>
+<text text-anchor="middle" x="147" y="-79.9" font-family="DejaVu Sans" font-size="12.00" fill="#f6f8ff">Incident and remediation history</text>
+</g>
+<!-- Manifest&#45;&gt;History -->
+<g id="edge5" class="edge">
+<title>Manifest&#45;&gt;History</title>
+<path fill="none" stroke="#a1abc2" d="M147,-129.78C147,-122.98 147,-115.04 147,-107.71"/>
+<polygon fill="#a1abc2" stroke="#a1abc2" points="149.28,-107.69 147,-101.19 144.73,-107.69 149.28,-107.69"/>
+</g>
+<!-- Export -->
+<g id="node7" class="node">
+<title>Export</title>
+<path fill="#252e42" stroke="#6475a2" d="M239,-36C239,-36 55,-36 55,-36 49,-36 43,-30 43,-24 43,-24 43,-12 43,-12 43,-6 49,0 55,0 55,0 239,0 239,0 245,0 251,-6 251,-12 251,-12 251,-24 251,-24 251,-30 245,-36 239,-36"/>
+<text text-anchor="middle" x="147" y="-14.9" font-family="DejaVu Sans" font-size="12.00" fill="#f6f8ff">Auditor verification and export</text>
+</g>
+<!-- History&#45;&gt;Export -->
+<g id="edge6" class="edge">
+<title>History&#45;&gt;Export</title>
+<path fill="none" stroke="#a1abc2" d="M147,-64.78C147,-57.98 147,-50.04 147,-42.71"/>
+<polygon fill="#a1abc2" stroke="#a1abc2" points="149.28,-42.69 147,-36.19 144.73,-42.69 149.28,-42.69"/>
+</g>
+</g>
+</svg>

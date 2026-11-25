@@ -1,0 +1,153 @@
+<svg width="366pt" height="549pt"
+ viewBox="0.00 0.00 366.20 549.20" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(21.6 527.6)">
+<title>G</title>
+<polygon fill="#171b23" stroke="transparent" points="-21.6,21.6 -21.6,-527.6 344.6,-527.6 344.6,21.6 -21.6,21.6"/>
+<!-- Employee -->
+<g id="node1" class="node">
+<title>Employee</title>
+<path fill="#252e42" stroke="#6475a2" d="M187.5,-506C187.5,-506 127.5,-506 127.5,-506 121.5,-506 115.5,-500 115.5,-494 115.5,-494 115.5,-478 115.5,-478 115.5,-472 121.5,-466 127.5,-466 127.5,-466 187.5,-466 187.5,-466 193.5,-466 199.5,-472 199.5,-478 199.5,-478 199.5,-494 199.5,-494 199.5,-500 193.5,-506 187.5,-506"/>
+<text text-anchor="middle" x="157.5" y="-489.4" font-family="DejaVu Sans" font-size="12.00" fill="#f6f8ff">Employee</text>
+<text text-anchor="middle" x="157.5" y="-476.4" font-family="DejaVu Sans" font-size="12.00" fill="#f6f8ff">EMP104</text>
+</g>
+<!-- Role -->
+<g id="node2" class="node">
+<title>Role</title>
+<path fill="#252e42" stroke="#6475a2" d="M73,-435C73,-435 12,-435 12,-435 6,-435 0,-429 0,-423 0,-423 0,-407 0,-407 0,-401 6,-395 12,-395 12,-395 73,-395 73,-395 79,-395 85,-401 85,-407 85,-407 85,-423 85,-423 85,-429 79,-435 73,-435"/>
+<text text-anchor="middle" x="42.5" y="-418.4" font-family="DejaVu Sans" font-size="12.00" fill="#f6f8ff">HR Role</text>
+<text text-anchor="middle" x="42.5" y="-405.4" font-family="DejaVu Sans" font-size="12.00" fill="#f6f8ff">Marketing</text>
+</g>
+<!-- Employee&#45;&gt;Role -->
+<g id="edge1" class="edge">
+<title>Employee&#45;&gt;Role</title>
+<path fill="none" stroke="#a1abc2" d="M125.77,-465.96C109.82,-456.39 90.52,-444.81 74.52,-435.21"/>
+</g>
+<!-- Account -->
+<g id="node3" class="node">
+<title>Account</title>
+<path fill="#252e42" stroke="#6475a2" d="M200,-435C200,-435 115,-435 115,-435 109,-435 103,-429 103,-423 103,-423 103,-407 103,-407 103,-401 109,-395 115,-395 115,-395 200,-395 200,-395 206,-395 212,-401 212,-407 212,-407 212,-423 212,-423 212,-429 206,-435 200,-435"/>
+<text text-anchor="middle" x="157.5" y="-418.4" font-family="DejaVu Sans" font-size="12.00" fill="#f6f8ff">Entra Account</text>
+<text text-anchor="middle" x="157.5" y="-405.4" font-family="DejaVu Sans" font-size="12.00" fill="#f6f8ff">rahul@corp</text>
+</g>
+<!-- Employee&#45;&gt;Account -->
+<g id="edge2" class="edge">
+<title>Employee&#45;&gt;Account</title>
+<path fill="none" stroke="#a1abc2" d="M157.5,-465.78C157.5,-456.21 157.5,-444.67 157.5,-435.12"/>
+</g>
+<!-- Device -->
+<g id="node4" class="node">
+<title>Device</title>
+<path fill="#252e42" stroke="#6475a2" d="M311,-435C311,-435 242,-435 242,-435 236,-435 230,-429 230,-423 230,-423 230,-407 230,-407 230,-401 236,-395 242,-395 242,-395 311,-395 311,-395 317,-395 323,-401 323,-407 323,-407 323,-423 323,-423 323,-429 317,-435 311,-435"/>
+<text text-anchor="middle" x="276.5" y="-418.4" font-family="DejaVu Sans" font-size="12.00" fill="#f6f8ff">Device</text>
+<text text-anchor="middle" x="276.5" y="-405.4" font-family="DejaVu Sans" font-size="12.00" fill="#f6f8ff">Laptop&#45;104</text>
+</g>
+<!-- Employee&#45;&gt;Device -->
+<g id="edge3" class="edge">
+<title>Employee&#45;&gt;Device</title>
+<path fill="none" stroke="#a1abc2" d="M190.33,-465.96C206.84,-456.39 226.81,-444.81 243.36,-435.21"/>
+</g>
+<!-- Entitlement -->
+<g id="node5" class="node">
+<title>Entitlement</title>
+<path fill="#252e42" stroke="#6475a2" d="M145,-354C145,-354 28,-354 28,-354 22,-354 16,-348 16,-342 16,-342 16,-326 16,-326 16,-320 22,-314 28,-314 28,-314 145,-314 145,-314 151,-314 157,-320 157,-326 157,-326 157,-342 157,-342 157,-348 151,-354 145,-354"/>
+<text text-anchor="middle" x="86.5" y="-337.4" font-family="DejaVu Sans" font-size="12.00" fill="#f6f8ff">Saviynt Entitlement</text>
+<text text-anchor="middle" x="86.5" y="-324.4" font-family="DejaVu Sans" font-size="12.00" fill="#f6f8ff">Legacy KYC access</text>
+</g>
+<!-- Account&#45;&gt;Entitlement -->
+<g id="edge4" class="edge">
+<title>Account&#45;&gt;Entitlement</title>
+<path fill="none" stroke="#a1abc2" d="M128.16,-394.81C116.36,-387.1 105.5,-380 105.5,-380 105.5,-380 101.47,-370.46 97.13,-360.17"/>
+<polygon fill="#a1abc2" stroke="#a1abc2" points="99.18,-359.19 94.56,-354.08 94.99,-360.96 99.18,-359.19"/>
+<text text-anchor="middle" x="152.5" y="-372" font-family="DejaVu Sans" font-size="10.00" fill="#dbe5ff">HAS_ENTITLEMENT</text>
+</g>
+<!-- AWSRole -->
+<g id="node6" class="node">
+<title>AWSRole</title>
+<path fill="#252e42" stroke="#6475a2" d="M270,-354C270,-354 187,-354 187,-354 181,-354 175,-348 175,-342 175,-342 175,-326 175,-326 175,-320 181,-314 187,-314 187,-314 270,-314 270,-314 276,-314 282,-320 282,-326 282,-326 282,-342 282,-342 282,-348 276,-354 270,-354"/>
+<text text-anchor="middle" x="228.5" y="-337.4" font-family="DejaVu Sans" font-size="12.00" fill="#f6f8ff">AWS IAM Role</text>
+<text text-anchor="middle" x="228.5" y="-324.4" font-family="DejaVu Sans" font-size="12.00" fill="#f6f8ff">KYC reader</text>
+</g>
+<!-- Account&#45;&gt;AWSRole -->
+<g id="edge5" class="edge">
+<title>Account&#45;&gt;AWSRole</title>
+<path fill="none" stroke="#a1abc2" d="M181.44,-394.62C190.88,-386.98 199.5,-380 199.5,-380 199.5,-380 205.88,-370.1 212.65,-359.59"/>
+<polygon fill="#a1abc2" stroke="#a1abc2" points="214.59,-360.78 216.2,-354.08 210.77,-358.32 214.59,-360.78"/>
+<text text-anchor="middle" x="247" y="-372" font-family="DejaVu Sans" font-size="10.00" fill="#dbe5ff">ASSUMES_ROLE</text>
+</g>
+<!-- Database -->
+<g id="node7" class="node">
+<title>Database</title>
+<path fill="#252e42" stroke="#6475a2" d="M135.5,-273C135.5,-273 61.5,-273 61.5,-273 55.5,-273 49.5,-267 49.5,-261 49.5,-261 49.5,-245 49.5,-245 49.5,-239 55.5,-233 61.5,-233 61.5,-233 135.5,-233 135.5,-233 141.5,-233 147.5,-239 147.5,-245 147.5,-245 147.5,-261 147.5,-261 147.5,-267 141.5,-273 135.5,-273"/>
+<text text-anchor="middle" x="98.5" y="-256.4" font-family="DejaVu Sans" font-size="12.00" fill="#f6f8ff">PostgreSQL</text>
+<text text-anchor="middle" x="98.5" y="-243.4" font-family="DejaVu Sans" font-size="12.00" fill="#f6f8ff">KYC schema</text>
+</g>
+<!-- Entitlement&#45;&gt;Database -->
+<g id="edge6" class="edge">
+<title>Entitlement&#45;&gt;Database</title>
+<path fill="none" stroke="#a1abc2" d="M89.4,-313.88C90.96,-303.67 92.89,-290.95 94.57,-279.87"/>
+<polygon fill="#a1abc2" stroke="#a1abc2" points="96.85,-279.99 95.58,-273.22 92.35,-279.31 96.85,-279.99"/>
+<text text-anchor="middle" x="120.5" y="-291" font-family="DejaVu Sans" font-size="10.00" fill="#dbe5ff">CAN_READ</text>
+</g>
+<!-- Bucket -->
+<g id="node8" class="node">
+<title>Bucket</title>
+<path fill="#252e42" stroke="#6475a2" d="M273.5,-273C273.5,-273 179.5,-273 179.5,-273 173.5,-273 167.5,-267 167.5,-261 167.5,-261 167.5,-245 167.5,-245 167.5,-239 173.5,-233 179.5,-233 179.5,-233 273.5,-233 273.5,-233 279.5,-233 285.5,-239 285.5,-245 285.5,-245 285.5,-261 285.5,-261 285.5,-267 279.5,-273 273.5,-273"/>
+<text text-anchor="middle" x="226.5" y="-256.4" font-family="DejaVu Sans" font-size="12.00" fill="#f6f8ff">S3 Bucket</text>
+<text text-anchor="middle" x="226.5" y="-243.4" font-family="DejaVu Sans" font-size="12.00" fill="#f6f8ff">KYC documents</text>
+</g>
+<!-- AWSRole&#45;&gt;Bucket -->
+<g id="edge7" class="edge">
+<title>AWSRole&#45;&gt;Bucket</title>
+<path fill="none" stroke="#a1abc2" d="M228.02,-313.88C227.76,-303.67 227.44,-290.95 227.16,-279.87"/>
+<polygon fill="#a1abc2" stroke="#a1abc2" points="229.43,-279.66 226.99,-273.22 224.88,-279.78 229.43,-279.66"/>
+<text text-anchor="middle" x="254.5" y="-291" font-family="DejaVu Sans" font-size="10.00" fill="#dbe5ff">CAN_READ</text>
+</g>
+<!-- Data -->
+<g id="node9" class="node">
+<title>Data</title>
+<path fill="#252e42" stroke="#6475a2" d="M203.5,-202C203.5,-202 117.5,-202 117.5,-202 111.5,-202 105.5,-196 105.5,-190 105.5,-190 105.5,-174 105.5,-174 105.5,-168 111.5,-162 117.5,-162 117.5,-162 203.5,-162 203.5,-162 209.5,-162 215.5,-168 215.5,-174 215.5,-174 215.5,-190 215.5,-190 215.5,-196 209.5,-202 203.5,-202"/>
+<text text-anchor="middle" x="160.5" y="-185.4" font-family="DejaVu Sans" font-size="12.00" fill="#f6f8ff">Sensitive Data</text>
+<text text-anchor="middle" x="160.5" y="-172.4" font-family="DejaVu Sans" font-size="12.00" fill="#f6f8ff">Customer PII</text>
+</g>
+<!-- Database&#45;&gt;Data -->
+<g id="edge8" class="edge">
+<title>Database&#45;&gt;Data</title>
+<path fill="none" stroke="#a1abc2" d="M115.77,-232.78C122.89,-224.85 131.22,-215.58 138.76,-207.2"/>
+<polygon fill="#a1abc2" stroke="#a1abc2" points="140.67,-208.47 143.32,-202.12 137.29,-205.43 140.67,-208.47"/>
+</g>
+<!-- Bucket&#45;&gt;Data -->
+<g id="edge9" class="edge">
+<title>Bucket&#45;&gt;Data</title>
+<path fill="none" stroke="#a1abc2" d="M208.12,-232.78C200.53,-224.85 191.66,-215.58 183.65,-207.2"/>
+<polygon fill="#a1abc2" stroke="#a1abc2" points="184.92,-205.24 178.79,-202.12 181.64,-208.39 184.92,-205.24"/>
+</g>
+<!-- Control -->
+<g id="node10" class="node">
+<title>Control</title>
+<path fill="#252e42" stroke="#6475a2" d="M229.5,-121C229.5,-121 91.5,-121 91.5,-121 85.5,-121 79.5,-115 79.5,-109 79.5,-109 79.5,-93 79.5,-93 79.5,-87 85.5,-81 91.5,-81 91.5,-81 229.5,-81 229.5,-81 235.5,-81 241.5,-87 241.5,-93 241.5,-93 241.5,-109 241.5,-109 241.5,-115 235.5,-121 229.5,-121"/>
+<text text-anchor="middle" x="160.5" y="-104.4" font-family="DejaVu Sans" font-size="12.00" fill="#f6f8ff">Internal Access Control</text>
+<text text-anchor="middle" x="160.5" y="-91.4" font-family="DejaVu Sans" font-size="12.00" fill="#f6f8ff">Lending staff only</text>
+</g>
+<!-- Data&#45;&gt;Control -->
+<g id="edge10" class="edge">
+<title>Data&#45;&gt;Control</title>
+<path fill="none" stroke="#a1abc2" d="M160.5,-161.88C160.5,-151.67 160.5,-138.95 160.5,-127.87"/>
+<polygon fill="#a1abc2" stroke="#a1abc2" points="162.78,-127.72 160.5,-121.22 158.23,-127.72 162.78,-127.72"/>
+<text text-anchor="middle" x="197" y="-139" font-family="DejaVu Sans" font-size="10.00" fill="#dbe5ff">GOVERNED_BY</text>
+</g>
+<!-- Obligation -->
+<g id="node11" class="node">
+<title>Obligation</title>
+<path fill="#252e42" stroke="#6475a2" d="M225.5,-40C225.5,-40 95.5,-40 95.5,-40 89.5,-40 83.5,-34 83.5,-28 83.5,-28 83.5,-12 83.5,-12 83.5,-6 89.5,0 95.5,0 95.5,0 225.5,0 225.5,0 231.5,0 237.5,-6 237.5,-12 237.5,-12 237.5,-28 237.5,-28 237.5,-34 231.5,-40 225.5,-40"/>
+<text text-anchor="middle" x="160.5" y="-23.4" font-family="DejaVu Sans" font-size="12.00" fill="#f6f8ff">Regulatory Obligation</text>
+<text text-anchor="middle" x="160.5" y="-10.4" font-family="DejaVu Sans" font-size="12.00" fill="#f6f8ff">DPDP safeguards</text>
+</g>
+<!-- Control&#45;&gt;Obligation -->
+<g id="edge11" class="edge">
+<title>Control&#45;&gt;Obligation</title>
+<path fill="none" stroke="#a1abc2" d="M160.5,-80.88C160.5,-70.67 160.5,-57.95 160.5,-46.87"/>
+<polygon fill="#a1abc2" stroke="#a1abc2" points="162.78,-46.72 160.5,-40.22 158.23,-46.72 162.78,-46.72"/>
+<text text-anchor="middle" x="184" y="-58" font-family="DejaVu Sans" font-size="10.00" fill="#dbe5ff">MAPS_TO</text>
+</g>
+</g>
+</svg>

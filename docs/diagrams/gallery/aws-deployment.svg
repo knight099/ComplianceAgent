@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 830" width="720" height="830" role="img" aria-labelledby="title" font-family="system-ui, sans-serif">
+<title id="title">SaaS deployment on AWS</title>
+<rect x="0" y="0" width="720" height="830" rx="10" fill="#181c24" stroke="#394152"/>
+<text x="28" y="44" font-size="23" fill="#f3f5fc" font-weight="650">SaaS deployment on AWS</text>
+<rect x="28" y="62" width="664" height="52" rx="10" fill="#252e42" stroke="#41495c"/>
+<text x="40" y="84" font-size="15" fill="#f3f5fc" font-weight="650">Enterprise users</text>
+<text x="40" y="103" font-size="13" fill="#c0cadd" font-weight="400">DNS lookup through Route 53</text>
+<path d="M360,116 V133 m-4,-5 l4,5 l4,-5" fill="none" stroke="#8698b8" stroke-width="2"/>
+<rect x="28" y="135" width="664" height="52" rx="10" fill="#3d3027" stroke="#41495c"/>
+<text x="40" y="157" font-size="15" fill="#f3f5fc" font-weight="650">CloudFront · AWS WAF</text>
+<text x="40" y="176" font-size="13" fill="#c0cadd" font-weight="400">HTTPS</text>
+<path d="M360,189 V206 m-4,-5 l4,5 l4,-5" fill="none" stroke="#8698b8" stroke-width="2"/>
+<rect x="18" y="206" width="684" height="448" rx="10" fill="#1c2230" stroke="#6176a2"/>
+<text x="28" y="239" font-size="16" fill="#aebfff" font-weight="650">AWS VPC · public subnets</text>
+<rect x="28" y="253" width="664" height="52" rx="10" fill="#3d3027" stroke="#41495c"/>
+<text x="40" y="285" font-size="15" fill="#f3f5fc" font-weight="650">Application Load Balancer</text>
+<path d="M360,307 V324 m-4,-5 l4,5 l4,-5" fill="none" stroke="#8698b8" stroke-width="2"/>
+<text x="28" y="342" font-size="16" fill="#aebfff" font-weight="650">Private subnets · Amazon EKS</text>
+<rect x="28" y="356" width="214" height="52" rx="10" fill="#252e42" stroke="#41495c"/>
+<text x="40" y="388" font-size="15" fill="#f3f5fc" font-weight="650">Next.js</text>
+<rect x="252" y="356" width="214" height="52" rx="10" fill="#252e42" stroke="#41495c"/>
+<text x="264" y="388" font-size="15" fill="#f3f5fc" font-weight="650">Fastify API</text>
+<rect x="476" y="356" width="214" height="52" rx="10" fill="#252e42" stroke="#41495c"/>
+<text x="488" y="388" font-size="15" fill="#f3f5fc" font-weight="650">Agent Gateway</text>
+<rect x="28" y="417" width="214" height="52" rx="10" fill="#252e42" stroke="#41495c"/>
+<text x="40" y="449" font-size="15" fill="#f3f5fc" font-weight="650">Collection workers</text>
+<rect x="252" y="417" width="214" height="52" rx="10" fill="#252e42" stroke="#41495c"/>
+<text x="264" y="449" font-size="15" fill="#f3f5fc" font-weight="650">OPA</text>
+<rect x="476" y="417" width="214" height="52" rx="10" fill="#252e42" stroke="#41495c"/>
+<text x="488" y="449" font-size="15" fill="#f3f5fc" font-weight="650">Graph workers</text>
+<rect x="28" y="478" width="214" height="52" rx="10" fill="#252e42" stroke="#41495c"/>
+<text x="40" y="510" font-size="15" fill="#f3f5fc" font-weight="650">Temporal workers</text>
+<rect x="252" y="478" width="214" height="52" rx="10" fill="#252e42" stroke="#41495c"/>
+<text x="264" y="510" font-size="15" fill="#f3f5fc" font-weight="650">AI workers</text>
+<rect x="476" y="478" width="214" height="52" rx="10" fill="#252e42" stroke="#41495c"/>
+<text x="488" y="510" font-size="15" fill="#f3f5fc" font-weight="650">NATS JetStream</text>
+<text x="28" y="555" font-size="16" fill="#aebfff" font-weight="650">VPC data services</text>
+<rect x="28" y="569" width="327" height="52" rx="10" fill="#252e42" stroke="#41495c"/>
+<text x="40" y="591" font-size="15" fill="#f3f5fc" font-weight="650">RDS PostgreSQL</text>
+<text x="40" y="610" font-size="13" fill="#c0cadd" font-weight="400">Multi-AZ</text>
+<rect x="365" y="569" width="327" height="52" rx="10" fill="#252e42" stroke="#41495c"/>
+<text x="377" y="591" font-size="15" fill="#f3f5fc" font-weight="650">ElastiCache</text>
+<text x="377" y="610" font-size="13" fill="#c0cadd" font-weight="400">Redis</text>
+<text x="28" y="675" font-size="16" fill="#aebfff" font-weight="650">AWS managed service endpoints</text>
+<rect x="28" y="689" width="327" height="52" rx="10" fill="#252e42" stroke="#41495c"/>
+<text x="40" y="711" font-size="15" fill="#f3f5fc" font-weight="650">Amazon S3</text>
+<text x="40" y="730" font-size="13" fill="#c0cadd" font-weight="400">Evidence</text>
+<rect x="365" y="689" width="327" height="52" rx="10" fill="#252e42" stroke="#41495c"/>
+<text x="377" y="711" font-size="15" fill="#f3f5fc" font-weight="650">Secrets Manager</text>
+<text x="377" y="730" font-size="13" fill="#c0cadd" font-weight="400">AWS KMS</text>
+<rect x="28" y="750" width="327" height="52" rx="10" fill="#252e42" stroke="#41495c"/>
+<text x="40" y="772" font-size="15" fill="#f3f5fc" font-weight="650">Amazon CloudWatch</text>
+<text x="40" y="791" font-size="13" fill="#c0cadd" font-weight="400">Telemetry</text>
+<rect x="365" y="750" width="327" height="52" rx="10" fill="#252e42" stroke="#41495c"/>
+<text x="377" y="772" font-size="15" fill="#f3f5fc" font-weight="650">Amazon Bedrock</text>
+<text x="377" y="791" font-size="13" fill="#c0cadd" font-weight="400">Optional AI</text>
+</svg>
