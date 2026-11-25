@@ -2,6 +2,74 @@
 
 ComplyOS checks whether terminated employees retain PostgreSQL read privileges. A customer-side relay correlates an HR extract with explicitly mapped database roles and sends scoped observations to a private control plane. The dashboard opens with an empty inventory and shows the latest assessment for each configured source. Open Compare assessments to inspect changes between two collections.
 
+## Enterprise architecture
+
+The product goal is continuous control assurance. For a given person and dataset, a reviewer should be able to trace each observed access path to evidence, compare it with an approved policy, and establish what a later collection verified. The current release delivers the read-only PostgreSQL offboarding workflow on `develop/enterprise-core`.
+
+**Running today**
+
+```mermaid
+flowchart LR
+ HR["HR extract and identity mappings"] --> Relay["Customer-side Node.js relay"]
+ DB["Private PostgreSQL catalogs"] --> Relay
+ Relay --> Spool["Encrypted SQLite queue"]
+ Spool -->|Outbound HTTPS| API["Next.js assessment API"]
+ API --> Store[("PostgreSQL assessments and evidence")]
+ Store --> Review["Review, reconcile and compare"]
+ Store --> Monitor["Collection monitor"]
+ Monitor --> Outbox["Durable alert outbox"]
+ Outbox --> Receiver["Optional signed webhook"]
+ Review -->|Aggregate results| Model["Operator-selected LLM"]
+```
+
+**Enterprise target**
+
+```mermaid
+flowchart LR
+ subgraph Customer["Customer data plane"]
+ Sources["HR, identity, cloud, database and CI evidence"] --> Relay["Read-only connectors and private relay"]
+ Executor["Separate typed remediation executor"] --> Sources
+ end
+ subgraph Control["Control plane"]
+ Intake["Tenant-authorized intake"] --> Graph["Versioned identity and data graph"]
+ Graph --> Policy["Reviewed controls and regulatory mappings"]
+ Policy --> Incident["Incident and impact preview"]
+ Incident --> Gate["Policy check and human approval"]
+ Gate --> Workflow["Durable workflow"]
+ end
+ Relay -->|Outbound authenticated transport| Intake
+ Executor -->|Poll for approved work| Workflow
+ Relay -->|Independent recollection| Verify["Verify all in-scope access paths"]
+ Verify --> Replay["Historical evidence and auditor replay"]
+```
+
+| Area | Implemented | Enterprise milestone |
+|---|---|---|
+| Identity and access | Explicit HR-to-role mapping, scoped PostgreSQL privilege checks and alternative role paths | Persistent cross-system graph with provenance and tenant isolation |
+| Private collection | Outbound relay, encrypted retries, source-bound credentials, signed Windows/Linux evidence bundles | Connector contracts, relay certificates, proxy support and managed fleet |
+| Review and operations | Named reviewer/analyst roles, assessment history, baseline reconciliation, freshness, alerts, webhook retry and delivery status | OIDC, audit exports, protected retention and recovery testing |
+| Policy and AI | Deterministic offboarding rule and optional bring-your-own-model summaries | Reviewed SOP and regulatory packs, cited investigation and model evaluation |
+| Remediation | Independently compare observations before and after an administrator changes access | Approval bound to exact parameters, crash-safe execution, reconciliation and fresh verification |
+
+## Enterprise engineering roadmap
+
+The 24 weeks below are overlapping planning estimates for a narrowly scoped pilot. Weeks start at enterprise program kickoff. Customer validation depends on authorized systems and an available data owner.
+
+| Weeks | Deliverable | Acceptance gate |
+|---|---|---|
+| 1–4 | Version the observation contract, introduce connector interfaces and design tenant-aware migrations | Existing relay uploads, offline retries and historical reports pass compatibility tests |
+| 4–7 | Project PostgreSQL and HR observations into generic entities and relationships | A reviewer can trace two independent paths to a resource, each with its source evidence |
+| 6–11 | Add P0 adapters for HR, PostgreSQL, Entra, AWS and GitHub | Four read-only integrations pass contract tests and report permission gaps; record which have authorized live verification |
+| 9–14 | Harden the private relay and operator identity boundary | Outbound collection survives disconnection, revoked credentials fail, and a two-tenant isolation suite passes before shared hosting |
+| 13–18 | Add typed plans, approval, execution journal and reconciliation | A worker interrupted after an external write can resume and independently verify remaining access |
+| 16–20 | Introduce source-grounded regulatory intake and review | An approved mapping names its clause, effective date, reviewer, control and evidence requirements |
+| 18–21 | Protect evidence and reconstruct historical decisions | Replay a decision with its original policy, provenance, approvals and verification; demonstrate restore |
+| 21–24 | Run a read-only customer pilot | A data owner reconciles results and measures unexplained grants, missing evidence and time to verify revocation |
+
+**Next engineering increment:** introduce a versioned read-only connector contract around the existing PostgreSQL collector, followed by an additive, evidence-linked graph projection. Run the existing two-path revocation case through both representations before migrating a dashboard query. An authorized single-organization pilot can continue in parallel.
+
+[Architecture, module boundaries and implementation sequence](docs/architecture.md) · [Read-only pilot runbook](docs/read-only-pilot.md)
+
 ## Start the control plane
 
 Use Node 24 and PostgreSQL 16 or newer. Set unique secrets for `OPERATOR_PASSWORD`, `RELAY_TOKEN` and a URL-safe `POSTGRES_PASSWORD` in the shell, then run `docker compose up --build`. The service binds to localhost:3000. Open the dashboard and sign in as `operator`. Publish the relay ingestion route through a TLS gateway when the relay runs on another host.
@@ -53,8 +121,6 @@ export AI_ENDPOINTS='{"OpenAI":"https://api.openai.com/v1/chat/completions","Int
 ```
 
 Replace the example URL with the full chat-completions endpoint. The provider must accept a model and messages and return text in `choices[0].message.content`. The server uses bearer authentication when a key is supplied. Private keyless models can leave the key blank. Loopback HTTP is supported for local inference; inside a container loopback refers to that container. Endpoints using other protocols or authentication schemes need a compatible gateway. Test calls may incur provider charges.
-
-[Current and planned architecture diagrams, module inventory and remaining roadmap](docs/architecture.md)
 
 ## Individual operator and relay credentials
 
