@@ -1136,7 +1136,7 @@ Consider an employee who has been terminated, but still retains access to enterp
 
 ### **Compliance incident lifecycle**
 
-This illustrative simulation shows the first four stages of the six-stage offboarding workflow. The same four modeled access paths remain through approval.
+This illustrative simulation follows all six stages of the offboarding workflow. The same four modeled access paths remain through approval.
 
 ```mermaid
 flowchart TB
@@ -1158,6 +1158,40 @@ flowchart TB
 | 2 of 6 | Cross-system discovery | Violation established | ComplyOS identifies four residual access paths using verified identity mappings. | 4 | 0 |
 | 3 of 6 | AI investigation | Investigation complete | The investigator explains the access paths and links them to the approved offboarding control. | 4 | 0 |
 | 4 of 6 | Approval | Approved | The authorized security officer approves a scoped revocation plan. | 4 | 0 |
+| 5 of 6 | Remediation | Partially remediated | Entra ID, AWS IAM and GitHub access are revoked. The PostgreSQL grant remains because its connector is unavailable. | 1 | 3 |
+| 6 of 6 | Retry and verification | Verified | The retry revokes the PostgreSQL grant. Independent verification checks all four modeled paths and confirms that access has been revoked. | 0 | 4 |
+
+#### Stage 5 — Partial remediation
+
+```mermaid
+flowchart TB
+    Employee["EMP104<br/>Terminated"]
+    Entra["Entra ID<br/>Access revoked"]
+    AWS["AWS IAM<br/>Access revoked"]
+    GitHub["GitHub<br/>Access revoked"]
+    PostgreSQL["PostgreSQL<br/>Access remains"]
+
+    Employee -.-> Entra
+    Employee -.-> AWS
+    Employee -.-> GitHub
+    Employee --> PostgreSQL
+```
+
+#### Stage 6 — Retry and verification
+
+```mermaid
+flowchart TB
+    Employee["EMP104<br/>Terminated"]
+    Entra["Entra ID<br/>Access revoked"]
+    AWS["AWS IAM<br/>Access revoked"]
+    GitHub["GitHub<br/>Access revoked"]
+    PostgreSQL["PostgreSQL<br/>Access revoked"]
+
+    Employee -.-> Entra
+    Employee -.-> AWS
+    Employee -.-> GitHub
+    Employee -.-> PostgreSQL
+```
 
 This is the flagship workflow I would implement first. It demonstrates every major component of your architecture without requiring hundreds of integrations.
 
@@ -1180,6 +1214,37 @@ Use PostgreSQL as the primary source of truth, with separate logical schemas for
 | `intelligence` | documents, embeddings, investigations, model_runs       |
 
 ## **Core entity relationship diagram**
+
+```mermaid
+flowchart TB
+    Tenants["TENANTS<br/>tenant_id · name"]
+    Connectors["CONNECTORS<br/>connector_id · tenant_id"]
+    Agents["AGENTS<br/>agent_id · tenant_id"]
+    Entities["ENTITIES<br/>entity_id · type"]
+    Observations["OBSERVATIONS<br/>source · timestamp"]
+    Relationships["RELATIONSHIPS<br/>source_id · target_id"]
+    Evidence["EVIDENCE<br/>hash · storage_uri"]
+    Policies["POLICIES<br/>control_id · version"]
+    Evaluations["EVALUATIONS<br/>policy_id · result"]
+    Incidents["INCIDENTS<br/>severity · status"]
+    Plans["REMEDIATION PLANS<br/>incident_id · state"]
+    Approvals["APPROVALS<br/>plan_id · approver"]
+    Executions["ACTION EXECUTIONS<br/>action_id · outcome"]
+    Verifications["VERIFICATIONS<br/>action_id · evidence"]
+
+    Tenants --- Connectors & Agents
+    Connectors --- Entities
+    Agents --- Observations
+    Entities --- Observations & Relationships
+    Observations --- Evidence
+    Relationships --- Evidence
+    Evidence --- Evaluations
+    Policies --- Evaluations
+    Evaluations --- Incidents
+    Incidents --- Plans & Approvals
+    Plans --- Approvals & Executions
+    Executions --- Verifications
+```
 
 Simplified logical ERD; production schema requires additional association tables and tenant-aware foreign keys.
 
@@ -1259,83 +1324,30 @@ Enrollment must use a separately protected bootstrap endpoint before the agent h
 
 The application should have dedicated workspaces for different enterprise personas.
 
-**ComplyOS**
-
-Overview
-
-Incidents
-
-Enterprise graph
-
-Regulations
-
-Policies
-
-Remediation
-
-Integrations
-
-Agent fleet
-
-Evidence
-
-Reports
-
-AI Copilot
-
-Settings
-
 ### **Compliance overview**
 
-Illustrative enterprise workspace
+Illustrative enterprise workspace.
 
-Controls passing
+```mermaid
+flowchart TB
+    Header["ComplyOS"]
+    subgraph Workspace["Enterprise workspace"]
+        direction LR
+        Navigation["Overview<br/>Incidents<br/>Enterprise graph<br/>Regulations<br/>Policies<br/>Remediation<br/>Integrations<br/>Agent fleet<br/>Evidence<br/>Reports<br/>AI Copilot<br/>Settings"]
 
-# **82%**
+        subgraph Overview["Compliance overview"]
+            direction TB
+            Metrics["Controls passing · 82%<br/>Open incidents · 24<br/>Evidence coverage · 91%<br/>Pending approvals · 8"]
+            Results["Control results<br/>Passing · 82%<br/>Failing · 8%<br/>Unknown · 7%<br/>Exception · 3%"]
+            Incidents["Priority incidents<br/>Terminated user retains access · IAM and PostgreSQL<br/>Unapproved KYC permissions · HRMS and AWS<br/>Endpoint evidence stale · 14 devices"]
+            Metrics ~~~ Results ~~~ Incidents
+        end
 
-Open incidents
+        Navigation ~~~ Overview
+    end
 
-# **24**
-
-Evidence coverage
-
-# **91%**
-
-Pending approvals
-
-# **8**
-
-**Control results**
-
-Passing
-
-82%
-
-Failing
-
-8%
-
-Unknown
-
-7%
-
-Exception
-
-3%
-
-**Priority incidents**
-
-Terminated user retains access
-
-IAM · PostgreSQL
-
-Unapproved KYC permissions
-
-HRMS · AWS
-
-Endpoint evidence stale
-
-14 devices
+    Header ~~~ Workspace
+```
 
 ## **User personas and authorization**
 
@@ -1357,19 +1369,18 @@ Use separation of duties so that an investigator cannot automatically approve an
 
 The evidence vault must be designed for trustworthy historical reconstruction.
 
-Original source observation
+```mermaid
+flowchart TB
+    Source["Original source observation"]
+    Canonical["Canonical evidence representation"]
+    Integrity["Content hash and source signature"]
+    Storage["Protected object storage"]
+    Manifest["Evidence manifest linked to policy evaluation"]
+    History["Incident and remediation history"]
+    Export["Auditor verification and export"]
 
-Canonical evidence representation
-
-Content hash and source signature
-
-Protected object storage
-
-Evidence manifest linked to policy evaluation
-
-Incident and remediation history
-
-Auditor verification and export
+    Source --> Canonical --> Integrity --> Storage --> Manifest --> History --> Export
+```
 
 ### **Evidence manifest**
 
