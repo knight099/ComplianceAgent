@@ -13,7 +13,7 @@ const navigation = [
   ["Integrations", Plug, "/operations#health"],
   ["Agent fleet", Server, "/operations#health"],
   ["Evidence", Archive, "/operations"],
-  ["Reports", ChartColumn, "/operations"],
+  ["Reports", ChartColumn, "/reports"],
   ["AI Copilot", Bot, "/operations#model"],
   ["Settings", Settings, "/operations#model"],
 ];

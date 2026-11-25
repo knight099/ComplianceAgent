@@ -41,6 +41,11 @@ SELECT EXISTS(SELECT FROM target) AS resource_known, EXISTS(SELECT FROM principa
  ((SELECT count(*) FROM sampled)>=513 OR EXISTS(SELECT FROM sampled WHERE cardinality(ids)=9)
  OR (SELECT count(*) FROM witnesses)>32) AS path_limit_reached`;
 export async function assess(feed, query, now = new Date(), directory) {
+  const results = await collectReadPrivileges(feed, query, now, directory, true);
+  return { id: randomUUID(), source: feed.source, policy, observed: now.toISOString(), results };
+}
+
+export async function collectReadPrivileges(feed, query, now, directory, terminatedOnly = false) {
   const text = (x) => typeof x === "string" && x.trim().length > 0;
   if (
     !text(feed.source) ||
@@ -76,9 +81,8 @@ export async function assess(feed, query, now = new Date(), directory) {
     roles.set(e.role, (roles.get(e.role) || 0) + 1);
   }
   const results = [];
-  for (const employee of feed.employees.filter(
-    (e) => e.status === "terminated",
-  )) {
+  for (const employee of feed.employees) {
+    if (terminatedOnly && employee.status !== "terminated") continue;
     for (const [schema, table] of feed.resources) {
       let decision = "UNKNOWN";
       const evidence = {
@@ -124,11 +128,5 @@ export async function assess(feed, query, now = new Date(), directory) {
       });
     }
   }
-  return {
-    id: randomUUID(),
-    source: feed.source,
-    policy,
-    observed: now.toISOString(),
-    results,
-  };
+  return results;
 }

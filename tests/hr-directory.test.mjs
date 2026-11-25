@@ -65,3 +65,16 @@ test("directory match requires a complete unique employee ID across pages", asyn
     assert.equal(result.decision, status === "matched" ? "RETAINED" : "UNKNOWN");
   }
 });
+
+test("CSV imports the current business role separately from the database login", async (t) => {
+  const dir = await mkdtemp(join(tmpdir(), "hr-transfer-"));
+  t.after(() => rm(dir, {recursive:true, force:true}));
+  const csv = join(dir, "transfer.csv"), config = join(dir, "scope.json");
+  await writeFile(csv, "Worker,Employment,Login,Department\n001,active,analyst1,Marketing\n");
+  await writeFile(config, JSON.stringify({...scope, columns:{
+    id:"Worker", status:"Employment", role:"Login", businessRole:"Department",
+  }}));
+  assert.deepEqual((await readHrInput(csv, config)).employees, [
+    {id:"001", status:"active", role:"analyst1", businessRole:"Marketing"},
+  ]);
+});

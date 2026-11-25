@@ -71,7 +71,7 @@ The [ComplyOS 2.0 system design](docs/complyos-2-system-design.md) defines the t
 
 **Implemented graph increment:** the PostgreSQL relay now uses a typed read-only connector contract. New and legacy observations feed a snapshot graph of mapped identities, roles and resources; the dashboard reads table-grant paths from its evidence-linked edges. The migration backfills existing assessments and preserves missing historical path evidence. Each deployment currently uses the `installation` organization namespace.
 
-**HR and directory intake.** The relay accepts JSON or mapped HR CSV and can corroborate identities with read-only Microsoft Graph. The next reporting increment is comparing observed access with a reviewed role and dataset policy for active and transferred employees.
+**HR and directory intake.** The relay accepts JSON or mapped HR CSV and can corroborate identities with read-only Microsoft Graph. The access review report compares observed read privileges with the approved dataset policy for each employee’s current business role.
 
 [Architecture, module boundaries and implementation sequence](docs/architecture.md) · [Read-only pilot runbook](docs/read-only-pilot.md)
 
@@ -120,6 +120,39 @@ Worker ID,Employment status,Database role
 IDs and role names retain their original spelling and leading zeros. Status values are `active` and `terminated`. A blank role represents a missing mapping. Shared roles produce unknown findings for affected terminated employees.
 
 Append `--entra` to either the JSON or CSV collection command to require directory corroboration. Supply a current Microsoft Graph access token for the source tenant through `ENTRA_ACCESS_TOKEN` with read access to directory users and their `employeeId` property (for example, application permission `User.Read.All` with administrator consent). The relay pages through public-cloud Microsoft Graph users and matches HR IDs exactly against `employeeId`. Only matching account IDs and match evidence for assessed employees enter the report. Duplicate matches, missing matches and incomplete directory reads yield `UNKNOWN`. The database role still comes from the reviewed HR mapping. The caller handles token acquisition and renewal.
+
+### Review access against a company SOP
+
+Set `SOURCE_DATABASE_URL` to the read-only database connection. Supply the current `businessRole` separately from the PostgreSQL `role` for each active employee in the HR JSON. For CSV, set `columns.businessRole` in the scope file to the corresponding HR column. A transfer is represented by the employee's new business role.
+
+Supply an owner-reviewed policy file. This example classifies one table and records explicit read expectations for two roles. The source must match the HR scope.
+
+```json
+{
+  "id": "KYC-ACCESS",
+  "version": "3",
+  "source": "payments-primary",
+  "reference": "Access SOP section 4",
+  "reviewer": "Lending data owner",
+  "datasets": [{
+    "resource": ["customer", "identity_records"],
+    "classification": "restricted-personal-data",
+    "roles": {"Lending": "read", "Marketing": "none"}
+  }],
+  "exceptions": []
+}
+```
+
+```sh
+umask 077
+node relay/access-report.mjs policy.json /secure/hr-scope.json > /secure/review.json
+# CSV alternative, with directory corroboration
+node relay/access-report.mjs policy.json /secure/employees.csv /secure/scope.json --entra > /secure/directory-review.json
+```
+
+Open **Reports** in the overview and select the generated file. The report contains employee IDs, role names and grant paths. It is a local point-in-time artifact. Each row compares scoped PostgreSQL SELECT privileges with the reviewed role expectation. Unknown roles or datasets yield insufficient evidence. Terminated employees are expected to have no read grant on covered datasets. An active exception may permit a read grant for a named employee and business role on a specific resource. Each exception records `employeeId`, `businessRole`, `resource`, `approver`, `reference`, and ISO timestamps `from` (inclusive) and `until` (exclusive).
+
+Collection uses one read-only PostgreSQL catalog snapshot and the existing 24-hour HR freshness window. The report includes bounded table-grant paths when available. A column-level grant can yield a positive read result without a table-grant path. These observations describe catalog privileges. Row-level restrictions, actual reads and regulatory conclusions require additional evidence.
 
 ### Recover interrupted uploads
 
