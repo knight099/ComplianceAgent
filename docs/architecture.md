@@ -37,20 +37,42 @@ flowchart LR
 | AI connectivity | Server-side chat-completions adapter, operator-provided model and key, connection test and assessment summary | Optional. Input is restricted to aggregate results and collection time. A summary cannot modify a decision or execute a change. |
 | Deployment | Next.js, PostgreSQL, Compose, additive schema migration | Catalog behavior tested using embedded PostgreSQL. Customer infrastructure validation is outstanding. |
 
-## Planned pilot architecture
+## Target control plane and customer data plane
+
+The [full system design](complyos-2-system-design.md) defines 16 logical modules. The target groups them into a modular TypeScript control plane with workers for collection, evaluation and long-running workflows.
 
 ```mermaid
-flowchart LR
- IdP["Enterprise OIDC"] --> API["Tenant-authorized API"]
- Sources["HR, identity, cloud and data sources"] --> SDK["Connector SDK and enrolled relays"]
- SDK --> Graph["Tenant-scoped identity and resource graph"]
- Graph --> Rules["Reviewed control packs and deterministic evaluation"]
- Rules --> Incidents["Correlated incidents"]
- Incidents --> Approval["Exact action preview and approval"]
- Approval --> Worker["Durable scoped executor"]
- Worker --> Verify["Independent fresh collection"]
- Verify --> Replay["Evidence retention and historical replay"]
+flowchart TB
+ subgraph Customer["Customer data plane"]
+   Sources["HR, directory, data catalogs, cloud and CI"] --> Collect["Private relay, endpoint, cloud or CI collector"]
+   Execute["Scoped action executor"] --> Sources
+ end
+ subgraph Control["Control plane"]
+   IAM["Tenant and identity"] --> API["Fastify gateway"]
+   Admin["Integrations and agent management"] --> Collection["Collection and normalization"]
+   API --> Collection
+   Collection --> Events["PostgreSQL observations and transactional outbox"]
+   Events --> Resolve["Identity resolution and data classification"]
+   Resolve --> Graph["Temporal compliance graph"]
+   Regulatory["Regulatory intelligence"] --> Policy["Policy evaluation"]
+   Graph --> Policy --> Incidents["Incident correlation"]
+   Incidents --> Notify["Notifications"]
+   Incidents --> Action["Remediation, approval and Temporal workflow"]
+   Events --> Evidence["Evidence vault"]
+   Evidence --> Reports["Reporting and replay"]
+   Graph --> AI["AI investigation"]
+   Evidence --> AI
+ end
+ Collect -->|Outbound authenticated observations| API
+ Execute -->|Poll for approved work| Action
+ Action -->|Request independent recollection| Collection
 ```
+
+Each observation carries source, tenant, schema version and collection time. Intake persists the observation and outbox event together. Idempotent consumers project temporal edges, re-evaluate affected controls and correlate incidents by a stable fingerprint. Scheduled reconciliation catches missing events. A later NATS JetStream transport can carry the same events. The current collection-health webhook outbox serves a narrower purpose.
+
+Regulatory documents and company SOPs supply reviewed obligations. Policy evaluation distinguishes pass, fail, unknown, stale, exception, not applicable and error. Each incident links the affected identity, entitlement, resource, data classification, policy revision and supporting observations.
+
+**Deployment boundaries.** The design covers developer Compose, managed AWS and customer-hosted Kubernetes/OpenShift deployments. Customer-side credentials stay with the relay. OIDC establishes operator identity, and tenant and role checks apply to API reads, jobs, evidence retrieval and exports. Agents enroll with revocable certificates. PostgreSQL stores evidence provenance and S3 or MinIO stores retained objects. OpenTelemetry traces connect collection, evaluation, action and verification by correlation ID.
 
 ## First implementation sequence
 
@@ -96,7 +118,7 @@ flowchart LR
 
 | Installation | Current boundary | Target |
 |---|---|---|
-| Enterprise relay | Node process inside the private network, read-only PostgreSQL catalog queries, encrypted local queue and scoped bearer authentication | Build this before expanding endpoint management. Add local secret references, outbound mTLS, proxy support, signed typed jobs, high availability and isolated write credentials. Evaluate Go packaging against the same connector contract. |
+| Enterprise relay | Node process inside the private network, read-only PostgreSQL catalog queries, encrypted local queue and scoped bearer authentication | Build this before expanding endpoint management. Add local secret references, outbound mTLS, proxy support, signed typed jobs, high availability and isolated write credentials. Build the Go relay against the same connector contract. |
 | Endpoint agent | IT-installed Python and PowerShell privilege collectors with per-device HMAC | Shared Go enrollment, signing, scheduler, encrypted spool, resource budgets and signed updates. Add Linux systemd packages, Windows Service/MSI and macOS launchd/notarized package. Collect approved encryption, patch, firewall, lock and privileged-account signals; prefer existing Intune, Jamf or CrowdStrike evidence where available. |
 | Agentless cloud | Existing CLI evidence import paths | Delegated short-lived credentials, AWS SDK adapters and explicit coverage for conditions, denials and unsupported policy mechanisms. Expand providers after pilot demand. |
 | CI/CD scanner | Repository logging check and scanner evidence import | CI integrations emitting commit-bound dependency, secret and infrastructure findings with redacted evidence. |
@@ -107,19 +129,19 @@ Connector SDK operations are connection validation, capability discovery, checkp
 
 1. Ingest an official document or internal SOP as a versioned source. An LLM proposes clause-level obligations and mappings. A specialist records applicability, dates, interpretation and approval before activation.
 2. A technical pack declares required evidence, deterministic evaluation, allowed actions and verification criteria. For example, a restricted-data access control may support a reviewed DPDP section 8(5) mapping. Record the legal review separately from the access result.
-3. Use five logical AI roles for regulatory extraction, evidence investigation, risk explanation, remediation planning and verification summaries. Ground outputs in authorized evidence, version prompts, and evaluate citation accuracy. The model proposes; policy, authorization and approval determine execution.
+3. Use six logical AI roles for investigation, regulatory retrieval, risk assessment, remediation planning, evidence review and reporting. The reporting role renders approved templates from scoped results. The target model adapter supports customer-approved providers, including private models. Ground outputs in authorized evidence, version prompts, and evaluate citation accuracy. The model proposes; policy, authorization and approval determine execution.
 4. Start with observe, recommend and human-approved modes. Bind approval to exact operations, risk, affected resources, current-state fingerprint, policy version, approver and expiry. Revalidate before execution. Persist intent first, execute outside the database transaction, record receipts and reconcile uncertain outcomes before retry.
 5. Fresh independent observations determine closure across alternative paths. Preserve unknown, stale, not applicable, partially verified and verified outcomes. Regulatory replay should recover the contemporaneous source coverage, policy, decision, approver, operations and closure evidence.
 6. Canonicalize and hash evidence, verify source signatures, protect signing keys, and store signed metadata alongside objects under independent retention controls. Test backup restoration and key rotation.
 
 ## Technology and repository evolution
 
-Retain Next.js, PostgreSQL, Compose and the current Node tests. Introduce shared TypeScript contracts first. Fastify with Zod/OpenAPI and Drizzle are candidates for an independently deployed modular API when a second consumer or deployment boundary justifies extraction. Keep graph projection, policy evaluation, incident correlation, remediation and verification as logical modules with separate workers where durable execution is needed.
+Retain Next.js, PostgreSQL, Compose and the current Node tests. Introduce shared TypeScript contracts first. The target API uses Fastify, Zod/OpenAPI and Drizzle. Migrate one versioned endpoint at a time with compatibility checks for existing clients. Keep graph projection, policy evaluation, incident correlation, remediation and verification as logical modules with separate workers where durable execution is needed.
 
 | Concern | Planned choices and adoption point |
 |---|---|
-| Workflow and transport | Keep transactional outboxes. Evaluate Temporal before production writes; add NATS only for demonstrated event fan-out. |
-| Policy and AI | Evaluate OPA/Rego for reviewed control packs and action gates. Add structured model output, approved retrieval and pgvector when a reviewed corpus exists. Keep the existing bring-your-own-model connection. |
+| Workflow and transport | Keep transactional outboxes. Introduce Temporal for approved execution; add NATS only for demonstrated event fan-out. |
+| Policy and AI | Use OPA/Rego for reviewed control packs and action gates. Add structured model output, approved retrieval and pgvector when a reviewed corpus exists. Keep the existing bring-your-own-model connection. |
 | Platform security | Enterprise IdP or Keycloak for OIDC; Vault or cloud secret references; S3-compatible protected evidence storage. Consider SPIRE for workload identity at scale. |
 | Deployment and observability | Helm for enterprise clusters, OpenTelemetry with Prometheus/Grafana, CI, dependency and artifact checks, Testcontainers and Playwright. Add Redis only for a measured cache requirement. |
 | Reuse | Evaluate Cartography and Cytoscape.js for graph modeling and display; Prowler, Cloud Custodian, osquery, Trivy, Steampipe, Semgrep and Presidio for bounded collection, approved remediation and redaction. Use OSCAL as an interchange reference. Review each tool and bundled rule license before redistribution. |
@@ -145,4 +167,4 @@ Extend the existing PostgreSQL offboarding workflow with Entra evidence first. N
 
 Use the proposed allocation as a planning budget: 30% graph and identity correlation, 25% relay and connectors, 20% remediation and verification, 15% security and evidence, 5% AI and 5% dashboard. Validate differentiation by measuring time to explain a cross-system grant, unexplained paths, evidence coverage and time to verified closure against a data owner's existing review process. Shared hosting, commercial integrations, automated writes and regulatory sign-off each require their own acceptance evidence.
 
-[24-week delivery phases](../README.md#enterprise-engineering-roadmap) · [Authorized pilot workflow](read-only-pilot.md)
+[Delivery phases and acceptance gates](implementation-plan.md) · [Authorized pilot workflow](read-only-pilot.md)

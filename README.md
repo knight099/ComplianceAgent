@@ -53,18 +53,19 @@ flowchart LR
 
 ## Enterprise engineering roadmap
 
-The 24 weeks below are overlapping planning estimates for a narrowly scoped pilot. Weeks start at enterprise program kickoff. Customer validation depends on authorized systems and an available data owner.
+The [ComplyOS 2.0 system design](docs/complyos-2-system-design.md) defines the target for a BFSI pilot. V1 connects HR, Entra, AWS, PostgreSQL and GitHub to explain offboarding and excessive access to sensitive data. Reviewed DPDP and internal controls, a private relay, an evidence-grounded investigator, approved remediation and historical replay complete the proposed release.
 
-| Weeks | Deliverable | Acceptance gate |
+| Phase | Estimated weeks | Delivery milestone |
 |---|---|---|
-| 1–4 | Version the observation contract, introduce connector interfaces and design tenant-aware migrations | Existing relay uploads, offline retries and historical reports pass compatibility tests |
-| 4–7 | Project PostgreSQL and HR observations into generic entities and relationships | A reviewer can trace two independent paths to a resource, each with its source evidence |
-| 6–11 | Add P0 adapters for HR, PostgreSQL, Entra, AWS and GitHub | Four read-only integrations pass contract tests and report permission gaps; record which have authorized live verification |
-| 9–14 | Harden the private relay and operator identity boundary | Outbound collection survives disconnection, revoked credentials fail, and a two-tenant isolation suite passes before shared hosting |
-| 13–18 | Add typed plans, approval, execution journal and reconciliation | A worker interrupted after an external write can resume and independently verify remaining access |
-| 16–20 | Introduce source-grounded regulatory intake and review | An approved mapping names its clause, effective date, reviewer, control and evidence requirements |
-| 18–21 | Protect evidence and reconstruct historical decisions | Replay a decision with its original policy, provenance, approvals and verification; demonstrate restore |
-| 21–24 | Run a read-only customer pilot | A data owner reconciles results and measures unexplained grants, missing evidence and time to verify revocation |
+| Core platform | 1–4 | TypeScript contracts, Fastify, PostgreSQL migrations and tenant-scoped OIDC authorization |
+| Enterprise graph | 4–7 | Temporal relationships, reviewed identity mappings and evidence-backed access paths |
+| Collection infrastructure | 6–12 | Five read-only connectors and an enrolled Go relay with offline delivery |
+| Compliance detection | 10–13 | Versioned OPA policies, applicability, exceptions, coverage and correlated incidents |
+| Safe remediation | 13–17 | Typed actions, human approval, Temporal recovery and independent verification |
+| Evidence and intelligence | 15–21 | Signed evidence, historical replay, reviewed regulatory mappings and cited AI investigation |
+| Enterprise pilot | 21–24 | Isolation, recovery and load tests followed by an authorized read-only deployment |
+
+[Delivery dependencies, acceptance gates and next build sequence](docs/implementation-plan.md)
 
 **Implemented graph increment:** the PostgreSQL relay now uses a typed read-only connector contract. New and legacy observations feed a snapshot graph of mapped identities, roles and resources; the dashboard reads table-grant paths from its evidence-linked edges. The migration backfills existing assessments and preserves missing historical path evidence. Each deployment currently uses the `installation` organization namespace.
 
