@@ -1021,6 +1021,23 @@ This module transforms a compliance finding into a safe, recoverable corrective 
 
 Use Temporal for workflows that require human approval, external API calls, retries and post-execution verification.
 
+```mermaid
+flowchart TB
+    Detected["Incident detected"]
+    Plan["Generate remediation plan"]
+    Impact["Simulate impact / blast radius"]
+    Policy["Validate against OPA policy"]
+    Approval["Authorized human approval"]
+    Refresh["Refresh evidence and preconditions"]
+    Execute["Execute typed connector action"]
+    Verify["Collect independent verification"]
+    Close["Close incident and retain evidence"]
+
+    Detected --> Plan --> Impact --> Policy --> Approval
+    Approval --> Refresh --> Execute --> Verify
+    Verify -->|Expected state confirmed| Close
+```
+
 ## **Action catalog**
 
 The system should only execute predefined, typed operations.
@@ -1117,29 +1134,30 @@ Rollback is not always safe. Automatically restoring an unauthorized entitlement
 
 Consider an employee who has been terminated, but still retains access to enterprise systems.
 
-### **Interactive compliance incident lifecycle**
+### **Compliance incident lifecycle**
 
-Step 1 of 6
+This illustrative simulation shows the first four stages of the six-stage offboarding workflow. The same four modeled access paths remain through approval.
 
-Detected
+```mermaid
+flowchart TB
+    Employee["EMP104<br/>Terminated"]
+    Entra["Entra ID<br/>Access remains"]
+    AWS["AWS IAM<br/>Access remains"]
+    GitHub["GitHub<br/>Access remains"]
+    PostgreSQL["PostgreSQL<br/>Access remains"]
 
-### **HR termination**
+    Employee --> Entra
+    Employee --> AWS
+    Employee --> GitHub
+    Employee --> PostgreSQL
+```
 
-HRMS reports that employee EMP104 has been terminated.
-
-Remaining modeled access paths
-
-# **4**
-
-Revoked access paths
-
-# **0**
-
-Previous
-
-Next stage
-
-Illustrative workflow simulation, not a connection to live enterprise systems.
+| Step | Stage | Incident status | What happens | Remaining modeled paths | Revoked paths |
+| --- | --- | --- | --- | ---: | ---: |
+| 1 of 6 | HR termination | Detected | HRMS reports that employee EMP104 has been terminated. | 4 | 0 |
+| 2 of 6 | Cross-system discovery | Violation established | ComplyOS identifies four residual access paths using verified identity mappings. | 4 | 0 |
+| 3 of 6 | AI investigation | Investigation complete | The investigator explains the access paths and links them to the approved offboarding control. | 4 | 0 |
+| 4 of 6 | Approval | Approved | The authorized security officer approves a scoped revocation plan. | 4 | 0 |
 
 This is the flagship workflow I would implement first. It demonstrates every major component of your architecture without requiring hundreds of integrations.
 
