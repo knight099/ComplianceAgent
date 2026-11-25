@@ -66,7 +66,9 @@ The 24 weeks below are overlapping planning estimates for a narrowly scoped pilo
 | 18–21 | Protect evidence and reconstruct historical decisions | Replay a decision with its original policy, provenance, approvals and verification; demonstrate restore |
 | 21–24 | Run a read-only customer pilot | A data owner reconciles results and measures unexplained grants, missing evidence and time to verify revocation |
 
-**Next engineering increment:** introduce a versioned read-only connector contract around the existing PostgreSQL collector, followed by an additive, evidence-linked graph projection. Run the existing two-path revocation case through both representations before migrating a dashboard query. An authorized single-organization pilot can continue in parallel.
+**Implemented graph increment:** the PostgreSQL relay now uses a typed read-only connector contract. New and legacy observations feed a snapshot graph of mapped identities, roles and resources; the dashboard reads table-grant paths from its evidence-linked edges. The migration backfills existing assessments and preserves missing historical path evidence. Each deployment currently uses the `installation` organization namespace.
+
+**Next engineering increment:** add an HR CSV adapter with explicit column mapping, identity ambiguity handling and parity tests against the existing JSON input. Then validate the connector contract with an independent identity source before expanding cross-system joins.
 
 [Architecture, module boundaries and implementation sequence](docs/architecture.md) · [Read-only pilot runbook](docs/read-only-pilot.md)
 

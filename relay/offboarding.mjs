@@ -1,5 +1,6 @@
 import { randomUUID } from "node:crypto";
-export const policy = "hr.postgres.offboarding/v1";
+import { postgresPolicy as policy } from "../packages/connector-sdk/contract.mjs";
+export { policy };
 // Catalog-only check. A reachable SET ROLE can retain access even after login inheritance is revoked.
 export const privilegeQuery = `
 WITH RECURSIVE target AS (SELECT c.oid,c.relowner,c.relacl FROM pg_catalog.pg_class c

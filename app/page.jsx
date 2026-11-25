@@ -67,8 +67,8 @@ export default function Page() {
                 {r.employee_id} · {r.resource} · {r.decision}
               </summary>
               <p>Mapped database role: {r.role_name || "Unknown"}</p>
-              {Array.isArray(r.evidence?.tableGrantPaths) &&
-                r.evidence.tableGrantPaths.every(
+              {Array.isArray(r.projected_paths) &&
+                r.projected_paths.every(
                   (path) =>
                     Array.isArray(path) &&
                     path.every((role) => typeof role === "string"),
@@ -78,9 +78,9 @@ export default function Page() {
                 r.decision === "RETAINED" && (
                   <section>
                     <h3>Table SELECT grant paths</h3>
-                    {r.evidence.tableGrantPaths.length ? (
+                    {r.projected_paths.length ? (
                       <ul>
-                        {r.evidence.tableGrantPaths.map((path) => (
+                        {r.projected_paths.map((path) => (
                           <li key={JSON.stringify(path)}>
                             {path.join(" → ")} → {r.evidence.schema}.
                             {r.evidence.table}

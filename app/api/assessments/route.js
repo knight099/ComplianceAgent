@@ -1,6 +1,6 @@
 import { authenticate, requireOperator } from "../../../lib/auth.mjs";
 import { latest, saveAssessment } from "../../../lib/store.mjs";
-import { policy } from "../../../relay/offboarding.mjs";
+import { parseAssessment } from "../../../packages/connector-sdk/contract.mjs";
 export const dynamic = "force-dynamic";
 export async function GET(req) {
   const denied = await requireOperator(req);
@@ -21,25 +21,7 @@ export async function POST(req) {
   }
   let a;
   try {
-    a = JSON.parse(Buffer.concat(chunks));
-    if (
-      !/^[a-f\d]{8}-(?:[a-f\d]{4}-){3}[a-f\d]{12}$/i.test(a.id) ||
-      a.policy !== policy ||
-      typeof a.source !== "string" ||
-      !a.source.trim() ||
-      !Number.isFinite(Date.parse(a.observed)) ||
-      !Array.isArray(a.results) ||
-      a.results.some(
-        (r) =>
-          typeof r.employeeId !== "string" ||
-          typeof r.role !== "string" ||
-          typeof r.resource !== "string" ||
-          !["UNKNOWN", "RETAINED", "NO_SCOPED_GRANT"].includes(r.decision) ||
-          !r.evidence ||
-          typeof r.evidence !== "object",
-      )
-    )
-      throw Error();
+    a = parseAssessment(JSON.parse(Buffer.concat(chunks)));
   } catch {
     return new Response("Invalid assessment", { status: 400 });
   }

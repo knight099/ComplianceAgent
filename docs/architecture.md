@@ -62,9 +62,11 @@ flowchart LR
 | 4 | Backfill historical assessments and compare projected results with the existing access query. Treat absent historic path evidence as unknown. | Removing one of two paths preserves retained access; stale or missing scope never closes an incident. Switch the first reader only after comparison passes. |
 | 5 | Add Entra and HR input adapters, followed by AWS IAM/S3 and GitHub App collection. In parallel, add OIDC and enforce tenant scope in API, storage, queues, exports and model requests. | Connector fixtures cover paging, revoked credentials and partial visibility. Verify live permissions in authorized accounts and run isolation tests before enrolling a second organization in one deployment. |
 
+The first connector and projection are implemented for PostgreSQL. The relay emits `complyos.assessment/v1`; intake normalizes unversioned uploads and rejects unsupported versions before persistence. Historical backfill and ingestion use the same projector. The dashboard reads table paths reconstructed from projected hops; decisions and raw evidence remain available from the original observations. Empty paths do not establish absence of all privileges.
+
 ## Domain model and provenance
 
-The control plane currently stores assessments, per-resource results, evidence observations, named identities, alert episodes and deliveries in PostgreSQL. SQLite holds the relay's local retry queue. The generic graph is a planned projection over these records.
+The control plane currently stores assessments, per-resource results, evidence observations, named identities, alert episodes and deliveries in PostgreSQL. SQLite holds the relay's local retry queue. Migration 007 projects assessed HR-to-account mappings and PostgreSQL table-grant witnesses into typed, snapshot-scoped edges. The entity view keys identifiers by organization, source and kind. Each edge links to its original result. Cross-provider identity resolution and shared-tenant authorization remain planned.
 
 | Planned records | Design contract |
 |---|---|

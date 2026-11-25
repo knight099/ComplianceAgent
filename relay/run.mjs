@@ -1,6 +1,6 @@
 import pg from "pg";
 import { readFile } from "node:fs/promises";
-import { assess } from "./offboarding.mjs";
+import { postgresConnector } from "../connectors/postgres/index.mjs";
 import { openOutbox } from "./outbox.mjs";
 const endpoint = new URL(process.env.CONTROL_URL);
 if (
@@ -30,9 +30,9 @@ try {
       options: "-c default_transaction_read_only=on",
     });
     try {
-      const report = await assess(
+      const connector = postgresConnector((sql, args) => pool.query(sql, args));
+      const report = await connector.collect(
         JSON.parse(await readFile(input, "utf8")),
-        (sql, args) => pool.query(sql, args),
       );
       queue.enqueue(report);
       console.log("Queued", report.id);
