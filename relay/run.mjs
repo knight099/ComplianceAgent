@@ -1,5 +1,6 @@
 import pg from "pg";
-import { readFile } from "node:fs/promises";
+import { readHrInput } from "../connectors/hr/input.mjs";
+import { collectDirectoryMatches } from "../connectors/entra/index.mjs";
 import { postgresConnector } from "../connectors/postgres/index.mjs";
 import { openOutbox } from "./outbox.mjs";
 const endpoint = new URL(process.env.CONTROL_URL);
@@ -11,7 +12,12 @@ if (
   )
 )
   throw Error("HTTPS required");
-const input = process.argv[2];
+const args = process.argv.slice(2);
+const useEntra = args.at(-1) === "--entra";
+if (useEntra) args.pop();
+const [input, scopePath] = args;
+if (args.length > 2 || (input === "--flush" && (scopePath || useEntra)))
+  throw Error("Expected an HR file, optional CSV scope file and optional --entra");
 if (!input || !process.env.RELAY_TOKEN)
   throw Error("Supply an HR extract path or --flush and configure RELAY_TOKEN");
 const queue = openOutbox(
@@ -30,10 +36,14 @@ try {
       options: "-c default_transaction_read_only=on",
     });
     try {
-      const connector = postgresConnector((sql, args) => pool.query(sql, args));
-      const report = await connector.collect(
-        JSON.parse(await readFile(input, "utf8")),
-      );
+      const scope = await readHrInput(input, scopePath);
+      if (useEntra && !process.env.ENTRA_ACCESS_TOKEN)
+        throw Error("Configure ENTRA_ACCESS_TOKEN for --entra");
+      const directory = useEntra
+        ? await collectDirectoryMatches(scope.employees, process.env.ENTRA_ACCESS_TOKEN)
+        : undefined;
+      const connector = postgresConnector((sql, args) => pool.query(sql, args), directory);
+      const report = await connector.collect(scope);
       queue.enqueue(report);
       console.log("Queued", report.id);
     } finally {

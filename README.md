@@ -71,7 +71,7 @@ The [ComplyOS 2.0 system design](docs/complyos-2-system-design.md) defines the t
 
 **Implemented graph increment:** the PostgreSQL relay now uses a typed read-only connector contract. New and legacy observations feed a snapshot graph of mapped identities, roles and resources; the dashboard reads table-grant paths from its evidence-linked edges. The migration backfills existing assessments and preserves missing historical path evidence. Each deployment currently uses the `installation` organization namespace.
 
-**Next engineering increment:** add an HR CSV adapter with explicit column mapping, identity ambiguity handling and parity tests against the existing JSON input. Then validate the connector contract with an independent identity source before expanding cross-system joins.
+**HR and directory intake.** The relay accepts JSON or mapped HR CSV and can corroborate identities with read-only Microsoft Graph. The next reporting increment is comparing observed access with a reviewed role and dataset policy for active and transferred employees.
 
 [Architecture, module boundaries and implementation sequence](docs/architecture.md) · [Read-only pilot runbook](docs/read-only-pilot.md)
 
@@ -96,6 +96,30 @@ On the customer-side host, install Node 24 and run `npm ci`. Set `SOURCE_DATABAS
 ```
 
 Run `node relay/run.mjs /secure/path/hr-scope.json`. Use the actual extract timestamp. Include active employees in the mapping so shared-role ambiguity is visible. Use a unique source name per database and scope. Keep the HR extract, connection strings and shared secrets outside version control.
+
+### Collect from HR CSV and Entra ID
+
+Run `node relay/run.mjs /secure/employees.csv /secure/scope.json`. The CSV contains one row per employee, including active employees. Map the headers in the scope file and supply the revision and observation time of that specific export.
+
+```csv
+Worker ID,Employment status,Database role
+00105,terminated,analyst_105
+00106,active,
+```
+
+```json
+{
+  "source": "payments-primary",
+  "hrRevision": "export-42",
+  "hrObserved": "2026-11-24T09:00:00Z",
+  "resources": [["customer", "identity_records"]],
+  "columns": {"id": "Worker ID", "status": "Employment status", "role": "Database role"}
+}
+```
+
+IDs and role names retain their original spelling and leading zeros. Status values are `active` and `terminated`. A blank role represents a missing mapping. Shared roles produce unknown findings for affected terminated employees.
+
+Append `--entra` to either the JSON or CSV collection command to require directory corroboration. Supply a current Microsoft Graph access token for the source tenant through `ENTRA_ACCESS_TOKEN` with read access to directory users and their `employeeId` property (for example, application permission `User.Read.All` with administrator consent). The relay pages through public-cloud Microsoft Graph users and matches HR IDs exactly against `employeeId`. Only matching account IDs and match evidence for assessed employees enter the report. Duplicate matches, missing matches and incomplete directory reads yield `UNKNOWN`. The database role still comes from the reviewed HR mapping. The caller handles token acquisition and renewal.
 
 ### Recover interrupted uploads
 

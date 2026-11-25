@@ -16,8 +16,8 @@ The [system design](complyos-2-system-design.md) defines the target. Weeks are o
 
 ## Next build sequence
 
-1. **HR intake.** Add configurable CSV columns alongside the existing JSON input. Preserve stable employee IDs, status and evidence time. Test equivalent CSV/JSON inputs, duplicate IDs, missing fields and ambiguous role mappings.
-2. **Directory correlation.** Add a read-only Entra adapter using authoritative identifiers. Persist the matching evidence and observation time. Exercise reassigned email, incomplete visibility and multiple candidate accounts before joining a directory identity to a PostgreSQL path.
+1. **HR intake implemented.** CSV exports use configurable columns and the existing JSON assessment contract. Automated tests cover equivalent assessments, duplicate IDs, missing mappings and shared roles.
+2. **Directory correlation implemented for the offboarding relay.** The optional read-only Entra adapter records exact employee-ID match evidence and collection time. Tests cover pagination, duplicates, missing identities and partial visibility. Authorized live-tenant validation remains open.
 3. **Access report.** For each in-scope person and dataset, show effective privilege, grant path, expected access from a reviewed SOP, applicable exception and freshness. Distinguish excess access, expected access, missing expected grants and insufficient evidence. Include the policy version and source references in the report.
 4. **Foundation in parallel.** Migrate assessment reads behind the versioned API and enforce organization scope through storage and authorization before enabling shared deployments. Run the phase 1 compatibility and isolation checks.
 

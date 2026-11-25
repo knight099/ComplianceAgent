@@ -40,7 +40,7 @@ SELECT EXISTS(SELECT FROM target) AS resource_known, EXISTS(SELECT FROM principa
  FROM (SELECT roles FROM witnesses ORDER BY roles LIMIT 32) shown) AS paths,
  ((SELECT count(*) FROM sampled)>=513 OR EXISTS(SELECT FROM sampled WHERE cardinality(ids)=9)
  OR (SELECT count(*) FROM witnesses)>32) AS path_limit_reached`;
-export async function assess(feed, query, now = new Date()) {
+export async function assess(feed, query, now = new Date(), directory) {
   const text = (x) => typeof x === "string" && x.trim().length > 0;
   if (
     !text(feed.source) ||
@@ -88,9 +88,12 @@ export async function assess(feed, query, now = new Date()) {
         schema,
         table,
       };
+      if (directory) evidence.directory = directory.get(employee.id);
       const age = now.getTime() - Date.parse(feed.hrObserved);
       if (age < 0 || age > 86400000)
         evidence.reason = "HR evidence outside freshness window";
+      else if (directory && evidence.directory?.status !== "matched")
+        evidence.reason = "Entra identity mapping " + (evidence.directory?.status ?? "unavailable");
       else if (!employee.role || roles.get(employee.role) !== 1)
         evidence.reason = "Missing or ambiguous identity mapping";
       else
