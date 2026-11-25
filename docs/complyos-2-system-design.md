@@ -502,6 +502,25 @@ A connector should never interpret an incomplete API response as proof that a re
 
 Enterprise systems continuously produce changes. ComplyOS should react to those changes without repeatedly scanning the entire organization.
 
+```mermaid
+flowchart TB
+    Uploads["Agent uploads"]
+    Webhooks["API webhooks"]
+    Scans["Scheduled scans"]
+    Intake["Ingestion Gateway<br/>Authentication · Validation · Deduplication"]
+    Storage["Evidence Storage<br/>Original observation and provenance"]
+    Workers["Normalization Workers<br/>Canonical observation schema"]
+    Identity["Identity Resolution<br/>Match identities across systems"]
+    Graph["Graph Projection<br/>Update affected nodes and edges"]
+    Policy["Policy Evaluation<br/>Evaluate impacted controls only"]
+    Incidents["Incident Correlation<br/>Create, update or resolve incidents"]
+
+    Uploads --> Intake
+    Webhooks --> Intake
+    Scans --> Intake
+    Intake --> Storage --> Workers --> Identity --> Graph --> Policy --> Incidents
+```
+
 ## **Canonical event format**
 
 Use a CloudEvents-compatible event envelope.
@@ -552,6 +571,33 @@ The transactional outbox pattern should guarantee that database changes and the 
 The Compliance Graph is the central intelligence layer of the entire platform.
 
 It connects employees, identities, permissions, business resources, sensitive information, internal controls and regulatory obligations.
+
+```mermaid
+flowchart TB
+    Employee["Employee<br/>EMP104"]
+    Role["HR Role<br/>Marketing"]
+    Account["Entra Account<br/>rahul@corp"]
+    Device["Device<br/>Laptop-104"]
+    Entitlement["Saviynt Entitlement<br/>Legacy KYC access"]
+    AWSRole["AWS IAM Role<br/>KYC reader"]
+    Database["PostgreSQL<br/>KYC schema"]
+    Bucket["S3 Bucket<br/>KYC documents"]
+    Data["Sensitive Data<br/>Customer PII"]
+    Control["Internal Access Control<br/>Lending staff only"]
+    Obligation["Regulatory Obligation<br/>DPDP safeguards"]
+
+    Employee --- Role
+    Employee --- Account
+    Employee --- Device
+    Account -->|HAS_GRANT| Entitlement
+    Account -->|ASSUMES| AWSRole
+    Entitlement -->|CAN_READ| Database
+    AWSRole -->|CAN_READ| Bucket
+    Database --> Data
+    Bucket --> Data
+    Data -->|GOVERNED_BY| Control
+    Data -->|GOVERNED_BY| Obligation
+```
 
 Illustrative graph showing two independent access paths to restricted customer data.
 
@@ -657,6 +703,22 @@ Effective permissions must also account for provider-specific semantics such as 
 
 One of the hardest enterprise problems is determining whether accounts in different systems belong to the same employee.
 
+```mermaid
+flowchart TB
+    subgraph Sources["Source identities"]
+        HR["HRMS<br/>EMP104"]
+        Entra["Entra ID<br/>rahul@corp"]
+        AWS["AWS IAM<br/>rahul-prod"]
+        GitHub["GitHub<br/>rahul-dev"]
+        Postgres["PostgreSQL<br/>rsharma_rw"]
+        Saviynt["Saviynt<br/>E00104"]
+    end
+
+    Person["Canonical Employee Identity<br/>person_001 · EMP104<br/>Verified identity mappings"]
+
+    Sources --> Person
+```
+
 ### **Matching strategy**
 
 | Matching evidence               | Reliability                   |
@@ -675,6 +737,18 @@ Never automatically revoke an account based only on a fuzzy name match.
 # **10. Regulatory intelligence engine**
 
 This module continuously manages the relationship between external regulations and internal enterprise controls.
+
+```mermaid
+flowchart TB
+    Sources["Regulatory sources<br/>MeitY · RBI · SEBI · Approved frameworks"]
+    Ingestion["Document ingestion<br/>Parse, hash, version and identify amendments"]
+    Extraction["AI obligation extraction<br/>Structured candidates with source citations"]
+    Review["Compliance specialist review<br/>Applicability and interpretation approval"]
+    Mapping["Control mapping<br/>Technical, procedural and manual controls"]
+    Publication["Policy publication<br/>Versioned executable rules and evidence needs"]
+
+    Sources --> Ingestion --> Extraction --> Review --> Mapping --> Publication
+```
 
 ## **Regulatory data hierarchy**
 
@@ -889,6 +963,28 @@ Proposed configurable prioritization formula, not a calculation of legal liabili
 # **13. Agentic AI architecture**
 
 The AI layer should operate on the enterprise graph and evidence, not directly on unrestricted production infrastructure.
+
+```mermaid
+flowchart TB
+    Trigger["User Query / Incident Trigger"]
+    Supervisor["AI Supervisor<br/>Context · Routing · Budgets · Authorization"]
+
+    subgraph Agents["Specialized agents"]
+        Investigator["Investigator<br/>Trace violations"]
+        Regulatory["Regulatory Agent<br/>Retrieve obligations"]
+        Risk["Risk Analyst<br/>Explain exposure"]
+        Planner["Remediation Planner<br/>Propose safe actions"]
+        Evidence["Evidence Analyst<br/>Assess completeness"]
+        Reporting["Report Agent<br/>Generate narratives"]
+    end
+
+    Gateway["Authorized Tool Gateway<br/>Schemas · RBAC · Tenant context · Audit"]
+    Tools["Graph queries · Evidence search · Policy lookup<br/>Regulation RAG · Action preview · Ticket lookup"]
+    Validation["Deterministic Output Validation"]
+    Answer["Grounded Answer / Proposed Plan"]
+
+    Trigger --> Supervisor --> Agents --> Gateway --> Tools --> Validation --> Answer
+```
 
 ## **AI agents and their tools**
 
