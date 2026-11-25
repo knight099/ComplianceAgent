@@ -1,0 +1,39 @@
+<svg aria-labelledby="title description" font-family="system-ui, sans-serif" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 740 405" role="img">
+  <title id="title">24-week engineering roadmap</title>
+  <desc id="description">Backend + database, elapsed weeks 0 to 4; Graph + identity, elapsed weeks 3 to 7; Connector SDK, elapsed weeks 5 to 9; Enterprise relay, elapsed weeks 7 to 12; Policy + incidents, elapsed weeks 9 to 13; Remediation, elapsed weeks 12 to 17; Evidence vault, elapsed weeks 14 to 19; AI + regulations, elapsed weeks 16 to 21; Security + pilot, elapsed weeks 20 to 24</desc>
+  <rect width="740" height="405" rx="12" fill="#f8fafc" />
+  <text font-size="22" font-weight="600" x="24" y="37" fill="#17243a">24-week engineering roadmap</text>
+  <line x1="220" x2="220" y1="80" y2="350" stroke="#d6dee8" />
+  <text text-anchor="middle" font-size="14" x="220" y="68" fill="#334155">0</text>
+  <line x1="300" x2="300" y1="80" y2="350" stroke="#d6dee8" />
+  <text text-anchor="middle" font-size="14" x="300" y="68" fill="#334155">4</text>
+  <line x1="380" x2="380" y1="80" y2="350" stroke="#d6dee8" />
+  <text text-anchor="middle" font-size="14" x="380" y="68" fill="#334155">8</text>
+  <line x1="460" x2="460" y1="80" y2="350" stroke="#d6dee8" />
+  <text text-anchor="middle" font-size="14" x="460" y="68" fill="#334155">12</text>
+  <line x1="540" x2="540" y1="80" y2="350" stroke="#d6dee8" />
+  <text text-anchor="middle" font-size="14" x="540" y="68" fill="#334155">16</text>
+  <line x1="620" x2="620" y1="80" y2="350" stroke="#d6dee8" />
+  <text text-anchor="middle" font-size="14" x="620" y="68" fill="#334155">20</text>
+  <line x1="700" x2="700" y1="80" y2="350" stroke="#d6dee8" />
+  <text text-anchor="middle" font-size="14" x="700" y="68" fill="#334155">24</text>
+  <text font-size="15" x="24" y="99" fill="#17243a">Backend + database</text>
+  <rect x="220" y="85" width="80" height="18" rx="4" fill="#52657a" />
+  <text font-size="15" x="24" y="129" fill="#17243a">Graph + identity</text>
+  <rect x="280" y="115" width="80" height="18" rx="4" fill="#6155b5" />
+  <text font-size="15" x="24" y="159" fill="#17243a">Connector SDK</text>
+  <rect x="320" y="145" width="80" height="18" rx="4" fill="#6155b5" />
+  <text font-size="15" x="24" y="189" fill="#17243a">Enterprise relay</text>
+  <rect x="360" y="175" width="100" height="18" rx="4" fill="#137d78" />
+  <text font-size="15" x="24" y="219" fill="#17243a">Policy + incidents</text>
+  <rect x="400" y="205" width="80" height="18" rx="4" fill="#6155b5" />
+  <text font-size="15" x="24" y="249" fill="#17243a">Remediation</text>
+  <rect x="460" y="235" width="100" height="18" rx="4" fill="#a45d13" />
+  <text font-size="15" x="24" y="279" fill="#17243a">Evidence vault</text>
+  <rect x="500" y="265" width="100" height="18" rx="4" fill="#52657a" />
+  <text font-size="15" x="24" y="309" fill="#17243a">AI + regulations</text>
+  <rect x="540" y="295" width="100" height="18" rx="4" fill="#784bb1" />
+  <text font-size="15" x="24" y="339" fill="#17243a">Security + pilot</text>
+  <rect x="620" y="325" width="80" height="18" rx="4" fill="#24804e" />
+  <text text-anchor="middle" font-size="14" x="460" y="378" fill="#334155">Development weeks</text>
+</svg>

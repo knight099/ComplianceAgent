@@ -1439,6 +1439,47 @@ Even an enrolled agent can be compromised. A valid signature proves that a regis
 
 ## **21.1 SaaS deployment on AWS**
 
+```mermaid
+flowchart TB
+    Users["Enterprise users"]
+    DNS["Route 53"]
+    Edge["CloudFront · AWS WAF"]
+
+    subgraph VPC["AWS VPC"]
+        subgraph Public["Public subnets"]
+            ALB["Application Load Balancer"]
+        end
+
+        subgraph Private["Private subnets · Amazon EKS"]
+            Frontend["Next.js"]
+            API["Fastify API"]
+            Gateway["Agent Gateway"]
+            Collection["Collection workers"]
+            OPA["OPA"]
+            Graph["Graph workers"]
+            Temporal["Temporal workers"]
+            AI["AI workers"]
+            NATS["NATS JetStream"]
+        end
+
+        RDS["Amazon RDS for PostgreSQL<br/>Multi-AZ"]
+        Redis["Amazon ElastiCache<br/>Redis"]
+    end
+
+    subgraph Managed["AWS managed service endpoints"]
+        S3["Amazon S3<br/>Evidence"]
+        Secrets["Secrets Manager · AWS KMS"]
+        CloudWatch["Amazon CloudWatch<br/>Telemetry"]
+        Bedrock["Amazon Bedrock<br/>Optional AI"]
+    end
+
+    Users -->|DNS lookup| DNS
+    Users -->|HTTPS| Edge --> ALB
+    ALB --> Frontend & API & Gateway
+    Private --> RDS & Redis & S3 & Secrets & CloudWatch
+    AI --> Bedrock
+```
+
 S3, Bedrock and other managed services are accessed through their supported service endpoints; the diagram groups them logically rather than implying they all run inside private subnets.
 
 ## **21.2 Deployment editions**
@@ -1462,29 +1503,21 @@ Assume a medium-to-large enterprise deployment with the following illustrative w
 
 ## **Enterprise ingestion capacity calculator**
 
-Managed endpoints
+| Input | Example value |
+| --- | ---: |
+| Managed endpoints | 10,000 |
+| Facts per scan | 30 |
+| Scan interval | 15 minutes |
+| Average bytes per fact | 500 |
 
-Facts per scan
+| Capacity estimate | Calculation | Result |
+| --- | --- | ---: |
+| Observations per day | 10,000 × 30 × (1,440 ÷ 15) | 28,800,000 |
+| Average observations per second | 28,800,000 ÷ 86,400 | 333.3 |
+| Raw data per day | 28,800,000 × 500 bytes | 14.40 GB |
+| Raw data per 30 days | 14.40 GB × 30 | 432.0 GB |
 
-Scan interval (minutes)
-
-Average bytes per fact
-
-Observations per day
-
-# **2,88,00,000**
-
-Average observations/sec
-
-# **333.3**
-
-Raw data per day
-
-# **14.40 GB**
-
-Raw data per 30 days
-
-# **432.0 GB**
+Storage estimates use decimal gigabytes. The per-second estimate assumes an even distribution across the day.
 
 Estimates before compression, change detection, indexing, replication, protocol overhead and other enterprise integrations.
 
@@ -1650,6 +1683,8 @@ Do not attempt to implement the entire target architecture simultaneously. Build
 
 ## **24-week engineering roadmap**
 
+![24-week roadmap showing nine overlapping workstreams from backend and database to security and pilot](diagrams/complyos-24-week-roadmap.svg)
+
 Illustrative overlapping roadmap. A part-time solo implementation may require longer.
 
 ## **Phase 1 — Core platform**
@@ -1688,37 +1723,16 @@ The first release should not attempt to compete with every feature of Vanta, Dra
 
 Identity-to-data regulatory control assurance
 
-**Enterprise graph**
-
-Identity and sensitive data relationships
-
-**Private relay**
-
-Secure enterprise system connectivity
-
-**Five connectors**
-
-HR, Entra, AWS, PostgreSQL, GitHub
-
-**Incident engine**
-
-Offboarding and excessive access
-
-**AI investigator**
-
-Evidence-grounded root cause analysis
-
-**Safe remediation**
-
-Approval, execution and verification
-
-**Regulatory packs**
-
-Reviewed DPDP and internal controls
-
-**Evidence vault**
-
-Historical audit reconstruction
+| Capability | V1 scope |
+| --- | --- |
+| Enterprise graph | Identity and sensitive data relationships |
+| Private relay | Secure enterprise system connectivity |
+| Five connectors | HR, Entra, AWS, PostgreSQL and GitHub |
+| Incident engine | Offboarding and excessive access |
+| AI investigator | Evidence-grounded root cause analysis |
+| Safe remediation | Approval, execution and verification |
+| Regulatory packs | Reviewed DPDP and internal controls |
+| Evidence vault | Historical audit reconstruction |
 
 # **27. Architecture decisions I would finalize now**
 
