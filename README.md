@@ -1,6 +1,8 @@
 # ComplyOS
 
-ComplyOS checks whether terminated employees retain PostgreSQL read privileges. A customer-side relay correlates an HR extract with explicitly mapped database roles and sends scoped observations to a private control plane. The dashboard opens with an empty inventory and shows the latest assessment for each configured source. Open Compare assessments to inspect changes between two collections.
+ComplyOS checks whether terminated employees retain PostgreSQL read privileges. A customer-side relay correlates an HR extract with explicitly mapped database roles and sends scoped observations to a private control plane. The overview at `/` presents the illustrative enterprise dashboard. The operator workspace at `/operations` opens with an empty inventory and shows the latest assessment for each configured source. Open Compare assessments to inspect changes between two collections.
+
+[Dashboard design system](docs/design-system.md)
 
 ## Enterprise architecture
 
@@ -115,7 +117,7 @@ Run `npm test` for signed-bundle checks and a PostgreSQL-backed role membership,
 
 ## Connect your own model
 
-Sign in to the dashboard and open **AI model connection**. Select a provider, enter an exact model ID available to your account, provide the API key when the provider requires one, and select **Test connection**. Select an assessment and **Generate summary** to explain its counts and freshness. Each browser session supplies its own credentials. Reloading or clearing the connection releases the key from application state. Use HTTPS when operating remotely and keep request bodies and authorization headers out of proxy logs.
+Select **AI Copilot** in the overview to open **AI model connection**. Select a provider, enter an exact model ID available to your account, provide the API key when the provider requires one, and select **Test connection**. Select an assessment and **Generate summary** to explain its counts and freshness. Each browser session supplies its own credentials. Reloading or clearing the connection releases the key from application state. Use HTTPS when operating remotely and keep request bodies and authorization headers out of proxy logs.
 
 OpenAI is available by default. To offer a private gateway, Ollama, vLLM or another OpenAI-compatible service, set the following on the **app server** and restart it (recreate the app container for Compose):
 
