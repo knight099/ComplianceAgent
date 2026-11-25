@@ -17,6 +17,52 @@ The target application should be capable of answering six questions for any ente
 
 # **1. High-level system architecture**
 
+```mermaid
+flowchart TB
+    subgraph Presentation["Presentation layer"]
+        Dashboard["Compliance Dashboard"]
+        Auditor["Auditor Portal"]
+        Copilot["AI Copilot"]
+        Admin["Administration"]
+    end
+
+    API["API Gateway / Control Plane<br/>OIDC · RBAC · Tenant isolation · Rate limits"]
+
+    subgraph Core["Core domain services"]
+        Identity["Identity Resolution<br/>Cross-system identities"]
+        Graph["Compliance Graph<br/>Entities and relationships"]
+        Policy["Policy Engine<br/>OPA / Rego"]
+        Regulation["Regulatory Intelligence<br/>Obligations and controls"]
+        Incidents["Incident Engine<br/>Detection and correlation"]
+        Investigation["AI Investigation<br/>Grounded reasoning"]
+        Remediation["Remediation Engine<br/>Durable workflows"]
+        Evidence["Evidence Engine<br/>Verification and audit"]
+    end
+
+    Events["Event Bus + Workflow Orchestrator<br/>NATS JetStream · Temporal"]
+
+    subgraph Persistence["Persistence layer"]
+        Postgres["PostgreSQL<br/>State and graph"]
+        Objects["Object Store<br/>Evidence"]
+        Redis["Redis<br/>Cache"]
+        Vector["pgvector<br/>Regulations"]
+    end
+
+    Gateway["Integration & Agent Gateway<br/>Webhooks · HTTPS · gRPC · mTLS"]
+
+    subgraph DataPlane["Enterprise data plane"]
+        Collectors["Enterprise Relay · Endpoint Agents<br/>Cloud Connectors · CI/CD Scanners"]
+        Systems["HRMS · IAM / IGA · Databases<br/>AWS / Azure · GitHub / GitLab · Endpoints<br/>Internal APIs · Jira / ITSM · Kubernetes"]
+        Collectors --- Systems
+    end
+
+    Presentation --> API --> Core
+    Core --> Events
+    Core --> Persistence
+    Gateway --> Core
+    DataPlane -->|Secure outbound communication| Gateway
+```
+
 Logical architecture. Domain services can initially run within a modular monolith rather than separate microservices.
 
 The application is divided into two major environments.
@@ -172,6 +218,21 @@ These are domain boundaries, not a requirement to deploy 16 independent servers.
 
 When an enterprise purchases ComplyOS, the onboarding process should discover and establish its compliance monitoring scope.
 
+```mermaid
+flowchart TB
+    Tenant["Create enterprise tenant<br/>Organization, industry, jurisdiction"]
+    Identity["Configure enterprise identity<br/>SSO, administrators, compliance officers"]
+    Applicability["Determine regulatory applicability<br/>DPDP, RBI, SEBI, SOC 2, ISO 27001"]
+    Connect["Connect enterprise systems<br/>OAuth, API keys, cloud roles, private relay"]
+    Discovery["Discover assets and identities<br/>Employees, accounts, databases, resources"]
+    Baselines["Establish approved baselines<br/>Access policies, classifications, exceptions"]
+    Assessment["Run initial compliance assessment<br/>Violations, unknowns, coverage gaps"]
+    Monitoring["Enable continuous monitoring<br/>Events, scheduled scans and investigations"]
+
+    Tenant --> Identity --> Applicability --> Connect
+    Connect --> Discovery --> Baselines --> Assessment --> Monitoring
+```
+
 The enterprise should receive an initial assessment that separates actual detected violations from areas where ComplyOS does not yet have sufficient evidence.
 
 # **5. Agent and collector architecture**
@@ -183,6 +244,35 @@ ComplyOS should have four distinct collection mechanisms.
 The endpoint agent is installed on individual employee laptops, workstations or servers where existing endpoint management integrations cannot supply sufficient evidence.
 
 ### **Internal Go agent architecture**
+
+```mermaid
+flowchart TB
+    Supervisor["Agent Supervisor<br/>Lifecycle · Configuration · Health"]
+
+    subgraph Collection["Evidence collection"]
+        Scheduler["Scheduler<br/>Periodic collection"]
+        Runtime["Collector Runtime<br/>OS-specific plugins"]
+        Processor["Evidence Processor<br/>Normalize and sign"]
+        Spool["Encrypted Spool<br/>Offline persistence"]
+        Scheduler --> Runtime --> Processor --> Spool
+    end
+
+    subgraph Management["Agent management"]
+        Policy["Policy Manager<br/>Signed configurations"]
+        Identity["Identity Manager<br/>Keys and certificates"]
+        Executor["Action Executor<br/>Restricted operations"]
+        Updates["Update Manager<br/>Signed releases"]
+    end
+
+    Transport["Transport Layer<br/>mTLS · gRPC · HTTPS fallback"]
+    Gateway["ComplyOS Agent Gateway"]
+
+    Supervisor --> Collection
+    Supervisor --> Management
+    Spool --> Transport
+    Management --- Transport
+    Transport --> Gateway
+```
 
 ### **Installation methods**
 
@@ -258,6 +348,24 @@ A device that stops reporting must become stale or unknown rather than remain co
 The relay is installed inside a customer VPC, data center or corporate network.
 
 Unlike the endpoint agent, it primarily connects to private enterprise services.
+
+```mermaid
+flowchart TB
+    Control["ComplyOS Control Plane"]
+
+    subgraph Customer["Customer private network"]
+        Relay["Go Enterprise Relay<br/>Job runtime · Secrets · Encrypted queue"]
+        Data["PostgreSQL · Active Directory · Oracle"]
+        Services["Internal GitLab · Saviynt · Private APIs"]
+        Infrastructure["Kafka · Kubernetes · Local Vault"]
+
+        Relay --> Data
+        Relay --> Services
+        Relay --> Infrastructure
+    end
+
+    Relay -->|Outbound mTLS| Control
+```
 
 The relay maintains an outbound connection to the control plane. Collection instructions travel through this established connection, and the relay accesses local services using customer-managed credentials.
 
