@@ -11,11 +11,14 @@ test("history API verifies two-stage revocation from persisted catalog observati
   const db = new PGlite();
   t.after(() => db.close());
   t.mock.method(pg.Pool.prototype, "query", (sql, args) => db.query(sql, args));
+  t.mock.method(pg.Pool.prototype, "connect", async () => ({query: (sql,args) => db.query(sql,args), release() {}}));
   process.env.DATABASE_URL = "postgres://localhost/unused";
   process.env.AUTH_MODE = "shared";
   process.env.OPERATOR_PASSWORD = "local-test";
   await db.exec(readFileSync("migrations/001-assurance.sql", "utf8"));
   await db.exec(readFileSync("migrations/007-access-graph.sql", "utf8"));
+  for (const name of ["002-identities","004-collection-alerts","005-webhook-outbox","008-organizations","009-alert-organizations","012-assessment-rls"])
+    await db.exec(readFileSync("migrations/" + name + ".sql","utf8"));
   await db.exec(
     "CREATE ROLE staff; CREATE ROLE lenders; CREATE ROLE readers; CREATE TABLE kyc (id int); GRANT SELECT ON kyc TO lenders, readers; GRANT lenders,readers TO staff",
   );

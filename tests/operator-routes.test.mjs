@@ -23,7 +23,7 @@ test("reviewer can read assessments; AI routes enforce role changes on the next 
     "003-operator-permissions",
     "007-access-graph",
     "008-organizations",
-    "004-collection-alerts", "005-webhook-outbox", "006-delivery-status", "009-alert-organizations",
+    "004-collection-alerts", "005-webhook-outbox", "006-delivery-status", "009-alert-organizations", "012-assessment-rls",
   ])
     await db.exec(readFileSync("migrations/" + file + ".sql", "utf8"));
   const key = await issue(db, "operator", "user", null, "reviewer");
@@ -36,6 +36,13 @@ test("reviewer can read assessments; AI routes enforce role changes on the next 
   await db.exec(`INSERT INTO assessments (id,source,collected_at,policy_version,organization_id)
     VALUES ('00000000-0000-0000-0000-000000000001','payments',now(),'v1','installation'),
            ('00000000-0000-0000-0000-000000000002','payments',now()+interval '1 hour','v1','other')`);
+  t.mock.method(pg.Pool.prototype, "connect", async () => ({
+    async query(sql, args) {
+      const result = await db.query(sql, args);
+      return { ...result, rowCount: result.rows.length };
+    },
+    release() {},
+  }));
   const versioned = await v1Assessments(req);
   assert.equal(versioned.status, 200);
   assert.equal(versioned.headers.get("Cache-Control"), "no-store");
@@ -49,13 +56,6 @@ test("reviewer can read assessments; AI routes enforce role changes on the next 
   const otherRows = await (await assessments(otherReq)).json();
   assert.deepEqual(otherRows.map(row => row.organization_id), ["other"]);
 
-  t.mock.method(pg.Pool.prototype, "connect", async () => ({
-    async query(sql, args) {
-      const result = await db.query(sql, args);
-      return { ...result, rowCount: result.rows.length };
-    },
-    release() {},
-  }));
   const relayKey = await issue(db, "relay", "other-relay", "payments", undefined, "other");
   const post = (id, source = "payments") => upload(new Request("http://localhost", {
     method: "POST", headers: { authorization: "Bearer " + relayKey },

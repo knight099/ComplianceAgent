@@ -52,7 +52,8 @@ Read top down alongside the [2.0 system design](complyos-2-system-design.md). Ea
 - [x] Isolate collection alert episodes, recovery evidence, monitor heartbeats, webhook claims and delivery status by organization. [Isolation regression test](../tests/alert-organizations.test.mjs)
 - [x] Bind device evidence uploads to enrollment ownership and scope receipt lookup to the authenticated organization. [Isolation test](../tests/device-organizations.test.mjs)
 - [x] Enforce row-level security on collected evidence. Test simultaneous organizations, unfiltered reads, rejected foreign writes and pooled connection reuse on PostgreSQL 17. [Database integration test](../tests/integration/evidence-rls.test.mjs)
-- [ ] Extend row-level security to assessments, results and graph projections, then monitoring and delivery records. Verify each runtime role and exercise concurrent two-organization requests across those paths.
+- [x] Apply row-level security to assessments, results and graph edges. Read both graph views with the caller’s permissions and check concurrent organizations on PostgreSQL. [Integration test](../tests/integration/assessment-rls.test.mjs)
+- [ ] Extend row-level security to monitoring and delivery records. Verify each runtime role and exercise concurrent two-organization requests across those paths.
 - [ ] Version the remaining APIs. Add tenant/connector administration, agent enrollment/heartbeat, observation batches, graph queries, policies, incidents, approvals, reports and replay endpoints. Add SSE progress and gateway protocols as their consumers ship.
 - [x] Provide overview design system, live operations, assessment comparisons, local access report viewer, connection settings and monitoring. [Frontend](../app)
 - [ ] Drive overview counts from measured coverage and findings. Deliver dedicated graph, incident, regulation, policy, remediation, fleet, administration and auditor workspaces with persona-specific authorization.

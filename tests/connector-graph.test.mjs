@@ -15,6 +15,7 @@ test("connector snapshots, historical backfill and graph reader preserve scoped 
   t.after(() => db.close());
   process.env.DATABASE_URL = "postgres://localhost/unused";
   t.mock.method(pg.Pool.prototype, "query", (sql, args) => db.query(sql, args));
+  t.mock.method(pg.Pool.prototype, "connect", async () => ({query: (sql,args) => db.query(sql,args), release() {}}));
   const apply = (name) =>
     db.exec(readFileSync("migrations/" + name + ".sql", "utf8"));
   await apply("001-assurance");
@@ -59,6 +60,8 @@ test("connector snapshots, historical backfill and graph reader preserve scoped 
   await persist(original);
   await apply("007-access-graph");
   await apply("007-access-graph");
+  for (const name of ["002-identities","004-collection-alerts","005-webhook-outbox","008-organizations","009-alert-organizations","012-assessment-rls"]) await apply(name);
+  await db.exec("INSERT INTO organizations VALUES ('other')");
   const check = async (batch) => {
     const [run] = await latest();
     const result = run.results[0];

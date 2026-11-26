@@ -42,7 +42,7 @@ For a login or startup problem, check `docker compose logs app db collection-mon
 | High-level layer | Working in the pilot | Still to build |
 |---|---|---|
 | Screens | Live operations, assessment comparison, local report viewer and optional summaries from a customer-selected model. The overview shows the intended design. | Live overview metrics, auditor portal and administration screens. |
-| API and access control | Next.js APIs, named reviewers and analysts, source-bound relay credentials and organization-scoped queries. PostgreSQL enforces organization isolation for collected evidence. | Enterprise single sign-on, rate limits, a separate Fastify API and database-enforced isolation across the remaining tables. |
+| API and access control | Next.js APIs, named reviewers and analysts, source-bound relay credentials and organization-scoped queries. PostgreSQL enforces organization isolation for collected evidence, assessments, individual results and access paths. | Enterprise single sign-on, rate limits, a separate Fastify API and database-enforced isolation across the remaining tables. |
 | Identity and access graph | Reviewed HR mappings, optional Entra matches and dated paths from PostgreSQL roles to tables. | A common identity and access history across cloud, apps, databases and devices. |
 | Policies, regulations and incidents | Offboarding checks, comparison against an owner-reviewed access policy, and alerts when collection fails or becomes overdue. | Reviewed regulatory packs, a versioned OPA policy service and access incidents that combine findings across systems. |
 | Investigation, fixes and evidence | AI can explain assessment counts and freshness. Reviewers can compare fresh observations after a manual fix. Signed device uploads can be retrieved by receipt. | Investigation with evidence citations, approved automated fixes, independent checks across providers and auditor replay. |
@@ -247,7 +247,9 @@ Device uploads, receipt lookups and local evidence imports run in transactions u
 
 Migration 011 creates a restricted non-login role and requires permission to manage roles and alter the evidence table. For a separately provisioned application login, grant it membership in `complyos_evidence` with permission to `SET ROLE`. The development Compose login has administrative privileges. A shared deployment still requires a separate non-administrative runtime login and database policies for the other tenant-owned tables.
 
-Run `node --test tests/integration/evidence-rls.test.mjs` with `COMPLYOS_TEST_DATABASE_URL` pointing to a fresh disposable PostgreSQL database. The test applies migrations, creates organizations and opens simultaneous connections.
+Migration 012 adds the `complyos_assessment` and `complyos_monitor` roles. Assessment uploads, history, summaries and graph reads use the first role. Health checks and alert sweeps use the second. Grant separately provisioned runtime logins permission to switch into the roles their processes use. Graph views apply the caller’s row policies. Alert and webhook tables still rely on application filtering.
+
+Run `node --test --test-concurrency=1 tests/integration/*.test.mjs` with `COMPLYOS_TEST_DATABASE_URL` pointing to a fresh disposable PostgreSQL database. The tests apply migrations, create organizations and open simultaneous connections.
 
 
 ### Operator permissions
