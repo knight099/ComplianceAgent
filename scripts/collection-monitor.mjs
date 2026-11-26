@@ -15,7 +15,7 @@ try {
       await sweep(config?.destination, organization);
       if (config)
         for (let i = 0; i < 10; i++) {
-          if (!(await deliverNext(database(), config))) break;
+          if (!(await deliverNext(config))) break;
         }
     } catch (e) {
       if (once) throw e;

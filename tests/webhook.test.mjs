@@ -1,3 +1,4 @@
+import pg from "pg";
 import { deliveryStatus } from "../lib/delivery-status.mjs";
 import test from "node:test";
 import assert from "node:assert/strict";
@@ -6,10 +7,15 @@ import { createHmac } from "node:crypto";
 import { PGlite } from "@electric-sql/pglite";
 import { webhookConfig, deliverNext } from "../lib/alert-webhook.mjs";
 
-test("transactional transitions retry in order with stable IDs and a signed body", async () => {
+test("transactional transitions retry in order with stable IDs and a signed body", async (t) => {
   const db = new PGlite(),
     config = webhookConfig("https://receiver.example/alerts", "s".repeat(32));
   try {
+    process.env.DATABASE_URL = "postgres://localhost/unused";
+    t.mock.method(pg.Pool.prototype, "connect", async () => ({
+      query: (sql, args) => db.query(sql, args),
+      release() {},
+    }));
     for (const m of [
       "001-assurance",
       "002-identities",
@@ -20,12 +26,14 @@ test("transactional transitions retry in order with stable IDs and a signed body
       "006-delivery-status",
       "006-delivery-status",
       "009-alert-organizations",
+      "012-assessment-rls",
+      "013-monitoring-rls",
     ])
       await db.exec(readFileSync("migrations/" + m + ".sql", "utf8"));
     const insert =
       "INSERT INTO collection_alerts(source,condition,detail) VALUES('finance','freshness','Overdue')";
     await db.exec(insert);
-    assert.equal(await deliverNext(db, config), false);
+    assert.equal(await deliverNext(config), false);
     await db.exec("DELETE FROM collection_alerts");
     const open = async (tx) => {
       await tx.query(
@@ -40,7 +48,7 @@ test("transactional transitions retry in order with stable IDs and a signed body
         throw Error("rollback");
       }),
     );
-    assert.equal(await deliverNext(db, config), false);
+    assert.equal(await deliverNext(config), false);
     await db.transaction(async (tx) => {
       await open(tx);
       await tx.exec(
@@ -48,7 +56,7 @@ test("transactional transitions retry in order with stable IDs and a signed body
       );
     });
     assert.equal(
-      await deliverNext(db, { ...config, destination: "different" }),
+      await deliverNext({ ...config, destination: "different" }),
       false,
     );
     const events = [];
@@ -64,8 +72,8 @@ test("transactional transitions retry in order with stable IDs and a signed body
       );
       return new Response(null, { status: events.length === 1 ? 503 : 204 });
     };
-    await deliverNext(db, config, receiver);
-    assert.equal(await deliverNext(db, config, receiver), false);
+    await deliverNext(config, receiver);
+    assert.equal(await deliverNext(config, receiver), false);
     const failed = await deliveryStatus(db);
     assert.equal(failed.pending_count, 2);
     assert.deepEqual(failed.pending.map((x) => x.status).sort(), [
@@ -82,8 +90,8 @@ test("transactional transitions retry in order with stable IDs and a signed body
     await db.exec(
       "UPDATE alert_deliveries SET available_at=now() WHERE transition='opened'",
     );
-    await deliverNext(db, config, receiver);
-    await deliverNext(db, config, receiver);
+    await deliverNext(config, receiver);
+    await deliverNext(config, receiver);
     const status = await deliveryStatus(db);
     assert.equal(status.pending_count, 0);
     assert.equal(status.acknowledged.length, 2);
@@ -99,7 +107,7 @@ test("transactional transitions retry in order with stable IDs and a signed body
       ["opened", "opened", "resolved"],
     );
     assert.equal(events[0].eventId, events[1].eventId);
-    assert.equal(await deliverNext(db, config, receiver), false);
+    assert.equal(await deliverNext(config, receiver), false);
   } finally {
     await db.close();
   }

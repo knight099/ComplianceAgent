@@ -1,3 +1,4 @@
+import pg from "pg";
 import test from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
@@ -8,6 +9,11 @@ import { deliveryStatus } from "../lib/delivery-status.mjs";
 
 test("same-source episodes and same-URL webhook queues stay separate across organizations and upgrades", async t => {
   const db = new PGlite();
+  process.env.DATABASE_URL = "postgres://localhost/unused";
+  t.mock.method(pg.Pool.prototype, "connect", async () => ({
+    query: (sql, args) => db.query(sql, args),
+    release() {},
+  }));
   t.after(() => db.close());
   const files = readdirSync("migrations").filter(f => f.endsWith(".sql")).sort();
   const apply = file => db.exec(readFileSync("migrations/" + file, "utf8"));
@@ -49,8 +55,8 @@ test("same-source episodes and same-URL webhook queues stay separate across orga
     received.push(JSON.parse(options.body));
     return new Response(null, { status: 204 });
   };
-  for (let n = 0; n < 2; n++) assert.ok(await deliverNext(db, config("second"), send));
-  assert.equal(await deliverNext(db, config("second"), send), false);
+  for (let n = 0; n < 2; n++) assert.ok(await deliverNext(config("second"), send));
+  assert.equal(await deliverNext(config("second"), send), false);
   assert.ok(received.every(event => event.organizationId === "second"));
   assert.deepEqual(received.map(item => [item.alertId,item.transition]), [
     [String(episode.id),"opened"], [String(episode.id),"resolved"],
