@@ -23,7 +23,7 @@ start
 read_api /api/v1/assessments | jq -e 'length == 0'
 id=$(cat /proc/sys/kernel/random/uuid)
 body=$(jq -nc --arg id "$id" --arg now "$(date -u +%FT%TZ)" \
-  '{id:$id,source:"ci-source",observed:$now,policy:"hr.postgres.offboarding/v1",results:[]}')
+  '{id:$id,source:"ci-source",observed:$now,policy:"hr.postgres.offboarding/v1",results:[{employeeId:"ci-employee",role:"ci-role",resource:"ci-table",decision:"RETAINED",evidence:{}}]}')
 curl -fsS -H "Authorization: Bearer $RELAY_TOKEN" -H 'Content-Type: application/json' \
   -d "$body" "$base/api/assessments" | jq -e --arg id "$id" '.id == $id'
 docker compose exec -T collection-monitor node scripts/collection-monitor.mjs --once
@@ -31,3 +31,4 @@ read_api /api/collection-alerts | jq -e '.checked_at != null'
 docker compose down
 start
 read_api /api/v1/assessments | jq -e --arg id "$id" 'any(.[]; .id == $id and .source == "ci-source")'
+read_api /api/collection-health | jq -e 'any(.[]; .source == "ci-source" and .freshness == "Current" and .evaluated == 1 and .retained == 1 and .no_scoped_grant == 0 and .unknown == 0)'

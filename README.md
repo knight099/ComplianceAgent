@@ -37,7 +37,7 @@ docker compose ps
 
 On an existing installation, keep the original `POSTGRES_PASSWORD` and database volume. Add the two new database passwords before running the command above. The `migrate` job applies the schema and provisions both logins. An exit code of zero for that job means the app and worker can start. Rerun `docker compose up --build -d` after rotating either runtime password in the file.
 
-Open [Operations](http://localhost:3000/operations). When prompted, use the username `operator` and the `OPERATOR_PASSWORD` from your file. A fresh installation shows an empty inventory until a relay submits its first assessment. The [overview](http://localhost:3000/) shows illustrative figures. Use Operations for actual results.
+Open [Operations](http://localhost:3000/operations). When prompted, use the username `operator` and the `OPERATOR_PASSWORD` from your file. A fresh installation shows an empty inventory until a relay submits its first assessment. The [overview](http://localhost:3000/) shows actual check counts from the latest assessment per source. Only sources collected within the last 24 hours with a valid collection time contribute to the result percentages. Overdue, future-dated and unreported sources are listed for review.
 
 For a login or startup problem, check `docker compose logs migrate app db collection-monitor`. Stop the stack with `docker compose down`; its named volumes retain the database and enrollment files.
 
@@ -45,7 +45,7 @@ For a login or startup problem, check `docker compose logs migrate app db collec
 
 | High-level layer | Working in the pilot | Still to build |
 |---|---|---|
-| Screens | Live operations, assessment comparison, local report viewer and optional summaries from a customer-selected model. The overview shows the intended design. | Live overview metrics, auditor portal and administration screens. |
+| Screens | Live operations, assessment comparison, local report viewer and optional summaries from a customer-selected model. The overview shows measured offboarding results and source freshness. | Auditor portal and administration screens. |
 | API and access control | Next.js APIs, named reviewers and analysts, source-bound relay credentials and organization-scoped queries. PostgreSQL enforces organization isolation for collected evidence, assessments, individual results, access paths, collection alerts and webhook deliveries. | Enterprise single sign-on, rate limits, a separate Fastify API and database-enforced isolation across the remaining tables. |
 | Identity and access graph | Reviewed HR mappings, optional Entra matches and dated paths from PostgreSQL roles to tables. | A common identity and access history across cloud, apps, databases and devices. |
 | Policies, regulations and incidents | Offboarding checks, comparison against an owner-reviewed access policy, and alerts when collection fails or becomes overdue. | Reviewed regulatory packs, a versioned OPA policy service and access incidents that combine findings across systems. |
