@@ -57,7 +57,8 @@ Read top down alongside the [2.0 system design](complyos-2-system-design.md). Ea
 - [x] Use a one-shot migration job and separate application and worker logins. Verify named dashboard reads, a monitoring sweep, and denial of administrative writes and role switching. [Runtime login integration test](../tests/integration/runtime-logins.test.mjs)
 - [ ] Version the remaining APIs. Add tenant/connector administration, agent enrollment/heartbeat, observation batches, graph queries, policies, incidents, approvals, reports and replay endpoints. Add SSE progress and gateway protocols as their consumers ship.
 - [x] Provide overview design system, live operations, assessment comparisons, local access report viewer, connection settings and monitoring. [Frontend](../app)
-- [ ] Drive overview counts from measured coverage and findings. Deliver dedicated graph, incident, regulation, policy, remediation, fleet, administration and auditor workspaces with persona-specific authorization.
+- [x] Drive overview counts from current PostgreSQL checks and show sources with stale or missing collections.
+- [ ] Deliver dedicated graph, incident, regulation, policy, remediation, fleet, administration and auditor workspaces with persona-specific authorization.
 
 ## 19–21. Evidence, security and deployment
 
@@ -91,4 +92,5 @@ Read top down alongside the [2.0 system design](complyos-2-system-design.md). Ea
 5. [x] Run six pull-request checks, including real PostgreSQL isolation and a Compose restart with retained data. [CI workflow](../.github/workflows/pilot.yml)
 6. [x] Restrict named authentication to an exact credential lookup. Test migration of existing grants, scoped relay inventory and immediate revocation using runtime logins.
 7. [ ] Require all six check names in GitHub branch rules and qualify upgrades from a previous release before a shared deployment. [Secure pilot plan](implementation-plan.md#secure-pilot-review-and-next-pull-request)
-8. [ ] Connect the overview to measured assessment results, then advance the connector and incident phases in the [delivery plan](implementation-plan.md).
+8. [x] Connect the overview to measured assessment results and source freshness.
+9. [ ] Advance the connector and incident phases in the [delivery plan](implementation-plan.md).

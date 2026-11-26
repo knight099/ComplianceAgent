@@ -33,14 +33,18 @@ test("health includes unreported enrollments and uses collection order for late 
         "INSERT INTO assessment_results VALUES($1,$2,'staff','kyc','UNKNOWN',$3)",
         [id, String(index), { reason }],
       );
+    await db.query(
+      "INSERT INTO assessment_results VALUES ($1,'3','staff','kyc','RETAINED','{}'), ($1,'4','staff','kyc','NO_SCOPED_GRANT','{}')",
+      [id],
+    );
     const rows = Object.fromEntries(
       (await collectionHealth(db)).map((r) => [r.source, r]),
     );
     assert.equal(rows.primary.assessment_id, id);
     assert.equal(rows.primary.freshness, "Current");
     assert.deepEqual(
-      [rows.primary.evaluated, rows.primary.unknown, rows.primary.failed],
-      [2, 2, 1],
+      [rows.primary.evaluated, rows.primary.retained, rows.primary.no_scoped_grant, rows.primary.unknown, rows.primary.failed],
+      [4, 1, 1, 2, 1],
     );
     assert.equal(rows.pending.freshness, "Awaiting first collection");
     assert.equal(rows.pending.evaluated, null);
