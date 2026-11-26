@@ -20,10 +20,12 @@ git clone --branch develop/enterprise-core https://github.com/knight099/Complian
 cd ComplianceAgent
 ```
 
-Create a private `.env` file in that directory with the following three entries. Replace each example value with a different secret. Hex strings work for all three. You can generate each one with `openssl rand -hex 32`. Keep this file for subsequent starts.
+Create a private `.env` file in that directory with the following five entries. Replace each example value with a different secret. Use URL-safe values for all three database passwords. Hex strings work for all five secrets. You can generate each one with `openssl rand -hex 32`. Keep this file for subsequent starts.
 
 ```dotenv
-POSTGRES_PASSWORD=replace_with_a_url_safe_database_password
+POSTGRES_PASSWORD=replace_with_the_database_admin_password
+APP_DB_PASSWORD=replace_with_a_separate_app_database_password
+WORKER_DB_PASSWORD=replace_with_a_separate_worker_database_password
 OPERATOR_PASSWORD=replace_with_an_operator_password
 RELAY_TOKEN=replace_with_a_relay_upload_token
 ```
@@ -33,9 +35,11 @@ docker compose up --build -d
 docker compose ps
 ```
 
+On an existing installation, keep the original `POSTGRES_PASSWORD` and database volume. Add the two new database passwords before running the command above. The `migrate` job applies the schema and provisions both logins. An exit code of zero for that job means the app and worker can start. Rerun `docker compose up --build -d` after rotating either runtime password in the file.
+
 Open [Operations](http://localhost:3000/operations). When prompted, use the username `operator` and the `OPERATOR_PASSWORD` from your file. A fresh installation shows an empty inventory until a relay submits its first assessment. The [overview](http://localhost:3000/) shows illustrative figures. Use Operations for actual results.
 
-For a login or startup problem, check `docker compose logs app db collection-monitor`. Stop the stack with `docker compose down`; its named volumes retain the database and enrollment files.
+For a login or startup problem, check `docker compose logs migrate app db collection-monitor`. Stop the stack with `docker compose down`; its named volumes retain the database and enrollment files.
 
 ## What is built and what is planned
 
@@ -93,16 +97,21 @@ flowchart LR
 
 ## Run without Docker
 
-Use Node.js 24 and an existing PostgreSQL 16+ database for the control plane. In your shell, set `DATABASE_URL` to that database’s connection string and export `OPERATOR_PASSWORD` and `RELAY_TOKEN`. For local development the migration login needs permission to create tables and manage the evidence role. See [database isolation for evidence](#database-isolation-for-evidence) for role requirements.
+Use Node.js 24 and PostgreSQL 16 or newer. In an administrative shell, set `DATABASE_URL` to the schema owner's connection string. The owner needs permission to create roles and grant membership. Set `APP_DB_PASSWORD` and `WORKER_DB_PASSWORD` to distinct secrets and run:
 
 ```sh
 npm ci
-node scripts/migrate.mjs
-npm run build
-npm start
+node scripts/migrate.mjs --provision-runtime
 ```
 
-Open the same Operations URL as above. In a second shell with the control-plane database settings, run `node scripts/collection-monitor.mjs` for collection alerts.
+Start the services in separate environments. Give each process its own `DATABASE_URL`, pointing to the same database. Supply administrative credentials only to the migration and identity administration commands.
+
+| Process | Database username | Other settings | Command |
+|---|---|---|---|
+| Application | `complyos_app` | Set `OPERATOR_PASSWORD` and `RELAY_TOKEN` for shared authentication. | `npm run build && npm start` |
+| Collection monitor | `complyos_worker` | Set `COMPLYOS_MONITOR_ORGANIZATION` when monitoring a named organization. | `node scripts/collection-monitor.mjs` |
+
+Open [Operations](http://localhost:3000/operations). If your DBA manages logins independently, `node scripts/migrate.mjs` still applies only the schema. The [runtime grants](scripts/provision-runtime.sql) list the permissions each login needs.
 
 ## Run a read-only collection
 
@@ -220,7 +229,7 @@ Replace the example URL with the full chat-completions endpoint. The provider mu
 
 For a dedicated organization, set `AUTH_MODE=named` on the app and run the migrations. Recreate the Compose app after changing modes. Named mode authenticates each request against PostgreSQL and disables the shared credentials. Existing deployments default to `shared` for compatibility.
 
-Run these commands on the control-plane host with administrative database access (or prefix each with `docker compose exec app`):
+Run these commands on the control-plane host with administrative database access (or prefix each with `docker compose run --rm migrate`):
 
 ```sh
 node scripts/identity.mjs issue operator alice
@@ -245,9 +254,9 @@ Use the same organization for role changes and revocation. Identity names are un
 
 Device uploads, receipt lookups and local evidence imports run in transactions under the `complyos_evidence` role. PostgreSQL checks the transaction’s organization on reads and inserts. A missing organization context gives that role no visible rows. Each transaction releases its role and organization settings on commit or rollback.
 
-Migration 011 creates a restricted non-login role and requires permission to manage roles and alter the evidence table. For a separately provisioned application login, grant it membership in `complyos_evidence` with permission to `SET ROLE`. The development Compose login has administrative privileges. A shared deployment still requires a separate non-administrative runtime login and database policies for the other tenant-owned tables.
+Migration 011 creates a restricted non-login role and requires permission to manage roles and alter the evidence table. For a separately provisioned application login, grant it membership in `complyos_evidence` with permission to `SET ROLE`. Compose gives the migration job administrative access. Its two long-running services use separate non-administrative logins.
 
-Migration 012 adds the `complyos_assessment` and `complyos_monitor` roles. Assessment uploads, history, summaries and graph reads use the first role. Health checks and alert sweeps use the second. Grant separately provisioned runtime logins permission to switch into the roles their processes use. Graph views apply the caller’s row policies.
+Migration 012 adds the `complyos_assessment` and `complyos_monitor` roles. Assessment uploads, history, summaries and graph reads use the first role. Alert sweeps use the second. Since migration 014, dashboard health checks use the read-only alert role. Grant separately provisioned runtime logins permission to switch into the roles their processes use. Graph views apply the caller’s row policies.
 
 Migration 013 applies organization policies to alert episodes, failed checks, monitor heartbeats and webhook deliveries. The app reads alert history and delivery status under `complyos_alert_reader`. A webhook worker uses `complyos_delivery` to claim a queued event and record its outcome. If you provision separate logins, grant the app and worker permission to switch into their respective roles. The claim commits before the HTTP request so a slow receiver does not hold a database transaction open.
 

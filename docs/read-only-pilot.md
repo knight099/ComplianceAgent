@@ -29,7 +29,7 @@ For each source, compare observation time with receipt time to spot delayed deli
 
 ### Automated collection alerts
 
-Compose starts a monitor that checks collection health every minute and persists alerts in PostgreSQL. For a host deployment, run `node scripts/migrate.mjs` and then supervise `node scripts/collection-monitor.mjs` with the control-plane database connection. Use `--once` for a single scheduled sweep.
+Compose starts a monitor that checks collection health every minute and persists alerts in PostgreSQL. For a host deployment, run `node scripts/migrate.mjs --provision-runtime` with the administrative database connection and configured runtime passwords, then supervise `node scripts/collection-monitor.mjs` with the `complyos_worker` connection. Use `--once` for a single scheduled sweep.
 
 Each worker monitors one existing organization. Set `COMPLYOS_MONITOR_ORGANIZATION` on the monitor process or Compose service. The default is `installation`. Run a separate worker for each organization that needs monitoring and configure its webhook URL and signing secret on that worker. Operator credentials determine which alerts, heartbeat and delivery receipts the dashboard returns. Historical episodes and the previous heartbeat migrate to `installation`. Stop old monitor processes during migration and restart them on the new version.
 

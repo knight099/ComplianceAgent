@@ -1,29 +1,37 @@
 services:
+  migrate:
+    build: .
+    environment:
+      DATABASE_URL: postgres://complyos:${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD}@db/complyos
+      APP_DB_PASSWORD: ${APP_DB_PASSWORD:?set APP_DB_PASSWORD}
+      WORKER_DB_PASSWORD: ${WORKER_DB_PASSWORD:?set WORKER_DB_PASSWORD}
+    command: ["node", "scripts/migrate.mjs", "--provision-runtime"]
+    depends_on:
+      db: {condition: service_healthy}
   app:
     build: .
     ports: ["127.0.0.1:3000:3000"]
     environment:
-      DATABASE_URL: postgres://complyos:${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD}@db/complyos
+      DATABASE_URL: postgres://complyos_app:${APP_DB_PASSWORD:?set APP_DB_PASSWORD}@db/complyos
       AUTH_MODE: ${AUTH_MODE:-shared}
       OPERATOR_PASSWORD: ${OPERATOR_PASSWORD:-}
       AI_ENDPOINTS: ${AI_ENDPOINTS:-}
       RELAY_TOKEN: ${RELAY_TOKEN:-}
       DEVICE_KEYS_FILE: /app/.data/devices.json
-    command: ["sh","-c","node scripts/migrate.mjs && exec node node_modules/next/dist/bin/next start -H 0.0.0.0"]
     volumes: ["evidence:/app/.data"]
     depends_on:
-      db: {condition: service_healthy}
+      migrate: {condition: service_completed_successfully}
   collection-monitor:
     build: .
     environment:
       COMPLYOS_MONITOR_ORGANIZATION: ${COMPLYOS_MONITOR_ORGANIZATION:-installation}
       ALERT_WEBHOOK_URL: ${ALERT_WEBHOOK_URL:-}
       ALERT_WEBHOOK_SECRET: ${ALERT_WEBHOOK_SECRET:-}
-      DATABASE_URL: postgres://complyos:${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD}@db/complyos
+      DATABASE_URL: postgres://complyos_worker:${WORKER_DB_PASSWORD:?set WORKER_DB_PASSWORD}@db/complyos
     command: ["node", "scripts/collection-monitor.mjs"]
     restart: unless-stopped
     depends_on:
-      app: {condition: service_started}
+      migrate: {condition: service_completed_successfully}
   db:
     image: postgres:17-alpine
     environment:
