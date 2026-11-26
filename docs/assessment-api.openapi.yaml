@@ -25,6 +25,24 @@ paths:
                     collected_at: {type: string, format: date-time}
                     policy_version: {type: string}
                     organization_id: {type: string}
+                    identities:
+                      type: array
+                      items:
+                        type: object
+                        required: [key, employee, links, review]
+                        properties:
+                          key: {type: string, description: Stable within organization and assessment source}
+                          employee: {type: string}
+                          review: {type: array, items: {type: string}}
+                          links:
+                            type: array
+                            items:
+                              type: object
+                              properties:
+                                system: {enum: [HR, Entra ID, PostgreSQL]}
+                                account: {type: string}
+                                source: {type: string}
+                                observedAt: {type: string, format: date-time}
                     results:
                       type: array
                       items:

@@ -57,6 +57,16 @@ export default function Page() {
                 : "Within 24-hour window"}
           </p>
           <PilotReview run={a} />
+          {a.identities?.map(identity => (
+            <details key={identity.key}>
+              <summary>{identity.employee} · Identity links · {identity.review.length ? "Review needed" : "Supported by evidence"}</summary>
+              <p>Source-scoped identity ID <code>{identity.key}</code></p>
+              <ul>{identity.links.map(link => (
+                <li key={link.system}>{link.system} · {link.account} · {link.source} · {link.observedAt}</li>
+              ))}</ul>
+              {identity.review.map(reason => <p key={reason}>{reason}</p>)}
+            </details>
+          ))}
           <AssessmentHistory source={a.source} />
           {!a.results.length && (
             <p>No terminated employees in the submitted scope.</p>
