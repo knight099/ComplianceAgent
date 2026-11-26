@@ -4,11 +4,12 @@ import { execFile } from "node:child_process";
 import { promisify } from "node:util";
 import { randomBytes, randomUUID } from "node:crypto";
 import pg from "pg";
-import { database, saveEvidence, evidenceById, saveAssessment } from "../../lib/store.mjs";
-import { issue } from "../../lib/identities.mjs";
+import { database, saveEvidence, evidenceById, organizationTransaction } from "../../lib/store.mjs";
+import { issue, revoke } from "../../lib/identities.mjs";
 import { GET as health } from "../../app/api/collection-health/route.js";
 import { GET as alerts } from "../../app/api/collection-alerts/route.js";
 import { GET as assessments } from "../../app/api/v1/assessments/route.js";
+import { POST as upload } from "../../app/api/assessments/route.js";
 const run = promisify(execFile);
 
 test("dedicated logins run operations and monitoring without access to migrations or each other's roles", async t => {
@@ -23,7 +24,10 @@ test("dedicated logins run operations and monitoring without access to migration
   const org = "runtime-test";
   await admin.query("INSERT INTO organizations VALUES ($1)", [org]);
   const secret = await issue(admin, "operator", "runtime-reviewer", null, "reviewer", org);
-  await issue(admin, "relay", "runtime-relay", "runtime-source", undefined, org);
+  const relaySecret = await issue(admin, "relay", "runtime-relay", "runtime-source", undefined, org);
+  await admin.query("GRANT SELECT (kind,name,source,secret_hash,ai_enabled,revoked_at,organization_id) ON access_identities TO complyos_app");
+  await run(process.execPath, ["scripts/migrate.mjs"], {env}); // schema-only upgrade of legacy grants
+  await issue(admin, "relay", "runtime-other-relay", "other-source");
   const urls = ["complyos_app", "complyos_worker"].map((name,i) => {
     const url = new URL(adminUrl);
     url.username = name;
@@ -39,18 +43,26 @@ test("dedicated logins run operations and monitoring without access to migration
   for (const [pool, name, forbiddenRole] of [[app,"complyos_app","complyos_monitor"], [worker,"complyos_worker","complyos_assessment"]]) {
     assert.equal((await pool.query("SELECT current_user AS name")).rows[0].name, name);
     for (const sql of ["ALTER TABLE assessments ADD COLUMN denied int", "CREATE ROLE denied",
-      "INSERT INTO organizations VALUES ('denied')", "SELECT * FROM assessments", "SET ROLE " + forbiddenRole])
+      "INSERT INTO organizations VALUES ('denied')", "SELECT * FROM assessments", "SELECT secret_hash FROM access_identities", "SELECT name FROM access_identities", "SET ROLE " + forbiddenRole])
       await assert.rejects(pool.query(sql), {code:"42501"});
   }
+  await assert.rejects(worker.query("SELECT * FROM public.authenticate_identity($1,$2,$3)", ["relay","x",null]), {code:"42501"});
+  await organizationTransaction("alertReader", org, async client => {
+    assert.deepEqual((await client.query("SELECT kind,source FROM access_identities")).rows,
+      [{kind:"relay",source:"runtime-source"}]);
+  });
   const req = new Request("http://localhost", {headers:{
     authorization:"Basic " + Buffer.from("runtime-reviewer:" + secret).toString("base64"),
   }});
   assert.deepEqual(await (await assessments(req)).json(), []);
   const receipt = await saveEvidence({ source: "runtime-device" }, org);
   assert.equal((await evidenceById(receipt, org)).observation.source, "runtime-device");
-  const batch = { id: randomUUID(), source: "runtime-source", policy: "v1",
+  const batch = { id: randomUUID(), source: "runtime-source", policy: "hr.postgres.offboarding/v1",
     observed: new Date(0).toISOString(), results: [] };
-  assert.equal(await saveAssessment(batch, "runtime-relay", org), true);
+  const post = () => upload(new Request("http://localhost/api/assessments", {
+    method: "POST", headers: {authorization: "Bearer " + relaySecret}, body: JSON.stringify(batch),
+  }));
+  assert.equal((await post()).status, 200);
   assert.equal((await (await assessments(req)).json())[0].id, batch.id);
   assert.equal((await (await health(req)).json())[0].source, "runtime-source");
   await run(process.execPath, ["scripts/collection-monitor.mjs", "--once"], {
@@ -59,4 +71,8 @@ test("dedicated logins run operations and monitoring without access to migration
   const state = await (await alerts(req)).json();
   assert.equal(state.open[0].source, "runtime-source");
   assert.ok(state.checked_at);
+  await revoke(admin, "operator", "runtime-reviewer", org);
+  await revoke(admin, "relay", "runtime-relay", org);
+  assert.equal((await assessments(req)).status, 401);
+  assert.equal((await post()).status, 403);
 });

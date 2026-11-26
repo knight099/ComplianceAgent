@@ -33,6 +33,8 @@ test("device enrollment owns the upload and operator membership scopes retrieval
   await db.exec("INSERT INTO organizations VALUES ('north')");
   await migration("011-evidence-rls");
   await migration("011-evidence-rls");
+  await db.exec("CREATE ROLE complyos_monitor; CREATE ROLE complyos_alert_reader");
+  await migration("015-identity-lookup");
   const key = "ad".repeat(32);
   writeFileSync(process.env.DEVICE_KEYS_FILE, JSON.stringify({ laptop: { organization: "north", key } }));
   const observation = { source: "laptop", mode: "Imported", organization_id: "installation", facts: [] };
