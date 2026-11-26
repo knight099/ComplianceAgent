@@ -195,3 +195,15 @@ New relay results carry `evidence.observations` through encrypted delivery, data
 Older assessments remain readable with their original evidence. The intake contract validates supplied observation records and checks that the PostgreSQL observation agrees with the enclosing assessment. [Connector contract](../packages/connector-sdk/observations.mjs)
 
 In **Operations**, expand an employee's identity links to see which HR record, optional Entra account and PostgreSQL role supported the latest offboarding check. Links show the source and collection time. Review flags identify missing evidence or conflicting mappings. Employee keys are stable within an organization and relay source. The separate personal-data access report above checks approved business roles against observed database grants for classified tables.
+
+### Save a personal-data review in Operations
+
+Generate the review JSON using the current relay and owner-reviewed policy described above. Send that file to the control plane with a relay credential authorized for its source. Use HTTPS outside loopback.
+
+```sh
+curl --fail-with-body -H "Authorization: Bearer $RELAY_TOKEN" \
+  -H 'Content-Type: application/json' --data-binary @/secure/review.json \
+  "$CONTROL_URL/api/v1/access-reviews"
+```
+
+The receipt identifies the stored report. Retrying the same file returns the same receipt. In **Operations → Personal-data access reviews**, choose an assessment and expand an employee and table to inspect expected access, observed privileges, classification, exception and source evidence. After correcting a grant, collect and upload a fresh review. Select the earlier assessment for the same source and policy to compare outcomes. Check both policy versions when interpreting changes. A table omitted from the latest scope is labeled accordingly.

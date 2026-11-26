@@ -1,3 +1,5 @@
+import { GET as getReviews, POST as postReview } from "../../app/api/v1/access-reviews/route.js";
+import { buildAccessReport } from "../../lib/access-report.mjs";
 import test from "node:test";
 import assert from "node:assert/strict";
 import { execFile } from "node:child_process";
@@ -55,6 +57,39 @@ test("dedicated logins run operations and monitoring without access to migration
     authorization:"Basic " + Buffer.from("runtime-reviewer:" + secret).toString("base64"),
   }});
   assert.deepEqual(await (await assessments(req)).json(), []);
+  const endpoint = "http://localhost/api/v1/access-reviews";
+  const list = async (request = req) => (await getReviews(request)).json();
+  const at = new Date();
+  const scope = { source: "runtime-source", hrObserved: at.toISOString(), hrRevision: "HR-1",
+    employees: [{ id: "employee", role: "reader", status: "active", businessRole: "Marketing" }],
+    resources: [["public", "kyc"]] };
+  const policy = { source: scope.source, id: "customer-data", version: "1", reviewer: "owner", reference: "SOP-4",
+    datasets: [{ resource: scope.resources[0], classification: "restricted", roles: { Marketing: "none" } }] };
+  const review = (readable, time) => buildAccessReport(scope, policy, async () => ({
+    rows: [{ resource_known: true, identity_known: true, readable_as: readable, paths: [], grantees: [] }]
+  }), time);
+  const submit = report => postReview(new Request(endpoint, { method: "POST",
+    headers: { authorization: "Bearer " + relaySecret }, body: JSON.stringify(report) }));
+  const first = await review(["reader"], at);
+  const firstResponse = await submit(first);
+  assert.equal(firstResponse.status, 200);
+  const firstId = (await firstResponse.json()).id;
+  assert.equal((await (await submit(first)).json()).id, firstId);
+  assert.equal((await submit({ ...first, source: "other", rows: [] })).status, 403);
+  assert.equal((await submit({ ...first, rows: [{...first.rows[0], outcome: "AS_EXPECTED"}] })).status, 400);
+  const second = await review([], new Date(at.getTime() + 1000));
+  const secondId = (await (await submit(second)).json()).id;
+  assert.deepEqual((await list()).map(run => run.id), [secondId, firstId]);
+  const fetchById = (id, headers) => getReviews(new Request(endpoint + "?id=" + id, { headers }));
+  for (const [id, outcome] of [[firstId, "EXCESS_ACCESS"], [secondId, "AS_EXPECTED"]])
+    assert.equal((await (await fetchById(id, req.headers)).json()).rows[0].outcome, outcome);
+  const outsider = await issue(admin, "operator", "outside-reviewer", null, "reviewer", "installation");
+  const outsideHeaders = { authorization: "Basic " + Buffer.from("outside-reviewer:" + outsider).toString("base64") };
+  assert.equal((await fetchById(firstId, outsideHeaders)).status, 404);
+  assert.deepEqual(await list(new Request(endpoint, { headers: outsideHeaders })), []);
+  await organizationTransaction("assessment", "installation", async client => {
+    assert.equal((await client.query("SELECT id FROM access_reviews")).rowCount, 0);
+  });
   const receipt = await saveEvidence({ source: "runtime-device" }, org);
   assert.equal((await evidenceById(receipt, org)).observation.source, "runtime-device");
   const batch = { id: randomUUID(), source: "runtime-source", policy: "hr.postgres.offboarding/v1",

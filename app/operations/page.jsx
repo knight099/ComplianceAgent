@@ -5,6 +5,7 @@ import CollectionHealth from "../collection-health";
 import CollectionAlerts from "../collection-alerts";
 import AssessmentHistory from "../assessment-history";
 import ModelConnection from "../model-connection";
+import AccessReviews from "../access-reviews";
 export default function Page() {
   const [runs, setRuns] = useState(null),
     [error, setError] = useState("");
@@ -32,6 +33,7 @@ export default function Page() {
       <p>
         Review PostgreSQL read privileges associated with terminated employees.
       </p>
+      <AccessReviews />
       <div id="alerts"><CollectionAlerts runs={runs} /></div>
       <div id="health"><CollectionHealth runs={runs} /></div>
       <div id="model"><ModelConnection runs={runs} /></div>

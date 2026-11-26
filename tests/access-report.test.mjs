@@ -1,6 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { PGlite } from "@electric-sql/pglite";
+import { validateAccessReport } from "../lib/access-review-contract.mjs";
 import { buildAccessReport } from "../lib/access-report.mjs";
 
 test("reviews current business roles, access paths, scoped exceptions and fresh revocation", async t => {
@@ -14,7 +15,11 @@ test("reviews current business roles, access paths, scoped exceptions and fresh 
   const scope = { source:"loans", hrObserved:now.toISOString(), hrRevision:"42", resources:[resource], employees:[person] };
   const policy = { id:"KYC", version:"1", source:"loans", reviewer:"owner", reference:"SOP §4",
     datasets:[{ resource, classification:"restricted", roles:{ Lending:"read", Marketing:"none" } }] };
-  const row = async () => (await buildAccessReport(scope, policy, query, now)).rows[0];
+  const row = async () => {
+    const report = await buildAccessReport(scope, policy, query, now);
+    validateAccessReport(report);
+    return report.rows[0];
+  };
   assert.equal((await row()).outcome,"AS_EXPECTED");
   person.businessRole = "Marketing";
   const excess = await row();

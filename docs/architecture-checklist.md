@@ -95,7 +95,7 @@ Read top down alongside the [2.0 system design](complyos-2-system-design.md). Ea
 8. [x] Connect the overview to measured assessment results and source freshness.
 9. [x] Carry versioned HR, optional Entra and PostgreSQL source observations through assessment intake with explicit time, provenance and coverage.
 10. [x] Link HR, optional Entra and PostgreSQL observations within each assessment source. Show supported links and mapping conflicts in Operations.
-11. [ ] Persist the owner-reviewed personal-data access check and show policy, exceptions and evidence in Operations. See the [delivery plan](implementation-plan.md#identity-linking-and-the-personal-data-access-milestone).
+11. [x] Persist the owner-reviewed personal-data access check and show policy, exceptions and evidence in Operations. See the [delivery plan](implementation-plan.md#identity-linking-and-the-personal-data-access-milestone).
 12. [ ] Enforce and test personal-data masking and minimization before all model calls.
 13. [ ] Qualify Saviynt read-only governance evidence and reconcile it with target-system grants.
 14. [ ] Deliver enterprise SSO, a reviewed OPA registry, correlated incidents, regulatory ingestion, an evidence vault, Temporal-backed remediation and the Go fleet. Track each release against the [enterprise delivery sequence](implementation-plan.md#enterprise-access-and-privacy-delivery-sequence).

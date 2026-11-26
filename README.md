@@ -11,7 +11,7 @@ ComplyOS helps security teams check who still has permission to read sensitive P
 1. **Choose the scope.** A data owner lists the tables to check and supplies an HR file linking employees to database roles. An optional Microsoft Entra ID lookup helps confirm identities.
 2. **Collect permissions.** A read-only relay inside your network inspects PostgreSQL permission records. Customer table contents stay in the database.
 3. **Review the findings.** Open **Operations** to see retained access, missing evidence and the identity links behind each check. After an administrator changes a grant, run another collection and compare the results.
-4. **Check company policy.** Generate a local report comparing grants with the business roles allowed to read each classified table. Open it in **Reports** to review excess access and approved exceptions.
+4. **Check company policy.** Generate a local report comparing grants with the business roles allowed to read each classified table. Open it locally in **Reports**, or [submit it to Operations](docs/operator-guide.md#save-a-personal-data-review-in-operations) to retain the evidence and compare two collections.
 
 These checks measure database permissions. Establishing who actually read a record requires database audit logs. Regulatory control mappings and automated remediation are on the [roadmap](docs/implementation-plan.md).
 
