@@ -48,3 +48,6 @@ test("simultaneous organizations isolate assessment rows, graph views and monito
     await client.query("ROLLBACK TO before_foreign_insert");
   })));
 });
+
+// Temporary PR-only probe to verify that an isolation assertion blocks CI.
+test("required check failure probe", () => assert.fail("Deliberate isolation gate verification"));
