@@ -6,12 +6,12 @@ paths:
   /api/v1/assessments:
     get:
       operationId: listLatestAssessments
-      summary: Latest assessment per source in this installation
+      summary: Latest assessment per source in the authenticated organization
       security:
         - operator: []
       responses:
         '200':
-          description: Latest runs, newest collection first. An empty installation returns an empty array.
+          description: Latest runs, newest collection first. An organization without assessments returns an empty array.
           content:
             application/json:
               schema:
@@ -24,7 +24,7 @@ paths:
                     source: {type: string}
                     collected_at: {type: string, format: date-time}
                     policy_version: {type: string}
-                    organization_id: {type: string, const: installation}
+                    organization_id: {type: string}
                     results:
                       type: array
                       items:

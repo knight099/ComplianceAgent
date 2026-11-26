@@ -5,13 +5,13 @@ export const dynamic = "force-dynamic";
 const reply = (data, status = 200) =>
   Response.json(data, { status, headers: { "Cache-Control": "no-store" } });
 export async function GET(req) {
-  const denied = await requireOperator(req, { ai: true });
-  if (denied) return denied;
+  const operator = await requireOperator(req, { ai: true });
+  if (operator instanceof Response) return operator;
   return reply({ providers: Object.keys(providers()) });
 }
 export async function POST(req) {
-  const denied = await requireOperator(req, { ai: true });
-  if (denied) return denied;
+  const operator = await requireOperator(req, { ai: true });
+  if (operator instanceof Response) return operator;
   if (req.headers.get("content-type") !== "application/json")
     return reply({ error: "JSON required" }, 415);
   const chunks = [];
@@ -33,7 +33,7 @@ export async function POST(req) {
   if (input.op === "explain") {
     if (!/^[a-f\d]{8}(?:-[a-f\d]{4}){3}-[a-f\d]{12}$/i.test(input.id))
       return reply({ error: "Invalid assessment ID" }, 400);
-    summary = await assessmentCounts(input.id);
+    summary = await assessmentCounts(input.id, operator.organization_id);
     if (!summary) return reply({ error: "Assessment unavailable" }, 404);
   }
   try {

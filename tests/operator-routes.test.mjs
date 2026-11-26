@@ -4,8 +4,11 @@ import pg from "pg";
 import { PGlite } from "@electric-sql/pglite";
 import { readFileSync } from "node:fs";
 import { issue, setOperatorRole, revoke } from "../lib/identities.mjs";
-import { GET as assessments } from "../app/api/assessments/route.js";
+import { GET as assessments, POST as upload } from "../app/api/assessments/route.js";
 import { GET as v1Assessments } from "../app/api/v1/assessments/route.js";
+import { GET as history } from "../app/api/history/route.js";
+import { GET as health } from "../app/api/collection-health/route.js";
+import { GET as alertState } from "../app/api/collection-alerts/route.js";
 import { GET as providers, POST as completion } from "../app/api/ai/route.js";
 
 test("reviewer can read assessments; AI routes enforce role changes on the next request", async (t) => {
@@ -19,6 +22,7 @@ test("reviewer can read assessments; AI routes enforce role changes on the next 
     "002-identities",
     "003-operator-permissions",
     "007-access-graph",
+    "008-organizations",
   ])
     await db.exec(readFileSync("migrations/" + file + ".sql", "utf8"));
   const key = await issue(db, "operator", "user", null, "reviewer");
@@ -27,6 +31,7 @@ test("reviewer can read assessments; AI routes enforce role changes on the next 
       authorization: "Basic " + Buffer.from("user:" + key).toString("base64"),
     },
   });
+  await db.exec("INSERT INTO organizations VALUES ('other')");
   await db.exec(`INSERT INTO assessments (id,source,collected_at,policy_version,organization_id)
     VALUES ('00000000-0000-0000-0000-000000000001','payments',now(),'v1','installation'),
            ('00000000-0000-0000-0000-000000000002','payments',now()+interval '1 hour','v1','other')`);
@@ -36,6 +41,47 @@ test("reviewer can read assessments; AI routes enforce role changes on the next 
   const body = await versioned.json();
   assert.deepEqual(body.map(row => row.organization_id), ["installation"]);
   assert.deepEqual(body, await (await assessments(req)).json());
+  const otherKey = await issue(db, "operator", "other-reviewer", null, "reviewer", "other");
+  const otherReq = new Request("http://localhost?organization_id=installation", {
+    headers: { authorization: "Basic " + Buffer.from("other-reviewer:" + otherKey).toString("base64") },
+  });
+  const otherRows = await (await assessments(otherReq)).json();
+  assert.deepEqual(otherRows.map(row => row.organization_id), ["other"]);
+
+  t.mock.method(pg.Pool.prototype, "connect", async () => ({
+    async query(sql, args) {
+      const result = await db.query(sql, args);
+      return { ...result, rowCount: result.rows.length };
+    },
+    release() {},
+  }));
+  const relayKey = await issue(db, "relay", "other-relay", "payments", undefined, "other");
+  const post = (id, source = "payments") => upload(new Request("http://localhost", {
+    method: "POST", headers: { authorization: "Bearer " + relayKey },
+    body: JSON.stringify({ id, source, organization_id: "installation",
+      policy: "hr.postgres.offboarding/v1", observed: new Date().toISOString(), results: [] }),
+  }));
+  const newId = "00000000-0000-0000-0000-000000000003";
+  assert.equal((await post(newId, "unbound")).status, 403);
+  assert.equal((await post(newId)).status, 200);
+  assert.equal((await post(newId)).status, 200);
+  assert.equal((await post(body[0].id)).status, 409);
+  const stored = await db.query("SELECT organization_id FROM assessments WHERE id=$1", [newId]);
+  assert.equal(stored.rows[0].organization_id, "other");
+  const otherHistory = await history(new Request("http://localhost/api/history?source=payments", {
+    headers: otherReq.headers,
+  }));
+  const ids = (await otherHistory.json()).map(run => run.id);
+  assert.ok(ids.includes(newId));
+  assert.ok(!ids.includes(body[0].id));
+  assert.equal((await (await health(otherReq)).json())[0].assessment_id, otherRows[0].id);
+  assert.equal((await alertState(otherReq)).status, 403);
+  await setOperatorRole(db, "other-reviewer", "analyst", "other");
+  const foreignSummary = await completion(new Request("http://localhost", {
+    method: "POST", headers: { ...Object.fromEntries(otherReq.headers), "content-type": "application/json" },
+    body: JSON.stringify({ op: "explain", id: body[0].id }),
+  }));
+  assert.equal(foreignSummary.status, 404);
   assert.equal((await providers(req)).status, 403);
   assert.equal((await completion(req)).status, 403);
   await setOperatorRole(db, "user", "analyst");

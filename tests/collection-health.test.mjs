@@ -8,7 +8,7 @@ import { GET } from "../app/api/collection-health/route.js";
 test("health includes unreported enrollments and uses collection order for late arrivals", async () => {
   const db = new PGlite();
   try {
-    for (const m of ["001-assurance", "002-identities"])
+    for (const m of ["001-assurance", "002-identities", "007-access-graph", "008-organizations"])
       await db.exec(readFileSync("migrations/" + m + ".sql", "utf8"));
     await db.exec(
       "INSERT INTO access_identities(kind,name,secret_hash,source) VALUES ('relay','r','1','pending'),('relay','old','2','revoked'); UPDATE access_identities SET revoked_at=now() WHERE name='old'",

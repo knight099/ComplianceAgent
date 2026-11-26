@@ -21,6 +21,7 @@ export async function POST(req) {
   }
   if (relay.source !== null && a.source !== relay.source)
     return new Response(null, { status: 403 });
-  await saveAssessment(a, relay.name);
+  if (!(await saveAssessment(a, relay.name, relay.organization_id)))
+    return new Response("Assessment ID conflict", { status: 409 });
   return Response.json({ id: a.id });
 }

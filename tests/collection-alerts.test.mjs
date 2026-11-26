@@ -10,6 +10,8 @@ test("monitor deduplicates failures, requires scope-matched recovery and records
     for (const m of [
       "001-assurance",
       "002-identities",
+      "007-access-graph",
+      "008-organizations",
       "004-collection-alerts",
       "004-collection-alerts",
     ])

@@ -13,8 +13,16 @@ test("independent identities, source binding and revocation persist in PostgreSQ
       "002-identities.sql",
       "003-operator-permissions.sql",
       "003-operator-permissions.sql",
+      "007-access-graph.sql",
     ])
       await db.exec(readFileSync("migrations/" + file, "utf8"));
+    await db.exec("INSERT INTO access_identities(kind,name,secret_hash) VALUES ('operator','legacy','legacy-hash')");
+    const migration = readFileSync("migrations/008-organizations.sql", "utf8");
+    await db.exec(migration);
+    await db.exec(migration);
+    const legacy = await db.query("SELECT organization_id FROM access_identities WHERE name='legacy'");
+    assert.equal(legacy.rows[0].organization_id, "installation");
+    await assert.rejects(issue(db, "operator", "bad-org", null, "reviewer", "missing"));
     const a = await issue(db, "operator", "alice"),
       b = await issue(db, "operator", "ben"),
       r = await issue(db, "relay", "private", "finance");
@@ -22,6 +30,7 @@ test("independent identities, source binding and revocation persist in PostgreSQ
       name: "private",
       source: "finance",
       ai_enabled: false,
+      organization_id: "installation",
     });
     assert.equal(await identify(db, "operator", basic("alice", r)), null);
     assert.equal(await identify(db, "operator", basic("ben", a)), null);

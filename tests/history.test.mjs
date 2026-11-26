@@ -15,6 +15,7 @@ test("history API verifies two-stage revocation from persisted catalog observati
   process.env.AUTH_MODE = "shared";
   process.env.OPERATOR_PASSWORD = "local-test";
   await db.exec(readFileSync("migrations/001-assurance.sql", "utf8"));
+  await db.exec(readFileSync("migrations/007-access-graph.sql", "utf8"));
   await db.exec(
     "CREATE ROLE staff; CREATE ROLE lenders; CREATE ROLE readers; CREATE TABLE kyc (id int); GRANT SELECT ON kyc TO lenders, readers; GRANT lenders,readers TO staff",
   );

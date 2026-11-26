@@ -71,7 +71,7 @@ The [ComplyOS 2.0 system design](docs/complyos-2-system-design.md) defines the t
 
 [Delivery dependencies, acceptance gates and next build sequence](docs/implementation-plan.md)
 
-**Implemented graph increment:** the PostgreSQL relay now uses a typed read-only connector contract. New and legacy observations feed a snapshot graph of mapped identities, roles and resources; the dashboard reads table-grant paths from its evidence-linked edges. The migration backfills existing assessments and preserves missing historical path evidence. Each deployment currently uses the `installation` organization namespace.
+**Implemented graph increment:** the PostgreSQL relay now uses a typed read-only connector contract. New and legacy observations feed a snapshot graph of mapped identities, roles and resources; the dashboard reads table-grant paths from its evidence-linked edges. The migration backfills existing assessments and preserves missing historical path evidence. Existing assessments use the `installation` namespace. New assessments inherit the organization of the authenticated relay.
 
 **HR and directory intake.** The relay accepts JSON or mapped HR CSV and can corroborate identities with read-only Microsoft Graph. The access review report compares observed read privileges with the approved dataset policy for each employee’s current business role.
 
@@ -198,6 +198,18 @@ node scripts/identity.mjs issue relay payments-relay payments-primary
 ```
 
 Each issue command prints a generated secret once. Deliver it through your secret manager. An operator signs in with the issued name and secret. To remove that operator’s access, run `node scripts/identity.mjs revoke operator alice`. A relay uses its secret as `RELAY_TOKEN` and submits only the source named at issuance. To revoke it, run `node scripts/identity.mjs revoke relay payments-relay`. Revocation applies to subsequent requests. For rotation, issue a distinct name, deploy its credential, verify access, then revoke the previous name. Prior assessments retain their original submitter attribution; assessments predating this feature show “Unrecorded”.
+
+### Organization membership
+
+After running database migrations, existing credentials and shared mode use the `installation` organization. In named mode, provision an organization and bind each new credential using the administration CLI:
+
+```sh
+node scripts/identity.mjs create-organization payments
+COMPLYOS_ORGANIZATION_ID=payments node scripts/identity.mjs issue operator payments-review reviewer
+COMPLYOS_ORGANIZATION_ID=payments node scripts/identity.mjs issue relay payments-relay finance-db
+```
+
+Use the same organization for role changes and revocation. Identity names are unique per credential kind across the deployment. Assessment uploads, reads, comparison history, collection health and AI assessment counts use the credential's stored organization. Collection alerts, monitoring webhooks and device evidence currently operate at installation scope. Shared-hosting qualification still requires tenant-aware audit, evidence, delivery and database isolation.
 
 ### Operator permissions
 
