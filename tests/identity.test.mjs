@@ -20,6 +20,8 @@ test("independent identities, source binding and revocation persist in PostgreSQ
     const migration = readFileSync("migrations/008-organizations.sql", "utf8");
     await db.exec(migration);
     await db.exec(migration);
+    await db.exec("CREATE ROLE complyos_monitor; CREATE ROLE complyos_alert_reader");
+    await db.exec(readFileSync("migrations/015-identity-lookup.sql", "utf8"));
     const legacy = await db.query("SELECT organization_id FROM access_identities WHERE name='legacy'");
     assert.equal(legacy.rows[0].organization_id, "installation");
     await assert.rejects(issue(db, "operator", "bad-org", null, "reviewer", "missing"));

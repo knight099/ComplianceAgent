@@ -23,7 +23,6 @@ BEGIN
 END $$;
 
 GRANT USAGE ON SCHEMA public TO complyos_app;
-GRANT SELECT (kind, name, source, secret_hash, ai_enabled, revoked_at, organization_id)
- ON access_identities TO complyos_app;
+GRANT EXECUTE ON FUNCTION public.authenticate_identity(text,text,text) TO complyos_app;
 GRANT complyos_evidence, complyos_assessment, complyos_alert_reader TO complyos_app WITH INHERIT FALSE;
 GRANT complyos_monitor, complyos_delivery TO complyos_worker WITH INHERIT FALSE;

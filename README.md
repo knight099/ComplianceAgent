@@ -260,6 +260,8 @@ Migration 012 adds the `complyos_assessment` and `complyos_monitor` roles. Asses
 
 Migration 013 applies organization policies to alert episodes, failed checks, monitor heartbeats and webhook deliveries. The app reads alert history and delivery status under `complyos_alert_reader`. A webhook worker uses `complyos_delivery` to claim a queued event and record its outcome. If you provision separate logins, grant the app and worker permission to switch into their respective roles. The claim commits before the HTTP request so a slow receiver does not hold a database transaction open.
 
+Migration 015 replaces the app’s direct identity-table grants with permission to call `public.authenticate_identity(text,text,text)`. A matching active credential returns the principal’s name, source, AI permission and organization. Collection health readers see active relay inventory for their current organization. Existing credentials continue to work. Deploy this migration together with the updated app because the previous app queried the table directly. For DBA-managed logins, replace the old identity-column grants with the function grant in [runtime provisioning](scripts/provision-runtime.sql).
+
 Run `node --test --test-concurrency=1 tests/integration/*.test.mjs` with `COMPLYOS_TEST_DATABASE_URL` pointing to a fresh disposable PostgreSQL database. The tests apply migrations, create organizations and open simultaneous connections.
 
 

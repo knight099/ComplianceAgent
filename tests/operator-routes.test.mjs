@@ -23,7 +23,7 @@ test("reviewer can read assessments; AI routes enforce role changes on the next 
     "003-operator-permissions",
     "007-access-graph",
     "008-organizations",
-    "004-collection-alerts", "005-webhook-outbox", "006-delivery-status", "009-alert-organizations", "012-assessment-rls", "013-monitoring-rls", "014-health-reader",
+    "004-collection-alerts", "005-webhook-outbox", "006-delivery-status", "009-alert-organizations", "012-assessment-rls", "013-monitoring-rls", "014-health-reader", "015-identity-lookup",
   ])
     await db.exec(readFileSync("migrations/" + file + ".sql", "utf8"));
   const key = await issue(db, "operator", "user", null, "reviewer");

@@ -89,5 +89,6 @@ Read top down alongside the [2.0 system design](complyos-2-system-design.md). Ea
 3. [x] Establish persistent organizations and membership for named operators and relays. Backfill existing identities into the installation organization and require server-derived organization context.
 4. [x] Apply organization context to the current assessment, graph, history, monitoring, evidence, AI summary and delivery paths. Exercise the existing PostgreSQL isolation and migration tests.
 5. [x] Run six pull-request checks, including real PostgreSQL isolation and a Compose restart with retained data. [CI workflow](../.github/workflows/pilot.yml)
-6. [ ] Require all six check names in GitHub branch rules. Qualify upgrades from a previous release and review direct identity-registry grants before a shared deployment. [Secure pilot plan](implementation-plan.md#secure-pilot-review-and-next-pull-request)
-7. [ ] Connect the overview to measured assessment results, then advance the connector and incident phases in the [delivery plan](implementation-plan.md).
+6. [x] Restrict named authentication to an exact credential lookup. Test migration of existing grants, scoped relay inventory and immediate revocation using runtime logins.
+7. [ ] Require all six check names in GitHub branch rules and qualify upgrades from a previous release before a shared deployment. [Secure pilot plan](implementation-plan.md#secure-pilot-review-and-next-pull-request)
+8. [ ] Connect the overview to measured assessment results, then advance the connector and incident phases in the [delivery plan](implementation-plan.md).
