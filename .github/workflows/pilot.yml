@@ -1,9 +1,9 @@
 name: Secure pilot
 on:
   pull_request:
-    branches: [develop/enterprise-core]
+    branches: [main]
   push:
-    branches: [develop/enterprise-core]
+    branches: [main]
 
 permissions:
   contents: read

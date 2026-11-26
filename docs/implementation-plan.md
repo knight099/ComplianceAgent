@@ -38,7 +38,7 @@ The November 26 review starts at `90ab52c` and includes an update for `e27fc50`.
 
 ### Next item — continuous integration for the secure pilot
 
-1. Add a GitHub Actions workflow for pull requests targeting `develop/enterprise-core` and pushes to that branch. Use Node 24, the committed lockfile, read-only repository permissions and disposable credentials.
+1. Add a GitHub Actions workflow for pull requests targeting `main` and pushes to that branch. Use Node 24, the committed lockfile, read-only repository permissions and disposable credentials.
 2. Run `npm ci`, `npm test` and `npm run build`. In a separate job start fresh PostgreSQL 17, wait for readiness, set `COMPLYOS_TEST_DATABASE_URL` and run `node --test --test-concurrency=1 tests/integration/*.test.mjs`. These tests provision cluster roles and must have their own disposable database.
 3. Exercise the documented Compose startup on a runner with sufficient disk. Require a successful migration exit, an authenticated assessment read and a completed worker sweep. Restart with the same volume and verify an existing assessment remains readable. Add dependency auditing and secret scanning as distinct checks with a documented failure policy.
 4. Verify the workflow on a pull request. Demonstrate that a deliberately failing isolation assertion makes the integration check fail, then restore it and record the passing run. Configure the agreed checks as required for merging where repository administration access permits.

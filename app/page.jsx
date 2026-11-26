@@ -4,7 +4,7 @@ import styles from "./ui/workspace.module.css";
 
 import OverviewResults from "./overview-results";
 
-const design = "https://github.com/knight099/ComplianceAgent/blob/develop/enterprise-core/docs/complyos-2-system-design.md";
+const design = "https://github.com/knight099/ComplianceAgent/blob/main/docs/complyos-2-system-design.md";
 const navigation = [
   ["Overview", LayoutGrid, "/"],
   ["Collection alerts", ShieldAlert, "/operations#alerts"],
