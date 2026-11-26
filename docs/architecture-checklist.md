@@ -50,7 +50,8 @@ Read top down alongside the [2.0 system design](complyos-2-system-design.md). Ea
 - [x] Serve authenticated latest assessments through GET /api/v1/assessments. Restrict latest-per-source selection to the authenticated organization. Preserve the legacy URL and use v1 from the operations UI. [Versioned route](../app/api/v1/assessments/route.js) · [Compatibility and isolation test](../tests/operator-routes.test.mjs)
 - [x] Bind named operators and relays to persisted organizations, migrate existing memberships and scope assessment intake, latest reads, history, model counts and collection health. [Organization migration](../migrations/008-organizations.sql)
 - [x] Isolate collection alert episodes, recovery evidence, monitor heartbeats, webhook claims and delivery status by organization. [Isolation regression test](../tests/alert-organizations.test.mjs)
-- [ ] Extend ownership to device evidence, enforce database row-level security and test concurrent two-tenant requests across all read/write paths.
+- [x] Bind device evidence uploads to enrollment ownership and scope receipt lookup to the authenticated organization. [Isolation test](../tests/device-organizations.test.mjs)
+- [ ] Enforce database row-level security and test concurrent two-tenant requests across all read/write paths.
 - [ ] Version the remaining APIs. Add tenant/connector administration, agent enrollment/heartbeat, observation batches, graph queries, policies, incidents, approvals, reports and replay endpoints. Add SSE progress and gateway protocols as their consumers ship.
 - [x] Provide overview design system, live operations, assessment comparisons, local access report viewer, connection settings and monitoring. [Frontend](../app)
 - [ ] Drive overview counts from measured coverage and findings. Deliver dedicated graph, incident, regulation, policy, remediation, fleet, administration and auditor workspaces with persona-specific authorization.

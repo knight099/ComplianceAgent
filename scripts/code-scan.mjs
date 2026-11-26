@@ -42,5 +42,5 @@ console.log(
     status: "Observed",
     observed: new Date().toISOString(),
     facts,
-  }),
+  }, "installation"),
 );

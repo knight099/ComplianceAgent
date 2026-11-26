@@ -1,20 +1,20 @@
 import { readFileSync, mkdirSync, writeFileSync, existsSync } from "node:fs";
 import { randomBytes } from "node:crypto";
 import { execFileSync } from "node:child_process";
-import { verifyBundle } from "../lib/evidence.mjs";
+import { verifyDeviceUpload } from "../lib/evidence.mjs";
 import { saveEvidence } from "../lib/store.mjs";
-const [op, arg] = process.argv.slice(2),
+const [op, arg, enrollmentOrganization = "installation"] = process.argv.slice(2),
   read = (p) => JSON.parse(readFileSync(p, "utf8"));
 const dir = process.env.DATA_DIR || ".data",
   keys = process.env.DEVICE_KEYS_FILE || dir + "/devices.json";
 mkdirSync(dir, { recursive: true, mode: 0o700 });
 if (op === "enroll") {
-  if (!/^[a-zA-Z0-9_-]{1,64}$/.test(arg))
+  if (!arg || arg === "__proto__" || !/^[a-zA-Z0-9_-]{1,64}$/.test(arg) || !enrollmentOrganization.trim())
     throw Error("Invalid device identifier");
   const known = existsSync(keys) ? read(keys) : {};
   if (Object.hasOwn(known, arg)) throw Error("Device already enrolled");
   const key = randomBytes(32).toString("hex");
-  known[arg] = key;
+  known[arg] = { key, organization: enrollmentOrganization };
   writeFileSync(keys, JSON.stringify(known), { mode: 0o600 });
   writeFileSync(
     dir + "/" + arg + ".json",
@@ -22,9 +22,10 @@ if (op === "enroll") {
     { mode: 0o600, flag: "wx" },
   );
 } else {
-  let e;
-  if (op === "bundle") e = verifyBundle(read(arg), read(keys));
-  else {
+  let e, organization = "installation";
+  if (op === "bundle") {
+    ({ observation: e, organization } = verifyDeviceUpload(read(arg), read(keys)));
+  } else {
     const run = (binary, args) =>
       JSON.parse(
         execFileSync(binary, args, {
@@ -116,6 +117,6 @@ if (op === "enroll") {
     }
     e = { source, mode, status, observed: new Date().toISOString(), facts };
   }
-  console.log(await saveEvidence(e));
+  console.log(await saveEvidence(e, organization));
 }
 process.exitCode = 0;

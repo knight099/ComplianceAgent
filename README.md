@@ -209,7 +209,7 @@ COMPLYOS_ORGANIZATION_ID=payments node scripts/identity.mjs issue operator payme
 COMPLYOS_ORGANIZATION_ID=payments node scripts/identity.mjs issue relay payments-relay finance-db
 ```
 
-Use the same organization for role changes and revocation. Identity names are unique per credential kind across the deployment. Assessment uploads, reads, comparison history, collection health and AI assessment counts use the credential's stored organization. Collection alert history and webhook status also follow the authenticated organization. Each monitor runs for one configured organization. Device evidence still uses installation scope. Shared-hosting qualification still requires tenant-aware audit, evidence, delivery and database isolation.
+Use the same organization for role changes and revocation. Identity names are unique per credential kind across the deployment. Assessment uploads, reads, comparison history, collection health and AI assessment counts use the credential's stored organization. Collection alert history and webhook status also follow the authenticated organization. Each monitor runs for one configured organization. Device uploads inherit the organization in the server-side enrollment registry. Enroll with `node scripts/evidence.mjs enroll DEVICE ORGANIZATION` using an existing organization. Legacy hex-key entries and enrollments without an organization use `installation`. Retrieve an upload by its receipt with authenticated `GET /api/v1/evidence?id=SHA256`. Shared-hosting qualification still requires tenant-aware audit, evidence, delivery and database isolation.
 
 ### Operator permissions
 

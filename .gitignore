@@ -5,4 +5,5 @@ node_modules/
 !.env.example
 *.tsbuildinfo
 evidence/
+!/app/api/v1/evidence/
 *.pem
