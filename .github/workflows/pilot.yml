@@ -1,0 +1,87 @@
+name: Secure pilot
+on:
+  pull_request:
+    branches: [develop/enterprise-core]
+  push:
+    branches: [develop/enterprise-core]
+
+permissions:
+  contents: read
+
+jobs:
+  node:
+    name: ${{ matrix.check }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - check: Regression tests
+            command: npm test
+          - check: Production build
+            command: npm run build
+    steps:
+      - uses: actions/checkout@v4
+        with: {persist-credentials: false}
+      - uses: actions/setup-node@v4
+        with: {node-version: 24, cache: npm}
+      - run: npm ci
+      - run: ${{ matrix.command }}
+
+  isolation:
+    name: PostgreSQL isolation
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    services:
+      postgres:
+        image: postgres:17-alpine
+        env:
+          POSTGRES_PASSWORD: disposable-ci-password
+        ports: ['5432:5432']
+        options: --health-cmd pg_isready --health-interval 3s --health-timeout 3s --health-retries 15
+    env:
+      COMPLYOS_TEST_DATABASE_URL: postgres://postgres:disposable-ci-password@localhost:5432/postgres
+    steps:
+      - uses: actions/checkout@v4
+        with: {persist-credentials: false}
+      - uses: actions/setup-node@v4
+        with: {node-version: 24, cache: npm}
+      - run: npm ci
+      - run: node --test --test-concurrency=1 tests/integration/*.test.mjs
+
+  compose:
+    name: Compose restart
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with: {persist-credentials: false}
+      - run: bash scripts/ci-compose.sh
+
+  audit:
+    name: Dependency audit
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with: {persist-credentials: false}
+      - uses: actions/setup-node@v4
+        with: {node-version: 24}
+      - run: npm audit --audit-level=high
+
+  secrets:
+    name: Secret scan
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with: {persist-credentials: false, fetch-depth: 0}
+      - name: Scan introduced commits
+        env:
+          BASE: ${{ github.event.pull_request.base.sha || github.event.before }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          range="$BASE..$HEAD_SHA"
+          if [[ "$BASE" =~ ^0+$ ]]; then range="$HEAD_SHA"; fi
+          docker run --rm -v "$PWD:/repo:ro" -w /repo zricethezav/gitleaks:v8.24.3 git --redact --log-opts="$range" .
