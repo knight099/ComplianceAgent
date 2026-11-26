@@ -87,5 +87,6 @@ Read top down alongside the [2.0 system design](complyos-2-system-design.md). Ea
 1. [x] HR intake, Entra identity corroboration and SOP-based access review.
 2. [x] Migrate the operations assessment read to the documented v1 endpoint and verify backward compatibility.
 3. [x] Establish persistent organizations and membership for named operators and relays. Backfill existing identities into the installation organization and require server-derived organization context.
-4. [ ] Apply that context to assessments, graph, history, monitoring, evidence, model requests and deliveries. Run isolation and migration tests before shared deployment.
-5. [ ] Connect the overview to measured assessment results, then advance the connector and incident phases in the [delivery plan](implementation-plan.md).
+4. [x] Apply organization context to the current assessment, graph, history, monitoring, evidence, AI summary and delivery paths. Exercise the existing PostgreSQL isolation and migration tests.
+5. [ ] Add required pull-request checks and qualify Compose startup and upgrade. Review direct identity-registry grants before a shared deployment. [Secure pilot plan](implementation-plan.md#secure-pilot-review-and-next-pull-request)
+6. [ ] Connect the overview to measured assessment results, then advance the connector and incident phases in the [delivery plan](implementation-plan.md).
