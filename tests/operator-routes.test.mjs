@@ -23,6 +23,7 @@ test("reviewer can read assessments; AI routes enforce role changes on the next 
     "003-operator-permissions",
     "007-access-graph",
     "008-organizations",
+    "004-collection-alerts", "005-webhook-outbox", "006-delivery-status", "009-alert-organizations",
   ])
     await db.exec(readFileSync("migrations/" + file + ".sql", "utf8"));
   const key = await issue(db, "operator", "user", null, "reviewer");
@@ -75,7 +76,7 @@ test("reviewer can read assessments; AI routes enforce role changes on the next 
   assert.ok(ids.includes(newId));
   assert.ok(!ids.includes(body[0].id));
   assert.equal((await (await health(otherReq)).json())[0].assessment_id, otherRows[0].id);
-  assert.equal((await alertState(otherReq)).status, 403);
+  assert.equal((await alertState(otherReq)).status, 200);
   await setOperatorRole(db, "other-reviewer", "analyst", "other");
   const foreignSummary = await completion(new Request("http://localhost", {
     method: "POST", headers: { ...Object.fromEntries(otherReq.headers), "content-type": "application/json" },

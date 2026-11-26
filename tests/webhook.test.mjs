@@ -12,10 +12,14 @@ test("transactional transitions retry in order with stable IDs and a signed body
   try {
     for (const m of [
       "001-assurance",
+      "002-identities",
+      "007-access-graph",
+      "008-organizations",
       "004-collection-alerts",
       "005-webhook-outbox",
       "006-delivery-status",
       "006-delivery-status",
+      "009-alert-organizations",
     ])
       await db.exec(readFileSync("migrations/" + m + ".sql", "utf8"));
     const insert =

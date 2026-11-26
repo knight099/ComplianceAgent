@@ -14,6 +14,7 @@ test("monitor deduplicates failures, requires scope-matched recovery and records
       "008-organizations",
       "004-collection-alerts",
       "004-collection-alerts",
+      "009-alert-organizations",
     ])
       await db.exec(readFileSync("migrations/" + m + ".sql", "utf8"));
     await db.exec(

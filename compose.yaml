@@ -16,6 +16,7 @@ services:
   collection-monitor:
     build: .
     environment:
+      COMPLYOS_MONITOR_ORGANIZATION: ${COMPLYOS_MONITOR_ORGANIZATION:-installation}
       ALERT_WEBHOOK_URL: ${ALERT_WEBHOOK_URL:-}
       ALERT_WEBHOOK_SECRET: ${ALERT_WEBHOOK_SECRET:-}
       DATABASE_URL: postgres://complyos:${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD}@db/complyos

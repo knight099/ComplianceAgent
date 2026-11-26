@@ -5,9 +5,10 @@ export const dynamic = "force-dynamic";
 export async function GET(req) {
   const operator = await requireOperator(req);
   if (operator instanceof Response) return operator;
-  if (operator.organization_id !== "installation")
-    return Response.json({ error: "Alert delivery is installation-scoped" }, { status: 403 });
-  const [state, webhooks] = await Promise.all([alerts(), deliveryStatus()]);
+  const [state, webhooks] = await Promise.all([
+    alerts(undefined, operator.organization_id),
+    deliveryStatus(undefined, operator.organization_id),
+  ]);
   return Response.json(
     { ...state, webhooks },
     {

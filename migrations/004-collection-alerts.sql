@@ -9,7 +9,7 @@ CREATE TABLE IF NOT EXISTS collection_alerts (
  resolved_at timestamptz,
  recovery_assessment uuid REFERENCES assessments(id)
 );
-CREATE UNIQUE INDEX IF NOT EXISTS collection_alert_active ON collection_alerts(source,condition) WHERE resolved_at IS NULL;
+-- Active episode uniqueness is installed by migration 009 after ownership is available.
 CREATE TABLE IF NOT EXISTS collection_monitor (
  singleton boolean PRIMARY KEY CHECK(singleton),
  last_success timestamptz NOT NULL
