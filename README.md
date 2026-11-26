@@ -274,3 +274,15 @@ In named mode, a **reviewer** can read assessments and an **analyst** can also l
 [Configure the collection alert monitor](docs/read-only-pilot.md#automated-collection-alerts)
 
 [Enable signed webhook notifications for collection alerts](docs/read-only-pilot.md#deliver-transitions-to-an-approved-webhook)
+
+### Source observations in assessment evidence
+
+New relay results carry `evidence.observations` through encrypted delivery, database storage and assessment history. Each record uses `complyos.observation/v1` and identifies the question checked (`kind`), the source reference, employee (`subject`), target, observation time, coverage and value.
+
+| Kind | Source and scope | Reading the result |
+|---|---|---|
+| `hr.employment` | HR export revision and employee ID, dated at the extract time | Records active or terminated status. Stale and future-dated exports prevent a fresh database decision. |
+| `entra.employee-id` | Microsoft Graph users lookup for the employee ID, dated at directory collection | A completed lookup can be matched, unmatched or ambiguous. An incomplete read yields unavailable coverage. This record appears when directory corroboration was requested. |
+| `postgres.catalog-select` | Configured database source and exact schema/table pair, with the mapped role in the parent result | Reports the catalog SELECT decision. Partial coverage flags a traversal limit on the path explanation. A failed check has an unavailable result. A skipped check has no observation time. Login, network connectivity and actual data reads remain outside scope. |
+
+Older assessments remain readable with their original evidence. The intake contract validates supplied observation records and checks that the PostgreSQL observation agrees with the enclosing assessment. [Connector contract](packages/connector-sdk/observations.mjs)

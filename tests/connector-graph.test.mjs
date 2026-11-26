@@ -66,6 +66,7 @@ test("connector snapshots, historical backfill and graph reader preserve scoped 
     const [run] = await latest();
     const result = run.results[0];
     assert.equal(run.id, batch.id);
+    assert.deepEqual(result.evidence.observations, batch.results[0].evidence.observations);
     assert.equal(result.decision, batch.results[0].decision);
     assert.deepEqual(
       result.projected_paths,
