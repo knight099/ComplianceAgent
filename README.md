@@ -211,6 +211,15 @@ COMPLYOS_ORGANIZATION_ID=payments node scripts/identity.mjs issue relay payments
 
 Use the same organization for role changes and revocation. Identity names are unique per credential kind across the deployment. Assessment uploads, reads, comparison history, collection health and AI assessment counts use the credential's stored organization. Collection alert history and webhook status also follow the authenticated organization. Each monitor runs for one configured organization. Device uploads inherit the organization in the server-side enrollment registry. Enroll with `node scripts/evidence.mjs enroll DEVICE ORGANIZATION` using an existing organization. Legacy hex-key entries and enrollments without an organization use `installation`. Retrieve an upload by its receipt with authenticated `GET /api/v1/evidence?id=SHA256`. Shared-hosting qualification still requires tenant-aware audit, evidence, delivery and database isolation.
 
+### Database isolation for evidence
+
+Device uploads, receipt lookups and local evidence imports run in transactions under the `complyos_evidence` role. PostgreSQL checks the transaction’s organization on reads and inserts. A missing organization context gives that role no visible rows. Each transaction releases its role and organization settings on commit or rollback.
+
+Migration 011 creates a restricted non-login role and requires permission to manage roles and alter the evidence table. For a separately provisioned application login, grant it membership in `complyos_evidence` with permission to `SET ROLE`. The development Compose login has administrative privileges. A shared deployment still requires a separate non-administrative runtime login and database policies for the other tenant-owned tables.
+
+Run `node --test tests/integration/evidence-rls.test.mjs` with `COMPLYOS_TEST_DATABASE_URL` pointing to a fresh disposable PostgreSQL database. The test applies migrations, creates organizations and opens simultaneous connections.
+
+
 ### Operator permissions
 
 In named mode, a **reviewer** can read assessments and an **analyst** can also list model providers, test connections and request AI summaries. To issue a review-only credential, run `node scripts/identity.mjs issue operator alice reviewer`. Change an existing credential with `node scripts/identity.mjs set-role operator alice analyst` or substitute `reviewer`. Changes take effect on the next API request. Existing operator credentials, issuance without a role, and shared operator mode retain analyst access for compatibility.

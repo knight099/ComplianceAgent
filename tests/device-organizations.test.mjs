@@ -19,6 +19,10 @@ test("device enrollment owns the upload and operator membership scopes retrieval
   process.env.AUTH_MODE = "named";
   process.env.DATABASE_URL = "postgres://localhost/unused";
   t.mock.method(pg.Pool.prototype, "query", (sql, args) => db.query(sql, args));
+  t.mock.method(pg.Pool.prototype, "connect", async () => ({
+    query: (sql, args) => db.query(sql, args),
+    release() {},
+  }));
   const migration = name => db.exec(readFileSync("migrations/" + name + ".sql", "utf8"));
   for (const name of ["001-assurance", "002-identities", "003-operator-permissions",
     "007-access-graph", "008-organizations"]) await migration(name);
@@ -27,6 +31,8 @@ test("device enrollment owns the upload and operator membership scopes retrieval
   await migration("010-evidence-organizations");
   assert.equal((await db.query("SELECT organization_id FROM collected_evidence")).rows[0].organization_id, "installation");
   await db.exec("INSERT INTO organizations VALUES ('north')");
+  await migration("011-evidence-rls");
+  await migration("011-evidence-rls");
   const key = "ad".repeat(32);
   writeFileSync(process.env.DEVICE_KEYS_FILE, JSON.stringify({ laptop: { organization: "north", key } }));
   const observation = { source: "laptop", mode: "Imported", organization_id: "installation", facts: [] };
