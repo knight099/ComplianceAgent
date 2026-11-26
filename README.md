@@ -1,14 +1,58 @@
 # ComplyOS
 
-[Architecture implementation checklist](docs/architecture-checklist.md)
+ComplyOS helps a security team answer a practical question: **after someone leaves the company, does their database role still have permission to read a sensitive table?** The current pilot checks PostgreSQL. It records which employee, role and table were checked, what the collector found, and when it checked. An administrator can remove a grant and collect again to see whether another path still gives the employee read access.
 
-ComplyOS checks whether terminated employees retain PostgreSQL read privileges. A customer-side relay correlates an HR extract with explicitly mapped database roles and sends scoped observations to a private control plane. The overview at `/` presents the illustrative enterprise dashboard. The operator workspace at `/operations` opens with an empty inventory and shows the latest assessment for each configured source. Open Compare assessments to inspect changes between two collections.
+The long-term goal is to do this across HR, identity, cloud, databases and code hosting. The planned platform will link access to company rules and regulatory obligations, explain violations, route proposed fixes for approval and keep the evidence that a fix worked.
 
-[Dashboard design system](docs/design-system.md)
+## How a check works today
 
-## Enterprise architecture
+1. A data owner chooses the tables to check and provides a current HR file mapping employees to database roles. Microsoft Entra ID can optionally corroborate employee IDs.
+2. A small program called the **relay** runs inside the customer’s network. It reads PostgreSQL’s permission records, including permissions inherited through other roles. Customer table contents stay in the database.
+3. The relay queues the results locally and uploads them to the **control plane**, the application that stores assessments and serves the review screens.
+4. In **Operations**, a reviewer sees retained grants, tables with no scoped grant, and checks with insufficient evidence. Two dated assessments show what changed after an administrator corrected access. A separate report can compare an employee’s current business role with a company-approved access policy.
 
-The product goal is continuous control assurance. For a given person and dataset, a reviewer should be able to trace each observed access path to evidence, compare it with an approved policy, and establish what a later collection verified. The current release delivers the read-only PostgreSQL offboarding workflow on `develop/enterprise-core`.
+## Start locally with Docker Compose
+
+**You need** Git, Docker with the Compose plugin, and a free local port 3000. Compose starts the app, PostgreSQL 17 and the collection monitor. A source database, HR file and AI account are optional for starting the app.
+
+```sh
+git clone --branch develop/enterprise-core https://github.com/knight099/ComplianceAgent.git
+cd ComplianceAgent
+```
+
+Create a private `.env` file in that directory with the following three entries. Replace each example value with a different secret. Hex strings work for all three. You can generate each one with `openssl rand -hex 32`. Keep this file for subsequent starts.
+
+```dotenv
+POSTGRES_PASSWORD=replace_with_a_url_safe_database_password
+OPERATOR_PASSWORD=replace_with_an_operator_password
+RELAY_TOKEN=replace_with_a_relay_upload_token
+```
+
+```sh
+docker compose up --build -d
+docker compose ps
+```
+
+Open [Operations](http://localhost:3000/operations). When prompted, use the username `operator` and the `OPERATOR_PASSWORD` from your file. A fresh installation shows an empty inventory until a relay submits its first assessment. The [overview](http://localhost:3000/) shows illustrative figures. Use Operations for actual results.
+
+For a login or startup problem, check `docker compose logs app db collection-monitor`. Stop the stack with `docker compose down`; its named volumes retain the database and enrollment files.
+
+## What is built and what is planned
+
+| High-level layer | Working in the pilot | Still to build |
+|---|---|---|
+| Screens | Live operations, assessment comparison, local report viewer and optional summaries from a customer-selected model. The overview shows the intended design. | Live overview metrics, auditor portal and administration screens. |
+| API and access control | Next.js APIs, named reviewers and analysts, source-bound relay credentials and organization-scoped queries. PostgreSQL enforces organization isolation for collected evidence. | Enterprise single sign-on, rate limits, a separate Fastify API and database-enforced isolation across the remaining tables. |
+| Identity and access graph | Reviewed HR mappings, optional Entra matches and dated paths from PostgreSQL roles to tables. | A common identity and access history across cloud, apps, databases and devices. |
+| Policies, regulations and incidents | Offboarding checks, comparison against an owner-reviewed access policy, and alerts when collection fails or becomes overdue. | Reviewed regulatory packs, a versioned OPA policy service and access incidents that combine findings across systems. |
+| Investigation, fixes and evidence | AI can explain assessment counts and freshness. Reviewers can compare fresh observations after a manual fix. Signed device uploads can be retrieved by receipt. | Investigation with evidence citations, approved automated fixes, independent checks across providers and auditor replay. |
+| Events and workflows | Encrypted upload retries, a collection monitor and a persistent queue for signed alert webhooks. | A shared event bus (NATS JetStream) and durable approval and remediation workflows (Temporal). |
+| Storage | PostgreSQL stores assessments, results, graph records, evidence and alert history. SQLite buffers relay uploads. | Protected object storage for evidence, vector search for regulations and Redis caching where needed. |
+| Gateway and customer-side collection | Outbound relay uploads, signed Linux and Windows privilege evidence, HR and PostgreSQL collection, optional Entra lookup and limited AWS, GitHub and scanner evidence imports. | Certificate-based gateway, managed Go relay and endpoint fleet, production cloud connectors and integrated CI/CD checks. |
+
+[High-level system design](docs/complyos-2-system-design.md) · [Detailed implementation checklist](docs/architecture-checklist.md) · [Engineering roadmap](docs/implementation-plan.md) · [Dashboard design system](docs/design-system.md)
+
+## Architecture diagrams
 
 **Running today**
 
@@ -47,45 +91,31 @@ flowchart LR
  Verify --> Replay["Historical evidence and auditor replay"]
 ```
 
-| Area | Implemented | Enterprise milestone |
-|---|---|---|
-| Identity and access | Explicit HR-to-role mapping, scoped PostgreSQL privilege checks and alternative role paths | Persistent cross-system graph with provenance and tenant isolation |
-| Private collection | Outbound relay, encrypted retries, source-bound credentials, signed Windows/Linux evidence bundles | Connector contracts, relay certificates, proxy support and managed fleet |
-| Review and operations | Named reviewer/analyst roles, assessment history, baseline reconciliation, freshness, alerts, webhook retry and delivery status | OIDC, audit exports, protected retention and recovery testing |
-| Policy and AI | Deterministic offboarding rule and optional bring-your-own-model summaries | Reviewed SOP and regulatory packs, cited investigation and model evaluation |
-| Remediation | Independently compare observations before and after an administrator changes access | Approval bound to exact parameters, crash-safe execution, reconciliation and fresh verification |
+## Run without Docker
 
-## Enterprise engineering roadmap
+Use Node.js 24 and an existing PostgreSQL 16+ database for the control plane. In your shell, set `DATABASE_URL` to that database’s connection string and export `OPERATOR_PASSWORD` and `RELAY_TOKEN`. For local development the migration login needs permission to create tables and manage the evidence role. See [database isolation for evidence](#database-isolation-for-evidence) for role requirements.
 
-The [ComplyOS 2.0 system design](docs/complyos-2-system-design.md) defines the target for a BFSI pilot. V1 connects HR, Entra, AWS, PostgreSQL and GitHub to explain offboarding and excessive access to sensitive data. Reviewed DPDP and internal controls, a private relay, an evidence-grounded investigator, approved remediation and historical replay complete the proposed release.
+```sh
+npm ci
+node scripts/migrate.mjs
+npm run build
+npm start
+```
 
-| Phase | Estimated weeks | Delivery milestone |
-|---|---|---|
-| Core platform | 1–4 | TypeScript contracts, Fastify, PostgreSQL migrations and tenant-scoped OIDC authorization |
-| Enterprise graph | 4–7 | Temporal relationships, reviewed identity mappings and evidence-backed access paths |
-| Collection infrastructure | 6–12 | Five read-only connectors and an enrolled Go relay with offline delivery |
-| Compliance detection | 10–13 | Versioned OPA policies, applicability, exceptions, coverage and correlated incidents |
-| Safe remediation | 13–17 | Typed actions, human approval, Temporal recovery and independent verification |
-| Evidence and intelligence | 15–21 | Signed evidence, historical replay, reviewed regulatory mappings and cited AI investigation |
-| Enterprise pilot | 21–24 | Isolation, recovery and load tests followed by an authorized read-only deployment |
-
-[Delivery dependencies, acceptance gates and next build sequence](docs/implementation-plan.md)
-
-**Implemented graph increment:** the PostgreSQL relay now uses a typed read-only connector contract. New and legacy observations feed a snapshot graph of mapped identities, roles and resources; the dashboard reads table-grant paths from its evidence-linked edges. The migration backfills existing assessments and preserves missing historical path evidence. Existing assessments use the `installation` namespace. New assessments inherit the organization of the authenticated relay.
-
-**HR and directory intake.** The relay accepts JSON or mapped HR CSV and can corroborate identities with read-only Microsoft Graph. The access review report compares observed read privileges with the approved dataset policy for each employee’s current business role.
-
-[Architecture, module boundaries and implementation sequence](docs/architecture.md) · [Read-only pilot runbook](docs/read-only-pilot.md)
-
-## Start the control plane
-
-Use Node 24 and PostgreSQL 16 or newer. Set unique secrets for `OPERATOR_PASSWORD`, `RELAY_TOKEN` and a URL-safe `POSTGRES_PASSWORD` in the shell, then run `docker compose up --build`. The service binds to localhost:3000. Open the dashboard and sign in as `operator`. Publish the relay ingestion route through a TLS gateway when the relay runs on another host.
-
-For an existing database, set `DATABASE_URL`, `OPERATOR_PASSWORD` and `RELAY_TOKEN`. Run `npm ci`, `node scripts/migrate.mjs`, `npm run build` and `npm start`. The additive migration creates assessment, result and evidence tables. Existing workspace documents are left intact and are excluded from assurance results.
+Open the same Operations URL as above. In a second shell with the control-plane database settings, run `node scripts/collection-monitor.mjs` for collection alerts.
 
 ## Run a read-only collection
 
-On the customer-side host, install Node 24 and run `npm ci`. Set `SOURCE_DATABASE_URL` to a read-only PostgreSQL connection, `CONTROL_URL` to the HTTPS control plane and `RELAY_TOKEN` to its ingestion credential. Supply an HR extract and reviewed identity mappings in this JSON shape:
+On a host that can reach the database being checked, install Node.js 24 and open the repository directory. Use a read-only account on the source PostgreSQL database (version 16 or newer). For a relay on the same machine as the control plane, use these settings. Set `RELAY_TOKEN` in this shell to the value you gave Compose, or use the named relay credential if you enabled named authentication. Replace the source connection string with your own. Remote relays require an HTTPS control-plane URL.
+
+```sh
+npm ci
+export CONTROL_URL=http://127.0.0.1:3000
+export SOURCE_DATABASE_URL='postgresql://readonly_user:password@db.example.org:5432/payments'
+export RELAY_TOKEN='replace_with_your_relay_upload_token'
+```
+
+Save an HR extract and reviewed identity mappings in this JSON shape:
 
 ```json
 {
@@ -97,7 +127,7 @@ On the customer-side host, install Node 24 and run `npm ci`. Set `SOURCE_DATABAS
 }
 ```
 
-Run `node relay/run.mjs /secure/path/hr-scope.json`. Use the actual extract timestamp. Include active employees in the mapping so shared-role ambiguity is visible. Use a unique source name per database and scope. Keep the HR extract, connection strings and shared secrets outside version control.
+Run `node relay/run.mjs /secure/path/hr-scope.json`. A successful upload prints `Acknowledged` and a count. Refresh Operations to see the source and collection time. Replace all sample identifiers and use the actual extract timestamp. Include active employees in the mapping so shared-role ambiguity is visible. Use a unique source name per database and scope. Keep the HR extract, connection strings and shared secrets outside version control.
 
 ### Collect from HR CSV and Entra ID
 
