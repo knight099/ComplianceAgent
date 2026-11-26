@@ -1,3 +1,4 @@
+import { validateResultObservations } from "./observations.mjs";
 export const contractVersion = "complyos.assessment/v1";
 export const postgresPolicy = "hr.postgres.offboarding/v1";
 export function parseAssessment(input) {
@@ -28,6 +29,8 @@ export function parseAssessment(input) {
       Array.isArray(r.evidence)
     )
       throw Error("Invalid observation");
+    if (r.evidence.observations !== undefined)
+      validateResultObservations(r.evidence.observations, r, input.source);
     const key = JSON.stringify([r.employeeId, r.resource]);
     if (seen.has(key)) throw Error("Duplicate observation");
     seen.add(key);

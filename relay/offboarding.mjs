@@ -1,5 +1,6 @@
 import { randomUUID } from "node:crypto";
 import { postgresPolicy as policy } from "../packages/connector-sdk/contract.mjs";
+import { observationVersion } from "../packages/connector-sdk/observations.mjs";
 export { policy };
 // Catalog-only check. A reachable SET ROLE can retain access even after login inheritance is revoked.
 export const privilegeQuery = `
@@ -85,6 +86,8 @@ export async function collectReadPrivileges(feed, query, now, directory, termina
     if (terminatedOnly && employee.status !== "terminated") continue;
     for (const [schema, table] of feed.resources) {
       let decision = "UNKNOWN";
+      let postgresCoverage = "skipped";
+      const resource = JSON.stringify([schema, table]);
       const evidence = {
         hrRevision: feed.hrRevision,
         hrObserved: feed.hrObserved,
@@ -94,7 +97,8 @@ export async function collectReadPrivileges(feed, query, now, directory, termina
       };
       if (directory) evidence.directory = directory.get(employee.id);
       const age = now.getTime() - Date.parse(feed.hrObserved);
-      if (age < 0 || age > 86400000)
+      const hrCoverage = age < 0 ? "future-dated" : age > 86400000 ? "stale" : "observed";
+      if (hrCoverage !== "observed")
         evidence.reason = "HR evidence outside freshness window";
       else if (directory && evidence.directory?.status !== "matched")
         evidence.reason = "Entra identity mapping " + (evidence.directory?.status ?? "unavailable");
@@ -102,6 +106,7 @@ export async function collectReadPrivileges(feed, query, now, directory, termina
         evidence.reason = "Missing or ambiguous identity mapping";
       else
         try {
+          postgresCoverage = "unavailable";
           const {
             rows: [fact],
           } = await query(privilegeQuery, [employee.role, schema, table]);
@@ -109,6 +114,7 @@ export async function collectReadPrivileges(feed, query, now, directory, termina
             evidence.reason = "Resource or mapped role unavailable";
           else {
             decision = fact.readable_as.length ? "RETAINED" : "NO_SCOPED_GRANT";
+            postgresCoverage = fact.path_limit_reached ? "partial" : "observed";
             Object.assign(evidence, {
               readableAs: fact.readable_as,
               tableGrantees: fact.grantees,
@@ -119,14 +125,42 @@ export async function collectReadPrivileges(feed, query, now, directory, termina
         } catch {
           evidence.reason = "PostgreSQL collection failed";
         }
+      evidence.observations = sourceObservations({
+        feed, employee, resource, evidence, decision, hrCoverage, postgresCoverage,
+        directoryRequested: Boolean(directory), now,
+      });
       results.push({
         employeeId: employee.id,
         role: employee.role || "",
-        resource: JSON.stringify([schema, table]),
+        resource,
         decision,
         evidence,
       });
     }
   }
   return results;
+}
+
+function sourceObservations({ feed, employee, resource, evidence, decision, hrCoverage, postgresCoverage, directoryRequested, now }) {
+  const common = { version: observationVersion, subject: employee.id };
+  const observations = [{
+    ...common, kind: "hr.employment", source: feed.hrRevision, target: employee.id,
+    observedAt: feed.hrObserved, coverage: hrCoverage,
+    value: employee.status,
+  }];
+  if (directoryRequested) {
+    const match = evidence.directory;
+    const unavailable = !match || match.status === "unavailable";
+    observations.push({
+      ...common, kind: "entra.employee-id", source: "Microsoft Graph /v1.0/users", target: match?.accountId ?? employee.id,
+      observedAt: match?.observed ?? null, coverage: unavailable ? "unavailable" : "observed",
+      value: unavailable ? null : match.status,
+    });
+  }
+  observations.push({
+    ...common, kind: "postgres.catalog-select", source: feed.source, target: resource,
+    observedAt: postgresCoverage === "skipped" ? null : now.toISOString(),
+    coverage: postgresCoverage, value: decision === "UNKNOWN" ? null : decision,
+  });
+  return observations;
 }

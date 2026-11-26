@@ -60,6 +60,12 @@ test("directory match requires a complete unique employee ID across pages", asyn
     });
     const connector = postgresConnector(status === "matched" ? query : assert.fail, directory);
     const [result] = (await connector.collect(feed, now)).results;
+    const [hr, entra, pg] = result.evidence.observations;
+    assert.deepEqual([hr.source, hr.observedAt, hr.value], [scope.hrRevision, scope.hrObserved, employee.status]);
+    assert.equal(entra.observedAt, directory.get(employee.id).observed);
+    assert.equal(entra.value, status === "unavailable" ? null : status);
+    assert.equal(pg.coverage, status === "matched" ? "observed" : "skipped");
+    assert.equal(pg.observedAt, status === "matched" ? now.toISOString() : null);
     assert.equal(result.evidence.directory.status, status);
     assert.equal(result.evidence.directory.accountId, status === "matched" ? user.id : undefined);
     assert.equal(result.decision, status === "matched" ? "RETAINED" : "UNKNOWN");

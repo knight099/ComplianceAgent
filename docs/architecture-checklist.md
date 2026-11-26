@@ -93,4 +93,5 @@ Read top down alongside the [2.0 system design](complyos-2-system-design.md). Ea
 6. [x] Restrict named authentication to an exact credential lookup. Test migration of existing grants, scoped relay inventory and immediate revocation using runtime logins.
 7. [ ] Require all six check names in GitHub branch rules and qualify upgrades from a previous release before a shared deployment. [Secure pilot plan](implementation-plan.md#secure-pilot-review-and-next-pull-request)
 8. [x] Connect the overview to measured assessment results and source freshness.
-9. [ ] Advance the connector and incident phases in the [delivery plan](implementation-plan.md).
+9. [x] Carry versioned HR, optional Entra and PostgreSQL source observations through assessment intake with explicit time, provenance and coverage.
+10. [ ] Link source observations to stable cross-system identities and advance the incident phases in the [delivery plan](implementation-plan.md).
