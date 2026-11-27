@@ -71,6 +71,11 @@ test("dedicated logins run operations and monitoring without access to migration
   const submit = report => postReview(new Request(endpoint, { method: "POST",
     headers: { authorization: "Bearer " + relaySecret }, body: JSON.stringify(report) }));
   const first = await review(["reader"], at);
+  first.saviynt = { analyticsName: "KYC history", observedAt: at.toISOString(), coverage: "observed" };
+  const subject = first.rows[0];
+  subject.governance = [{ recordId: "approval-1", employeeId: subject.employeeId, account: subject.databaseRole,
+    schema: subject.resource[0], table: subject.resource[1], entitlement: "read KYC", approvedRole: "Lending",
+    status: "revoked", expiresAt: null }];
   const firstResponse = await submit(first);
   assert.equal(firstResponse.status, 200);
   const firstId = (await firstResponse.json()).id;
@@ -83,6 +88,9 @@ test("dedicated logins run operations and monitoring without access to migration
   const fetchById = (id, headers) => getReviews(new Request(endpoint + "?id=" + id, { headers }));
   for (const [id, outcome] of [[firstId, "EXCESS_ACCESS"], [secondId, "AS_EXPECTED"]])
     assert.equal((await (await fetchById(id, req.headers)).json()).rows[0].outcome, outcome);
+  const storedReview = await (await fetchById(firstId, req.headers)).json();
+  assert.deepEqual(storedReview.rows[0].governance, subject.governance);
+  assert.deepEqual(storedReview.saviynt, first.saviynt);
   const outsider = await issue(admin, "operator", "outside-reviewer", null, "reviewer", "installation");
   const outsideHeaders = { authorization: "Basic " + Buffer.from("outside-reviewer:" + outsider).toString("base64") };
   assert.equal((await fetchById(firstId, outsideHeaders)).status, 404);

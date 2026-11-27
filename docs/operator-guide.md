@@ -214,3 +214,25 @@ curl --fail-with-body -H "Authorization: Bearer $RELAY_TOKEN" \
 ```
 
 The receipt identifies the stored report. Retrying the same file returns the same receipt. In **Operations → Personal-data access reviews**, choose an assessment and expand an employee and table to inspect expected access, observed privileges, classification, exception and source evidence. After correcting a grant, collect and upload a fresh review. Select the earlier assessment for the same source and policy to compare outcomes. Check both policy versions when interpreting changes. A table omitted from the latest scope is labeled accordingly.
+
+### Compare Saviynt approvals with observed access
+
+The relay has a fixture-tested reader for Saviynt Enterprise Identity Cloud's runtime Analytics interface. A customer administrator must qualify the API version, response format, token permissions and analytics control in an authorized tenant before pilot use.
+
+Create a read-only analytics control scoped to one PostgreSQL assessment source. Return one row per governance record and table, ordered by a stable unique record ID. Map Saviynt entitlement identifiers to exact database accounts and schema/table names using a data-owner-reviewed mapping. Include historical approvals and revocations as needed. The adapter calls `POST /ECM/api/v5/fetchRuntimeControlsDataV2` with `analyticsname`, `offset` and `max`; it expects a `results` array and a matching `totalcount` on every page. Configure the control to supply these aliases:
+
+| Column | Expected value |
+|---|---|
+| recordId, employeeId | Unique governance record/table identifier and authoritative HR ID |
+| account, schema, table | Exact PostgreSQL role, schema and table |
+| entitlement, approvedRole | Entitlement label and business role recorded with the request |
+| status | approved, revoked, pending or denied |
+| expiresAt | ISO timestamp with timezone, or JSON null for no recorded expiry |
+
+Supply the service account's current read-only token through `SAVIYNT_TOKEN`. Set `SAVIYNT_CONFIG` to the path of a local JSON file like this:
+
+```json
+{"origin":"https://tenant.example","source":"payments-primary","analyticsName":"PostgreSQL governance evidence"}
+```
+
+Run the existing access-report command and submit the report to Operations. Each employee/table row shows matching records beside the current HR role and observed grant. The owner's access policy still determines the outcome. A revoked or expired approval can coexist with an active database grant. A complete empty result means the configured control returned no match. Authentication failures, interrupted pagination, duplicate IDs and malformed responses mark governance evidence unavailable and discard partial pages. Each run reads a full snapshot. Collection time records when the relay read the analytics result; check the control's upstream refresh schedule separately.

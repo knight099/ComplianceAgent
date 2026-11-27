@@ -37,6 +37,7 @@ To see your first results, follow the [read-only collection instructions](docs/o
 
 - [Run a pilot and verify an access change](docs/read-only-pilot.md)
 - [Check personal-data access against company policy](docs/operator-guide.md#review-access-against-a-company-sop)
+- [Compare Saviynt governance records with database access](docs/operator-guide.md#compare-saviynt-approvals-with-observed-access)
 - [Connect your own AI model](docs/operator-guide.md#connect-your-own-model)
 - [Operator guide, credentials and troubleshooting](docs/operator-guide.md)
 - [System architecture](docs/complyos-2-system-design.md) · [Implementation checklist](docs/architecture-checklist.md)

@@ -1,3 +1,4 @@
+import { collectSaviynt, attachGovernance } from "../connectors/saviynt/index.mjs";
 import pg from "pg";
 import { readFile } from "node:fs/promises";
 import { readHrInput } from "../connectors/hr/input.mjs";
@@ -16,6 +17,9 @@ if (useEntra && !process.env.ENTRA_ACCESS_TOKEN) throw Error("Configure ENTRA_AC
 const directory = useEntra
   ? await collectDirectoryMatches(feed.employees, process.env.ENTRA_ACCESS_TOKEN)
   : undefined;
+const governance = process.env.SAVIYNT_CONFIG
+  ? await collectSaviynt(JSON.parse(await readFile(process.env.SAVIYNT_CONFIG, "utf8")), feed.source, process.env.SAVIYNT_TOKEN)
+  : null;
 const client = new pg.Client({
   connectionString: process.env.SOURCE_DATABASE_URL, connectionTimeoutMillis: 5000,
   statement_timeout: 10000, options: "-c default_transaction_read_only=on",
@@ -26,6 +30,7 @@ try {
   const report = await buildAccessReport(feed, policy, (sql, args) => client.query(sql, args), new Date(), directory);
   const commit = await client.query("COMMIT");
   if (commit.command !== "COMMIT") throw Error("Catalog snapshot failed. Retry collection");
+  if (governance) attachGovernance(report, governance);
   console.log(JSON.stringify(report, null, 2));
 } finally {
   await client.end();

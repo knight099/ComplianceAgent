@@ -62,6 +62,17 @@ export default function AccessReviews() {
         <summary>{row.employeeId} · {row.resource.join(".")} · {row.outcome}</summary>
         <p>{row.classification ?? "Unclassified"} · Business role {row.businessRole ?? "unknown"} · Database role {row.databaseRole || "unknown"}</p>
         <p>Expected {row.expected ?? "unknown"} · Observed {row.observed ?? "unknown"}</p>
+        {latest.data.saviynt && <section>
+          <h3>Saviynt governance evidence</h3>
+          <p>{latest.data.saviynt.analyticsName} · Collected {latest.data.saviynt.observedAt}</p>
+          {latest.data.saviynt.coverage === "unavailable" ? <p>Governance coverage unavailable.</p>
+            : row.governance?.length ? row.governance.map(record => <p key={record.recordId}>
+              {record.entitlement} · {record.status} · Recorded role {record.approvedRole}
+              {record.approvedRole !== row.businessRole && " · Different from current HR role"}
+              {record.expiresAt && (Date.parse(record.expiresAt) <= Date.parse(latest.data.observedAt) ? " · Expired " : " · Expires ") + record.expiresAt}
+              {" · Record "}{record.recordId}
+            </p>) : <p>No matching record in this analytics control.</p>}
+        </section>}
         {row.exception && <p>Exception {row.exception.reference} · Approved by {row.exception.approver} · Expires {row.exception.until}</p>}
         {prior.data && <p>Previous outcome {before.get(key(row))?.outcome ?? "Outside earlier scope"} · Previous observed access {before.get(key(row))?.observed ?? "unknown"}</p>}
         <pre>{JSON.stringify(row.evidence, null, 2)}</pre>

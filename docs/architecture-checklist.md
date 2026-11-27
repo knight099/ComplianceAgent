@@ -99,3 +99,5 @@ Read top down alongside the [2.0 system design](complyos-2-system-design.md). Ea
 12. [x] Enforce and test aggregate-only model calls for the current connection probe and summary. Richer text, retrieval and investigation tools require separate privacy rules before rollout.
 13. [ ] Qualify Saviynt read-only governance evidence and reconcile it with target-system grants.
 14. [ ] Deliver enterprise SSO, a reviewed OPA registry, correlated incidents, regulatory ingestion, an evidence vault, Temporal-backed remediation and the Go fleet. Track each release against the [enterprise delivery sequence](implementation-plan.md#enterprise-access-and-privacy-delivery-sequence).
+
+Saviynt progress for item 13: the read-only Analytics adapter and Operations comparison are covered by contract fixtures. Live tenant qualification, stable source snapshots and incremental checkpointing remain open.
