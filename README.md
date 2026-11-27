@@ -33,6 +33,50 @@ Open the [dashboard](http://localhost:3000). When prompted, sign in as `operator
 
 To see your first results, follow the [read-only collection instructions](docs/operator-guide.md#run-a-read-only-collection). Stop the local services with `docker compose down`. Their named volumes retain the data.
 
+## Enterprise connections
+
+### Laptop and security tools
+
+| Category | Tools | How to connect today |
+|---|---|---|
+| Device management (MDM / UEM) | Microsoft Intune, Jamf, Workspace ONE | Use the read-only Intune audit below. Native Jamf and Workspace ONE connectors are planned. |
+| Identity management | Microsoft Entra ID, Active Directory, Okta | For Entra employee matching, supply a Microsoft Graph token in `ENTRA_ACCESS_TOKEN` with permission to read users and their employee IDs, then add `--entra` to the HR collection command. Native on-premises AD and Okta inventory connectors are planned. [Entra setup](docs/operator-guide.md#collect-from-hr-csv-and-entra-id) |
+| Endpoint detection and response (EDR) | CrowdStrike, Microsoft Defender for Endpoint, SentinelOne | Native connectors for endpoint sensor health and detections are planned. |
+| Data loss prevention (DLP) | Microsoft Purview, Forcepoint | Native connectors for DLP policy assignments and events are planned. |
+| Remote management | Microsoft Configuration Manager, ManageEngine, Tanium | IT can distribute the collector scripts through its existing deployment process. Native inventory and remote-action connectors are planned. |
+| VPN / Zero Trust | Zscaler, GlobalProtect, Netskope | Native connectors for device posture and network access decisions are planned. |
+| IT asset management | ServiceNow, Lansweeper | Export the issued laptops in scope and convert the export to the dated inventory JSON used below. Native APIs are planned. [Inventory file format](docs/laptop-audit.md#run-the-intune-audit) |
+| Security monitoring (SIEM) | Splunk, Microsoft Sentinel | To forward collection-health alerts, configure `ALERT_WEBHOOK_URL` and `ALERT_WEBHOOK_SECRET` on the monitor. Your receiver must verify the signature and forward the event to your SIEM. Native Splunk and Sentinel connectors are planned. [Webhook setup](docs/read-only-pilot.md#deliver-transitions-to-an-approved-webhook) |
+
+**Run an Intune laptop audit.** On the relay host, use Node.js 24 and supply a Microsoft Graph token in `INTUNE_ACCESS_TOKEN` with the read-only permission `DeviceManagementManagedDevices.Read.All`. Prepare an inventory with the export time, each issued laptop’s asset ID and its Entra device ID where known. From the repository root, run:
+
+```sh
+umask 077
+node relay/laptop-audit.mjs /secure/issued-laptops.json > /secure/intune-review.json
+```
+
+Open the output JSON to review encryption, stale check-ins, missing matches and ambiguous identities. This check runs centrally. The connector has passed fixture tests; confirm its visible scope in your licensed tenant before relying on coverage. [Intune pilot guide](docs/laptop-audit.md#run-the-intune-audit)
+
+**Install the IT collector for local evidence.** Enroll each laptop on the control plane with its own device ID and organization, for example `docker compose exec app node scripts/evidence.mjs enroll LAPTOP-104 payments`. Deliver only that device’s generated JSON through IT’s provisioning channel. For automatic uploads, set its `url` to your HTTPS endpoint ending in `/api/device`.
+
+| Platform | Install under the intended IT-managed account | Evidence collected hourly |
+|---|---|---|
+| Windows | From the directory containing both collector PowerShell scripts, run `.\install-windows.ps1 -Config C:\Secure\device.json`. | Local Administrators membership and BitLocker protection on the OS volume |
+| Linux | From the repository root, run `sh collectors/install-linux.sh /secure/device.json` in a systemd user session. | Local `sudo` and `wheel` membership |
+
+Check the first signed bundle or upload receipt for the enrolled device. A macOS collector and machine-wide signed packages are planned. [Enrollment, verification and uninstall](docs/laptop-audit.md#install-the-endpoint-collector)
+
+### Access reviews and other integrations
+
+| Connection | How to connect today |
+|---|---|
+| HR and PostgreSQL | On the relay host, set `SOURCE_DATABASE_URL` to the read-only source connection and supply `CONTROL_URL` and `RELAY_TOKEN` for upload. Run `node relay/run.mjs /secure/hr-scope.json`, or supply an HR CSV followed by its scope JSON. Open **Operations** after the relay acknowledges the upload. [HR and database setup](docs/operator-guide.md#run-a-read-only-collection) |
+| Saviynt | Create a read-only Analytics control, set `SAVIYNT_CONFIG` to the local mapping configuration and supply `SAVIYNT_TOKEN`. Run `node relay/access-report.mjs policy.json /secure/hr-scope.json` to include matching governance records in the report. The reader is fixture-tested; live tenant qualification is pending. [Required fields and upload instructions](docs/operator-guide.md#compare-saviynt-approvals-with-observed-access) |
+| AWS IAM and GitHub | On the evidence host, configure ComplyOS database access and authenticate the relevant CLI. For sandbox IAM group membership, set `SANDBOX_ACCOUNT` and `SANDBOX_USER`, then run `node scripts/evidence.mjs aws`. For default-branch review settings, run `node scripts/evidence.mjs github OWNER/REPO` with permission to read branch protection. |
+| Trivy and Prowler | On the evidence host, import an existing JSON scan with `node scripts/evidence.mjs trivy /secure/trivy.json` or `node scripts/evidence.mjs prowler /secure/prowler.json`. The evidence commands print a receipt ID. |
+| AI model | Configure approved endpoints in `AI_ENDPOINTS` and model IDs in `AI_MODELS` on the app. In **AI Copilot**, select the provider and model, enter the key if required, and choose **Test connection**. [Model setup](docs/operator-guide.md#connect-your-own-model) |
+| Enterprise operator sign-in | Configure the issuer, API audience, signing-key URL and operator memberships in `OIDC_CONFIG_FILE`, set `AUTH_MODE=oidc` and recreate the app. Browser sign-in also requires a configured login gateway. [OIDC and gateway setup](docs/operator-guide.md#use-an-enterprise-identity-provider-for-operator-apis) |
+
 ## Guides
 
 - [Audit laptop encryption, check vendor coverage and install the IT collector](docs/laptop-audit.md)
