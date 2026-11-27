@@ -114,6 +114,9 @@ test("dedicated logins run operations and monitoring without access to migration
   const state = await (await alerts(req)).json();
   assert.equal(state.open[0].source, "runtime-source");
   assert.ok(state.checked_at);
+  process.env.AUTH_MODE = "oidc";
+  assert.equal((await assessments(req)).status, 401);
+  assert.equal((await post()).status, 200);
   await revoke(admin, "operator", "runtime-reviewer", org);
   await revoke(admin, "relay", "runtime-relay", org);
   assert.equal((await assessments(req)).status, 401);

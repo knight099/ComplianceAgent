@@ -236,3 +236,30 @@ Supply the service account's current read-only token through `SAVIYNT_TOKEN`. Se
 ```
 
 Run the existing access-report command and submit the report to Operations. Each employee/table row shows matching records beside the current HR role and observed grant. The owner's access policy still determines the outcome. A revoked or expired approval can coexist with an active database grant. A complete empty result means the configured control returned no match. Authentication failures, interrupted pagination, duplicate IDs and malformed responses mark governance evidence unavailable and discard partial pages. Each run reads a full snapshot. Collection time records when the relay read the analytics result; check the control's upstream refresh schedule separately.
+
+### Use an enterprise identity provider for operator APIs
+
+The app can verify signed OAuth access tokens issued by an OIDC identity provider. This mode supports one trusted issuer per installation. Register a dedicated API audience for ComplyOS. Configure the issuer to produce expiring RS256 or ES256 access tokens with the `at+jwt` type and the `iss`, `sub`, `aud`, `iat` and `exp` claims. Obtain the issuer and HTTPS signing-key URL from the provider's trusted discovery metadata. Providers that emit opaque access tokens or generic JWT headers require a compatible broker.
+
+Create the organization first, provision named relay tokens for that organization, and create an administrator-managed membership file:
+
+```json
+{
+  "issuer": "https://identity.example/realms/enterprise",
+  "jwksUri": "https://identity.example/realms/enterprise/protocol/openid-connect/certs",
+  "audience": "complyos-api",
+  "members": [
+    { "subject": "immutable-user-subject", "organization": "payments", "role": "reviewer" }
+  ]
+}
+```
+
+Set `AUTH_MODE=oidc` and `OIDC_CONFIG_FILE=/run/complyos/oidc.json` on the app. For Compose, add a read-only bind mount of the configuration directory to `/run/complyos` on the app service and recreate it. Use filesystem permissions that allow only administrators to change membership. A subject has one assignment per installation. Removing the entry or changing its role takes effect on the next API request. The analyst role also grants access to the configured model tools. Relay submissions continue to require named source-bound relay credentials.
+
+With a short-lived access token for this API in the shell environment, request an assessment list:
+
+```sh
+curl --fail-with-body -H "Authorization: Bearer $ACCESS_TOKEN" "$CONTROL_URL/api/v1/assessments"
+```
+
+For dashboard sign-in, deploy a customer-managed OIDC login gateway in front of the app. The gateway owns the authorization-code flow, session cookies, logout and CSRF protections. Configure it to replace the Authorization header on operator requests with the signed API access token for the authenticated session. Route relay uploads separately so their named credentials reach the intake API. Validate the browser flow, token refresh, group changes and logout with the chosen provider before a shared rollout. The repository currently implements the token-verification side of this integration.
