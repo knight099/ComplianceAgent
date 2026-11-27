@@ -1,13 +1,19 @@
 import { requireOperator } from "../../../lib/auth.mjs";
 import { assessmentCounts } from "../../../lib/store.mjs";
-import { providers, complete } from "../../../lib/ai.mjs";
+import { modelConnections, complete } from "../../../lib/ai.mjs";
 export const dynamic = "force-dynamic";
 const reply = (data, status = 200) =>
   Response.json(data, { status, headers: { "Cache-Control": "no-store" } });
 export async function GET(req) {
   const operator = await requireOperator(req, { ai: true });
   if (operator instanceof Response) return operator;
-  return reply({ providers: Object.keys(providers()) });
+  try {
+    const connections = modelConnections(operator.organization_id);
+    return reply({ providers: Object.keys(connections), models: Object.fromEntries(
+      Object.entries(connections).map(([name, connection]) => [name, connection.models])) });
+  } catch {
+    return reply({ error: "Model configuration unavailable." }, 503);
+  }
 }
 export async function POST(req) {
   const operator = await requireOperator(req, { ai: true });
@@ -37,9 +43,10 @@ export async function POST(req) {
     if (!summary) return reply({ error: "Assessment unavailable" }, 404);
   }
   try {
-    const text = await complete(providers(), input, summary);
+    const text = await complete(modelConnections(operator.organization_id), input, summary);
     return reply({ text: summary ? text : "Connection verified", summary });
   } catch (e) {
+    if (e.message === "Model privacy policy blocked request") return reply({ error: e.message }, 400);
     return reply(
       {
         error: /^Model endpoint returned HTTP \d{3}$/.test(e.message)

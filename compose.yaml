@@ -15,6 +15,8 @@ services:
       DATABASE_URL: postgres://complyos_app:${APP_DB_PASSWORD:?set APP_DB_PASSWORD}@db/complyos
       AUTH_MODE: ${AUTH_MODE:-shared}
       OPERATOR_PASSWORD: ${OPERATOR_PASSWORD:-}
+      AI_MODELS: ${AI_MODELS:-}
+      AI_TENANT_PROVIDERS: ${AI_TENANT_PROVIDERS:-}
       AI_ENDPOINTS: ${AI_ENDPOINTS:-}
       RELAY_TOKEN: ${RELAY_TOKEN:-}
       DEVICE_KEYS_FILE: /app/.data/devices.json

@@ -122,15 +122,22 @@ Run `npm test` for signed-bundle checks and a PostgreSQL-backed role membership,
 
 ## Connect your own model
 
-Select **AI Copilot** in the overview to open **AI model connection**. Select a provider, enter an exact model ID available to your account, provide the API key when the provider requires one, and select **Test connection**. Select an assessment and **Generate summary** to explain its counts and freshness. Each browser session supplies its own credentials. Reloading or clearing the connection releases the key from application state. Use HTTPS when operating remotely and keep request bodies and authorization headers out of proxy logs.
+Select **AI Copilot** in the overview to open **AI model connection**. Select a provider, choose a server-approved model ID available to your account, provide the API key when the provider requires one, and select **Test connection**. Select an assessment and **Generate summary** to explain its counts and freshness. Each browser session supplies its own credentials. Reloading or clearing the connection releases the key from application state. Use HTTPS when operating remotely and keep request bodies and authorization headers out of proxy logs.
 
 OpenAI is available by default. To offer a private gateway, Ollama, vLLM or another OpenAI-compatible service, set the following on the **app server** and restart it (recreate the app container for Compose):
 
 ```sh
+export AI_MODELS='{"OpenAI":["gpt-4o-mini"],"Internal model":["internal-small"]}'
 export AI_ENDPOINTS='{"OpenAI":"https://api.openai.com/v1/chat/completions","Internal model":"https://models.example.org/v1/chat/completions"}'
 ```
 
 Replace the example URL with the full chat-completions endpoint. The provider must accept a model and messages and return text in `choices[0].message.content`. The server uses bearer authentication when a key is supplied. Private keyless models can leave the key blank. Loopback HTTP is supported for local inference; inside a container loopback refers to that container. Endpoints using other protocols or authentication schemes need a compatible gateway. Test calls may incur provider charges.
+
+The default model selection is OpenAI's `gpt-4o-mini`. For an existing deployment with other models or custom endpoints, add their exact IDs to `AI_MODELS` before upgrading. Replace the example model names with IDs offered by your provider. An empty model map (`{}`) disables inference. When using Compose, set these values in the deployment environment or its private `.env` file and recreate the app container.
+
+To restrict destinations by organization, set `AI_TENANT_PROVIDERS` to a JSON object such as `{"installation":["Internal model"],"finance":[]}`. When this setting is present, an omitted organization or an empty provider list disables model calls for that organization. Without it, analysts can use the installation's approved connections.
+
+Both operations use the same outbound privacy policy (`complyos.model-privacy/v1`). The connection probe sends a fixed message. A summary sends a freshness flag and three count ranges (0–4, 5–9, 10–49 or 50+). Exact counts, timestamps, employee identifiers, access reports and source names stay in ComplyOS. Unexpected summary fields or invalid types block transmission. The application logs the policy version and allow/block decision. This applies to hosted and private endpoints. Review proxy and provider logging independently.
 
 ## Individual operator and relay credentials
 

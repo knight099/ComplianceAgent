@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 export default function ModelConnection({ runs }) {
   const [names, list] = useState([]),
+    [models, setModels] = useState({}),
     [provider, select] = useState(""),
     [model, setModel] = useState(""),
     [key, setKey] = useState(""),
@@ -22,6 +23,7 @@ export default function ModelConnection({ runs }) {
         if (active) {
           restrict(Boolean(data.restricted));
           if (data.restricted) setKey("");
+          setModels(data.models ?? {});
           list(data.providers);
           select((prev) =>
             data.providers.includes(prev) ? prev : data.providers[0] || "",
@@ -86,7 +88,10 @@ export default function ModelConnection({ runs }) {
         </label>{" "}
         <label>
           Model ID{" "}
-          <input value={model} onChange={(e) => setModel(e.target.value)} />
+          <select value={model} onChange={(e) => setModel(e.target.value)}>
+            <option value="">Choose an approved model</option>
+            {(models[provider] ?? []).map(id => <option key={id}>{id}</option>)}
+          </select>
         </label>{" "}
         <label>
           API key{" "}
@@ -110,7 +115,7 @@ export default function ModelConnection({ runs }) {
         {selected && (
           <>
             <p>
-              Summaries send the collection time, freshness and decision counts.
+              Summaries send count ranges and a freshness flag. Exact counts and collection times stay in ComplyOS.
             </p>
             <label>
               Assessment{" "}

@@ -87,6 +87,22 @@ test("reviewer can read assessments; AI routes enforce role changes on the next 
   assert.equal((await completion(req)).status, 403);
   await setOperatorRole(db, "user", "analyst");
   assert.equal((await providers(req)).status, 200);
+  process.env.AI_TENANT_PROVIDERS = JSON.stringify({ installation: ["OpenAI"] });
+  const sent = [];
+  t.mock.method(globalThis, "fetch", async (url, init) => {
+    sent.push(JSON.parse(init.body));
+    return Response.json({choices:[{message:{content:"Summary"}}]});
+  });
+  const explain = (headers, input) => completion(new Request("http://localhost", {
+    method: "POST", headers: { ...Object.fromEntries(headers), "content-type":"application/json" },
+    body: JSON.stringify({op:"explain", model:"gpt-4o-mini", provider:"OpenAI", key:"fixture-token", ...input})
+  }));
+  assert.equal((await explain(req.headers, {id:body[0].id})).status, 200);
+  assert.equal((await explain(req.headers, {id:body[0].id, organization_id:"other"})).status, 400);
+  assert.equal((await explain(otherReq.headers, {id:newId})).status, 400);
+  assert.equal(sent.length, 1);
+  assert.deepEqual(JSON.parse(sent[0].messages.at(-1).content),
+    {retained:"0-4", unknown:"0-4", no_scoped_grant:"0-4", stale:false});
   await setOperatorRole(db, "user", "reviewer");
   assert.equal((await providers(req)).status, 403);
   await revoke(db, "operator", "user");
