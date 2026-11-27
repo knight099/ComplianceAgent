@@ -5,8 +5,9 @@ import { CircleAlert } from "lucide-react";
 import { Metric, Panel, ResultBar } from "./ui/workspace";
 import styles from "./ui/workspace.module.css";
 
-export default function OverviewResults() {
+export default function OverviewResults({ login }) {
   const [rows, setRows] = useState(null);
+  const [needsLogin, setNeedsLogin] = useState(false);
   const [error, setError] = useState("");
   const [request, setRequest] = useState(0);
 
@@ -16,6 +17,7 @@ export default function OverviewResults() {
       try {
         const response = await fetch("/api/collection-health", {cache: "no-store", signal: controller.signal});
         if (!response.ok) {
+          setNeedsLogin(response.status === 401);
           setError(response.status === 401 ? "Sign in with an operator credential to view results." : "Collection health is unavailable.");
           return;
         }
@@ -35,7 +37,7 @@ export default function OverviewResults() {
     setRequest(value => value + 1);
   }
 
-  if (error) return <Panel title="Overview unavailable"><p role="alert">{error}</p><button onClick={refresh}>Try again</button></Panel>;
+  if (error) return <Panel title="Overview unavailable"><p role="alert">{error}</p>{needsLogin && login && <a href={login}>Sign in with your organization</a>} <button onClick={refresh}>Try again</button></Panel>;
   if (!rows) return <p role="status">Loading collection health…</p>;
 
   const current = rows.filter(row => row.freshness === "Current");

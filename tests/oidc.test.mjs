@@ -1,3 +1,5 @@
+import { GET as session } from "../app/api/v1/operator-session/route.js";
+import { gatewayPath } from "../lib/gateway-path.mjs";
 import assert from "node:assert/strict";
 import test from "node:test";
 import { mkdtemp, rm, writeFile } from "node:fs/promises";
@@ -31,6 +33,11 @@ test("signed operator tokens use current local membership and a dedicated API au
     return new Request("https://app.example/api", {headers:{authorization:"Bearer "+token}});
   }
   const req = await request();
+  const authenticated = await session(req);
+  const metadata = await authenticated.json();
+  assert.deepEqual(metadata, { organization: "acme", role: "reviewer", expiresAt: metadata.expiresAt });
+  assert.ok(metadata.expiresAt > Date.now()/1000);
+  assert.match(authenticated.headers.get("cache-control"), /no-store/);
   assert.equal((await requireOperator(req)).organization_id,"acme");
   assert.equal((await requireOperator(req,{ai:true})).status,403);
   for (const invalid of [await request({iss:"https://other.test"}),await request({aud:"different-api"}),
@@ -45,5 +52,14 @@ test("signed operator tokens use current local membership and a dedicated API au
   await configure([membership,{...membership,organization:"other"}]);
   assert.equal((await requireOperator(req)).status,401);
   await configure([]);
+  assert.equal((await session(req)).status,401);
   assert.equal((await requireOperator(req)).status,401);
+});
+
+
+test("gateway actions link only to same-origin paths", () => {
+  assert.equal(gatewayPath("/oauth2/sign_out"), "/oauth2/sign_out");
+  assert.equal(gatewayPath(undefined), null);
+  for (const value of ["//other.test", "https://other.test", "/%2fother", "/signout?redirect=https://other.test"])
+    assert.throws(() => gatewayPath(value));
 });

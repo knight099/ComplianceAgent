@@ -263,3 +263,15 @@ curl --fail-with-body -H "Authorization: Bearer $ACCESS_TOKEN" "$CONTROL_URL/api
 ```
 
 For dashboard sign-in, deploy a customer-managed OIDC login gateway in front of the app. The gateway owns the authorization-code flow, session cookies, logout and CSRF protections. Configure it to replace the Authorization header on operator requests with the signed API access token for the authenticated session. Route relay uploads separately so their named credentials reach the intake API. Validate the browser flow, token refresh, group changes and logout with the chosen provider before a shared rollout. The repository currently implements the token-verification side of this integration.
+
+#### Qualify gateway login, refresh and logout
+
+On the app, set `OIDC_GATEWAY_LOGIN_PATH` and `OIDC_GATEWAY_LOGOUT_PATH` to your gateway's same-origin action paths and recreate the app. For example, an oauth2-proxy deployment may expose `/oauth2/start` and `/oauth2/sign_out`. Configure the gateway's post-login destination as the dashboard and its post-logout destination as a signed-out page. Configure browser page requests to enter the login flow and unauthenticated operator API requests to return HTTP 401. The overview offers the configured login link after a 401 and the sign-out link in its header.
+
+Use a pilot reviewer with a short access-token lifetime. Choose a timeout longer than the initial token lifetime plus the time needed for sign-in. From a workstation with Python Playwright and Chromium installed, run:
+
+```sh
+python scripts/qualify-oidc-gateway.py https://complyos.example payments reviewer --timeout 600
+```
+
+Complete login and any logout confirmation in the opened browser. The check starts with an empty browser context, verifies the expected organization and role, reads dashboard collection health, waits until the original access token expires and verifies a later expiry with the same session. It clicks the dashboard's sign-out link and checks that both operator APIs return 401. The session endpoint exposes the verified token expiry, organization and role to the current operator with caching disabled. The check does not print credentials, cookies or tokens. A successful run validates the gateway session at this application. Provider-wide logout and other applications' sessions require separate IdP verification.

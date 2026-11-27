@@ -1,3 +1,5 @@
+import { gatewayPath } from "../lib/gateway-path.mjs";
+export const dynamic = "force-dynamic";
 import { ShieldCheck, LayoutGrid, ShieldAlert, Network, BookOpen, FileCheck, Workflow, Plug, Server, Archive, ChartColumn, Bot, Settings, Bell, CircleUserRound } from "lucide-react";
 import { Workspace } from "./ui/workspace";
 import styles from "./ui/workspace.module.css";
@@ -20,10 +22,14 @@ const navigation = [
   ["Settings", Settings, "/operations#model"],
 ];
 export default function Overview() {
+  const oidc = process.env.AUTH_MODE === "oidc";
+  const login = oidc && gatewayPath(process.env.OIDC_GATEWAY_LOGIN_PATH);
+  const logout = oidc && gatewayPath(process.env.OIDC_GATEWAY_LOGOUT_PATH);
   return <Workspace>
     <header className={styles.topbar}>
       <a href="/" className={styles.brand}><ShieldCheck aria-hidden="true" />ComplyOS</a>
       <div className={styles.tools}>
+        {logout && <a href={logout}>Sign out</a>}
         <a href="/operations#alerts" aria-label="Collection alerts"><Bell size={18} /></a>
         <a href="/operations" aria-label="Open operator workspace"><CircleUserRound size={22} /></a>
       </div>
@@ -36,7 +42,7 @@ export default function Overview() {
       </nav>
       <main className={styles.content}>
         <h1>Compliance overview</h1>
-        <OverviewResults />
+        <OverviewResults login={login} />
       </main>
     </div>
   </Workspace>;
