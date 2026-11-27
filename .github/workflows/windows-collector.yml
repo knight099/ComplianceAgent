@@ -1,0 +1,17 @@
+name: Windows collector
+on:
+  pull_request:
+    paths: ['collectors/windows.ps1', 'tests/windows-collector.ps1', '.github/workflows/windows-collector.yml']
+  push:
+    branches: [main]
+    paths: ['collectors/windows.ps1', 'tests/windows-collector.ps1', '.github/workflows/windows-collector.yml']
+permissions:
+  contents: read
+jobs:
+  signed-observations:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check signed observations with fixture cmdlets
+        shell: powershell
+        run: ./tests/windows-collector.ps1

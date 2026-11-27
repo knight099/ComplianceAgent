@@ -103,3 +103,5 @@ Read top down alongside the [2.0 system design](complyos-2-system-design.md). Ea
 Saviynt progress for item 13: the read-only Analytics adapter and Operations comparison are covered by contract fixtures. Live tenant qualification, stable source snapshots and incremental checkpointing remain open.
 
 SSO progress for item 14: operator APIs validate signed access tokens and resolve reviewer or analyst membership within one configured issuer. Browser SSO qualification and separation of duties for remediation remain open.
+
+Laptop audit progress: read-only Intune managed-device collection and issued-inventory reconciliation are fixture-tested. The Windows collector now reports OS-volume BitLocker protection. Pending qualification covers a licensed Intune tenant, representative Windows laptops and machine-wide signed deployment. [Connection inventory and IT installation](laptop-audit.md)

@@ -35,6 +35,7 @@ To see your first results, follow the [read-only collection instructions](docs/o
 
 ## Guides
 
+- [Audit laptop encryption, check vendor coverage and install the IT collector](docs/laptop-audit.md)
 - [Run a pilot and verify an access change](docs/read-only-pilot.md)
 - [Check personal-data access against company policy](docs/operator-guide.md#review-access-against-a-company-sop)
 - [Compare Saviynt governance records with database access](docs/operator-guide.md#compare-saviynt-approvals-with-observed-access)
