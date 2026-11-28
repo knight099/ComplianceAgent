@@ -6,15 +6,6 @@ ComplyOS helps security teams check who still has permission to read sensitive P
 
 *The running dashboard with illustrative collection data. A new installation shows an empty inventory until its first collection.*
 
-## How it works
-
-1. **Choose the scope.** A data owner lists the tables to check and supplies an HR file linking employees to database roles. An optional Microsoft Entra ID lookup helps confirm identities.
-2. **Collect permissions.** A read-only relay inside your network inspects PostgreSQL permission records. Customer table contents stay in the database.
-3. **Review the findings.** Open **Operations** to see retained access, missing evidence and the identity links behind each check. After an administrator changes a grant, run another collection and compare the results.
-4. **Check company policy.** Generate a local report comparing grants with the business roles allowed to read each classified table. Open it locally in **Reports**, or [submit it to Operations](docs/operator-guide.md#save-a-personal-data-review-in-operations) to retain the evidence and compare two collections.
-
-These checks measure database permissions. Establishing who actually read a record requires database audit logs. Regulatory control mappings and automated remediation are on the [roadmap](docs/implementation-plan.md).
-
 ## Start locally
 
 Install Git, Docker with Compose and OpenSSL. On a new installation, clone the repository and create a private file containing separate random credentials.
@@ -32,6 +23,49 @@ docker compose ps -a
 Open the [dashboard](http://localhost:3000). When prompted, sign in as `operator` with the `OPERATOR_PASSWORD` in your local `.env`. Keep this file for later starts. The `migrate` service exits successfully after preparing the database. To troubleshoot startup, run `docker compose logs migrate app db`.
 
 To see your first results, follow the [read-only collection instructions](docs/operator-guide.md#run-a-read-only-collection). Stop the local services with `docker compose down`. Their named volumes retain the data.
+
+## Enterprise walkthrough: from login to a verified finding
+
+Use this sequence for a read-only pilot. The example follows one question from the company's access procedure through to evidence: **can an employee who moved from Lending to Marketing still read customer KYC records?**
+
+1. **Deploy and sign in.** IT runs the [local setup](#start-locally) for an initial evaluation. For a team pilot, create the organization, issue a source-bound relay credential and assign reviewers. Give the analyst role to operators who need AI summaries. For enterprise sign-in, configure the identity provider and login gateway. Sign in to **Operations** and confirm the expected organization has access to its assessments. An empty inventory is normal before the first upload. [Organization setup](docs/operator-guide.md#organization-membership) · [Enterprise login](docs/operator-guide.md#use-an-enterprise-identity-provider-for-operator-apis)
+
+2. **Connect the systems in scope.** For the KYC check, place the relay on a host that can reach the source database. From the repository root on that host, install dependencies with Node.js 24 and `npm ci`. Set `SOURCE_DATABASE_URL` to a read-only PostgreSQL connection, `CONTROL_URL` to the ComplyOS server and `RELAY_TOKEN` to the credential for that source. Add Entra if you need employee-ID corroboration or Saviynt if you need approval history. For a laptop audit, use Intune and the issued-laptop inventory. IT can install the endpoint collector for local OS evidence. [Connection options and commands](#enterprise-connections)
+
+3. **Prepare the compliance directory.** Use a restricted folder on the relay host or your existing document repository. For example, keep the approved SOP under `sops/`, regulatory references under `regulations/`, current HR and asset inputs under `inputs/`, and dated outputs under `reports/`. Compliance staff record the official source, clause, effective version, applicability decision and reviewer for each regulation. This directory is maintained by your team. ComplyOS reads files explicitly supplied to its commands; automatic regulatory ingestion and applicability review are planned.
+
+4. **Turn the SOP into a check.** The data owner translates “only Lending staff may read customer KYC” into a versioned `policy.json`. Include the SOP section, reviewer, source name, table, classification, allowed business roles and any approved exceptions with expiry dates. In `hr-scope.json`, supply the HR export time, current business role and mapped PostgreSQL role for each employee. Use the same source name and table in both files. [Copyable policy example](docs/operator-guide.md#review-access-against-a-company-sop) · [HR input format](docs/operator-guide.md#run-a-read-only-collection)
+
+5. **Agree on the audit checklist.** For this control, check whether the HR record is current, the database role maps to one employee, a direct or inherited grant permits reading the table, and a valid exception covers the grant. Agree who will investigate missing evidence. An analyst can configure an approved model in **AI Copilot** now. Its current **Generate summary** action becomes useful after collection, when it can explain offboarding count ranges and freshness. The team prepares the checklist in the current pilot. [Model setup and privacy](docs/operator-guide.md#connect-your-own-model)
+
+6. **Run each configured collection.** On the relay, generate the SOP report and upload it using the commands below. Run the offboarding assessment if that control is also in scope. Intune produces its own JSON report, installed endpoint collectors run hourly, and scanner imports produce evidence receipts. Start or schedule each applicable collector using its documented entry point. Record which source succeeded, failed or was outside scope. [Laptop audit](docs/laptop-audit.md#run-the-intune-audit) · [Collection health](docs/read-only-pilot.md#monitor-collection-health)
+
+   ```sh
+   # From the repository root, with the relay environment from step 2.
+   # Replace /secure/compliance with the directory prepared by your team.
+   umask 077
+   audit_dir=/secure/compliance
+   mkdir -p "$audit_dir/reports"
+   run_dir=$(mktemp -d "$audit_dir/reports/kyc-review.XXXXXXXX") || exit 1
+   report="$run_dir/review.json"
+   node relay/access-report.mjs "$audit_dir/sops/policy.json" "$audit_dir/inputs/hr-scope.json" > "$report" &&
+     curl --fail-with-body -H "Authorization: Bearer $RELAY_TOKEN" \
+       -H 'Content-Type: application/json' --data-binary "@$report" \
+       "$CONTROL_URL/api/v1/access-reviews"
+
+   # Separate offboarding assessment for terminated employees in the HR scope.
+   node relay/run.mjs "$audit_dir/inputs/hr-scope.json"
+   ```
+
+7. **Review the report.** Save the upload receipt. In **Operations → Personal-data access reviews**, open the assessment and expand the employee/table row. Compare expected access with the observed grant, its evidence and any exception. For a local review, open the generated JSON file in **Reports**. If the Marketing employee still has read access, the result can be `EXCESS_ACCESS`. If the HR evidence is stale, the result is `INSUFFICIENT_EVIDENCE`; collect fresh evidence before drawing a conclusion. Review the Intune report and device receipts separately for laptop controls. [Report review and comparison](docs/operator-guide.md#save-a-personal-data-review-in-operations)
+
+8. **Correct access and verify.** The reviewer identifies the grant path and hands the finding to the database owner. The owner follows the company's change process to remove the obsolete grant or document an approved exception. Run step 6 again and compare the earlier and later assessments in Operations. Close the finding only when fresh evidence covers the same employee and table and supports the expected access. Today's relay and endpoint agents collect evidence; the administrator performs the change. [Pilot verification procedure](docs/read-only-pilot.md#compare-collection-history)
+
+### Planned automation
+
+The target workflow starts with a compliance lead adding SOPs, regulations and the systems in scope to an in-app compliance directory. The LLM proposes a checklist that cites the relevant clauses and names the evidence needed for each check. A reviewer approves the scope and checklist before ComplyOS schedules read-only audits across the selected connections.
+
+The planned consolidated report will show findings, supporting evidence and coverage gaps. A reviewer can then assign a manual change or authorize a specific agent operation after reviewing its target and impact. Independent collection will verify the result and retain the before-and-after evidence. These capabilities are tracked in the [enterprise delivery plan](docs/implementation-plan.md#enterprise-access-and-privacy-delivery-sequence).
 
 ## Enterprise connections
 
