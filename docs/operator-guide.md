@@ -309,4 +309,32 @@ curl --fail-with-body -u payments-review --get --data-urlencode 'source=payments
   --data-urlencode 'policy=KYC-ACCESS' "$CONTROL_URL/api/v1/policy-registry" -o /secure/effective-policy.json
 ```
 
-After a successful download, use that file in the existing access-report command. In **Operations → Personal-data access reviews**, select a stored report and choose **Replay approved policy**. The server selects the latest revision effective at the report's collection timestamp, re-evaluates the retained employee status, business role, resource and observed privilege using the pinned v1 decision logic, and shows the recorded and replayed outcomes. Reports collected before the first effective approval show a coverage gap. This is a historical SOP comparison using retained observations. It performs no live collection or remote OPA execution. Signed OPA bundle distribution remains planned.
+After a successful download, use that file in the existing access-report command. In **Operations → Personal-data access reviews**, select a stored report and choose **Replay approved policy**. The server selects the latest revision effective at the report's collection timestamp, re-evaluates the retained employee status, business role, resource and observed privilege using the pinned v1 decision logic, and shows the recorded and replayed outcomes. Reports collected before the first effective approval show a coverage gap. This is a historical SOP comparison using retained observations. It performs no live collection or remote OPA execution. The following procedure automates delivery to enrolled relays.
+
+### Deliver a signed access policy to relays
+
+Use this mode for source-bound named relay credentials. Each relay runs a local OPA sidecar. OPA periodically pulls the approved SOP and its Rego evaluator as one RS256-signed archive. The control plane uses the relay credential to determine the organization and source.
+
+1. On a restricted publishing host, install OPA 1.4.2 and create or provision an RSA release key. For example, run `openssl genpkey -algorithm RSA -pkeyopt rsa_keygen_bits:3072 -out release-private.pem` under `umask 077`, then `openssl pkey -in release-private.pem -pubout -out release-public.pem`. Distribute the public key to relay hosts through your IT management system. Keep the private key on the signing host.
+2. From the release checkout, sign the same SOP JSON submitted for approval. For scheduled revisions you can stage the archive ahead of activation.
+
+   ```sh
+   node scripts/sign-policy-bundle.mjs payments /secure/policy.json /secure/release-private.pem /secure/releases
+   ```
+
+3. Copy the resulting digest-named `.tar.gz` to the app's `.data/policy-bundles/` directory using an atomic rename on the destination filesystem. With Compose you can mount the release directory read-only at `/app/.data/policy-bundles`. All app replicas need access to the same archives. The server selects the archive whose organization and SOP match the currently effective registry revision.
+4. On the relay host, export the HTTPS control-plane origin as `CONTROL_URL`, the source-bound bearer credential as `RELAY_TOKEN`, and the approved SOP ID as `POLICY_ID`. Run OPA locally under the relay service account.
+
+   ```sh
+   export POLICY_ID_ENCODED="$(node -p 'encodeURIComponent(process.env.POLICY_ID)')"
+   opa run --server --addr=127.0.0.1:8181 --config-file relay/opa-bundles.yaml \
+     --set-file keys.release.key=/etc/complyos/release-public.pem
+   ```
+
+5. In the collector environment set the same control URL, token and policy ID, plus `SOURCE_DATABASE_URL` and `OPA_ORIGIN=http://127.0.0.1:8181`. Generate the review and upload it through the existing access-review intake.
+
+   ```sh
+   node relay/access-report.mjs --signed-policy hr.json > review.json
+   ```
+
+OPA polls every 5–15 seconds and verifies the release signature before activation. Each managed review checks the active revision at the beginning and end of collection. If OPA still holds an older revision, the registry is unreachable, or the approved archive has yet to arrive, wait for publication and retry. Only submit output from a successful run. Existing file-based collection remains available.

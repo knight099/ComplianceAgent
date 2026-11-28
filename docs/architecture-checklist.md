@@ -107,4 +107,4 @@ SSO progress for item 14: operator APIs validate signed access tokens and resolv
 
 Laptop audit progress: read-only Intune managed-device collection and issued-inventory reconciliation are fixture-tested. The Windows collector now reports OS-volume BitLocker protection. Pending qualification covers a licensed Intune tenant, representative Windows laptops and machine-wide signed deployment. [Connection inventory and IT installation](laptop-audit.md)
 
-Policy registry progress: tenant-scoped publication, effective dates, current-definition download and historical SOP comparison are implemented for personal-data reviews. Signed OPA bundle distribution remains open.
+Policy registry progress: tenant-scoped publication, effective dates, current-definition download and historical SOP comparison are implemented for personal-data reviews. Source-bound relays can poll the control plane for signed SOP and Rego bundles and verify them with an IT-provisioned public key.

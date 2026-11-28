@@ -1,0 +1,18 @@
+services:
+  control:
+    url: ${CONTROL_URL}
+    credentials:
+      bearer:
+        token: ${RELAY_TOKEN}
+keys:
+  release:
+    algorithm: RS256
+bundles:
+  access:
+    service: control
+    resource: "/api/v1/policy-bundles?policy=${POLICY_ID_ENCODED}"
+    signing:
+      keyid: release
+    polling:
+      min_delay_seconds: 5
+      max_delay_seconds: 15

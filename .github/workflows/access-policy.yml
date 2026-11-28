@@ -1,10 +1,10 @@
 name: Access policy parity
 on:
   pull_request:
-    paths: ['policies/**', 'lib/opa-access-review.mjs', 'lib/access-review-contract.mjs', 'tests/opa-access-review.test.mjs', '.github/workflows/access-policy.yml']
+    paths: ['policies/**', 'relay/opa-bundles.yaml', 'relay/access-report.mjs', 'app/api/v1/policy-bundles/**', 'lib/policy-bundle.mjs', 'scripts/sign-policy-bundle.mjs', 'tests/signed-policy.test.mjs', 'lib/opa-access-review.mjs', 'lib/access-review-contract.mjs', 'tests/opa-access-review.test.mjs', '.github/workflows/access-policy.yml']
   push:
     branches: [main]
-    paths: ['policies/**', 'lib/opa-access-review.mjs', 'lib/access-review-contract.mjs', 'tests/opa-access-review.test.mjs', '.github/workflows/access-policy.yml']
+    paths: ['policies/**', 'relay/opa-bundles.yaml', 'relay/access-report.mjs', 'app/api/v1/policy-bundles/**', 'lib/policy-bundle.mjs', 'scripts/sign-policy-bundle.mjs', 'tests/signed-policy.test.mjs', 'lib/opa-access-review.mjs', 'lib/access-review-contract.mjs', 'tests/opa-access-review.test.mjs', '.github/workflows/access-policy.yml']
 permissions:
   contents: read
 jobs:
@@ -28,4 +28,4 @@ jobs:
           pid=$!
           trap 'kill "$pid"' EXIT
           curl -fsS --retry 10 --retry-connrefused "$TEST_OPA_ORIGIN/health"
-          node --test tests/opa-access-review.test.mjs
+          OPA_BIN="$RUNNER_TEMP/opa" node --test tests/opa-access-review.test.mjs tests/signed-policy.test.mjs

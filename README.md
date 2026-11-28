@@ -118,6 +118,7 @@ Check the first signed bundle or upload receipt for the enrolled device. A macOS
 - [Check personal-data access against company policy](docs/operator-guide.md#review-access-against-a-company-sop)
 - [Run the personal-data access rule with Open Policy Agent](docs/operator-guide.md#evaluate-an-access-review-with-open-policy-agent)
 - [Approve an effective-dated policy revision and replay a stored review](docs/operator-guide.md#approve-a-policy-revision-and-replay-a-review)
+- [Automatically deliver signed access policies to enterprise relays](docs/operator-guide.md#deliver-a-signed-access-policy-to-relays)
 - [Compare Saviynt governance records with database access](docs/operator-guide.md#compare-saviynt-approvals-with-observed-access)
 - [Connect your own AI model](docs/operator-guide.md#connect-your-own-model)
 - [Configure enterprise operator API authentication](docs/operator-guide.md#use-an-enterprise-identity-provider-for-operator-apis)

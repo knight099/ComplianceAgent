@@ -1,3 +1,8 @@
+import { GET as bundle } from "../../app/api/v1/policy-bundles/route.js";
+import { bundleRevision } from "../../lib/policy-bundle.mjs";
+import { mkdtemp, writeFile, rm } from "node:fs/promises";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
 import { GET as registry, POST as approve } from "../../app/api/v1/policy-registry/route.js";
 import { GET as getReviews, POST as postReview } from "../../app/api/v1/access-reviews/route.js";
 import { buildAccessReport } from "../../lib/access-report.mjs";
@@ -109,6 +114,21 @@ test("dedicated logins run operations and monitoring without access to migration
   assert.equal((await publish(policy)).status,201);
   assert.equal((await publish(policy)).status,409);
   assert.equal((await (await replay(firstId)).json()).status,"NO_EFFECTIVE_REVISION");
+  const bundleDir = await mkdtemp(join(tmpdir(),"registry-bundles-"));
+  process.env.POLICY_BUNDLE_DIR = bundleDir;
+  t.after(() => rm(bundleDir,{recursive:true,force:true}));
+  const fetchBundle = (token, format="archive") => bundle(new Request("http://localhost/api/v1/policy-bundles?policy=customer-data&format="+format,
+    {headers:{authorization:"Bearer "+token}}));
+  assert.equal((await fetchBundle("invalid")).status,403);
+  const otherSource = await issue(admin,"relay","separate-source","unrelated",undefined,org);
+  const otherOrg = await issue(admin,"relay","separate-org",scope.source,undefined,"installation");
+  for (const token of [otherSource,otherOrg]) assert.equal((await fetchBundle(token)).status,404);
+  await revoke(admin,"relay","separate-source",org);
+  assert.equal((await fetchBundle(relaySecret)).status,503);
+  const digest = bundleRevision(org,policy);
+  assert.deepEqual(await (await fetchBundle(relaySecret,"revision")).json(),{revision:digest});
+  await writeFile(join(bundleDir,digest+".tar.gz"),"archive fixture");
+  assert.equal(await (await fetchBundle(relaySecret)).text(),"archive fixture");
   const historical = await review(["reader"],new Date());
   const historicalId = (await (await submit(historical)).json()).id;
   const replacement = {...policy,version:"2",datasets:[{...policy.datasets[0],roles:{Marketing:"read"}}]};

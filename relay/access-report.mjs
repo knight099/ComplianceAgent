@@ -1,4 +1,4 @@
-import { evaluateAccessReview } from "../lib/opa-access-review.mjs";
+import { activeBundleRevision, evaluateAccessReview, loadBundlePolicy } from "../lib/opa-access-review.mjs";
 import { collectSaviynt, attachGovernance } from "../connectors/saviynt/index.mjs";
 import pg from "pg";
 import { readFile } from "node:fs/promises";
@@ -12,7 +12,10 @@ if (useEntra) args.pop();
 const [policyFile, input, scopePath] = args;
 if (!input || args.length > 3 || !process.env.SOURCE_DATABASE_URL)
   throw Error("Set SOURCE_DATABASE_URL and supply policy.json, HR input, optional CSV scope and optional --entra");
-const policy = JSON.parse(await readFile(policyFile, "utf8"));
+const managed = policyFile === "--signed-policy";
+const registryRevision = () => activeBundleRevision(process.env.CONTROL_URL, process.env.POLICY_ID, process.env.RELAY_TOKEN);
+const revision = managed ? await registryRevision() : null;
+const policy = managed ? await loadBundlePolicy(process.env.OPA_ORIGIN, revision) : JSON.parse(await readFile(policyFile, "utf8"));
 const feed = await readHrInput(input, scopePath);
 if (useEntra && !process.env.ENTRA_ACCESS_TOKEN) throw Error("Configure ENTRA_ACCESS_TOKEN");
 const directory = useEntra
@@ -33,6 +36,7 @@ try {
   if (commit.command !== "COMMIT") throw Error("Catalog snapshot failed. Retry collection");
   if (governance) attachGovernance(report, governance);
   const evaluated = process.env.OPA_ORIGIN ? await evaluateAccessReview(report, process.env.OPA_ORIGIN) : report;
+  if (managed && await registryRevision() !== revision) throw Error("Policy changed during collection. Retry the review");
   console.log(JSON.stringify(evaluated, null, 2));
 } finally {
   await client.end();
