@@ -287,3 +287,26 @@ opa run --server --addr=127.0.0.1:8181 policies/access-review/v1/policy.rego
 In the relay shell set `OPA_ORIGIN=http://127.0.0.1:8181` and run the usual `node relay/access-report.mjs` command with the reviewed SOP and HR input. The relay first matches roles, grants and time-bound exceptions. It sends OPA only the expected permission, observed permission and active-exception flag for each row. The Rego rule classifies those inputs, including missing evidence. The relay requires one matching decision per row and the expected rule revision. A missing rule, outage or disagreement makes the command exit unsuccessfully before printing a report.
 
 Successful reports include the evaluator path and revision alongside the owner's SOP ID and version. Upload the JSON as usual to see both in Operations. Existing reports remain readable. Leaving `OPA_ORIGIN` unset selects the built-in evaluator. To check a deployed decision endpoint against the full outcome matrix, run `TEST_OPA_ORIGIN=http://127.0.0.1:8181 node --test tests/opa-access-review.test.mjs`. Rule distribution and publication approvals remain administrator-managed.
+
+### Approve a policy revision and replay a review
+
+Apply migration 017 with the normal migration command. Use named or OIDC authentication and set `POLICY_APPROVERS` on the app to a JSON map from organization ID to permitted operator names (OIDC subjects in OIDC mode). For example, `{"payments":["payments-review"]}` grants the named payments reviewer publication rights in that organization. Recreate the app after changing the setting. Other authenticated reviewers can read their organization's registry and replay reports.
+
+Review the versioned SOP JSON described above. To publish it immediately with a named operator, run the example below on an authorized workstation with jq installed. Curl prompts for the named operator's password. With OIDC, use the gateway's dedicated API access token as a Bearer credential instead. Use HTTPS outside loopback.
+
+```sh
+jq '{definition:.}' /secure/policy.json > /secure/approval.json
+curl --fail-with-body -u payments-review -H 'Content-Type: application/json' \
+  --data-binary @/secure/approval.json "$CONTROL_URL/api/v1/policy-registry"
+```
+
+For scheduled activation add an `effectiveAt` ISO timestamp with timezone beside `definition` before submission. Omit it for immediate activation. The receipt records the authenticated approver and server approval time. A revision is identified by organization, source, policy ID and version. To correct or supersede a revision, publish a new version. The database rejects backdating, duplicate versions and competing revisions at the same effective time.
+
+List approved revisions with `GET /api/v1/policy-registry`. To obtain the currently effective definition for the relay, use an operator credential and the source and policy ID:
+
+```sh
+curl --fail-with-body -u payments-review --get --data-urlencode 'source=payments-primary' \
+  --data-urlencode 'policy=KYC-ACCESS' "$CONTROL_URL/api/v1/policy-registry" -o /secure/effective-policy.json
+```
+
+After a successful download, use that file in the existing access-report command. In **Operations → Personal-data access reviews**, select a stored report and choose **Replay approved policy**. The server selects the latest revision effective at the report's collection timestamp, re-evaluates the retained employee status, business role, resource and observed privilege using the pinned v1 decision logic, and shows the recorded and replayed outcomes. Reports collected before the first effective approval show a coverage gap. This is a historical SOP comparison using retained observations. It performs no live collection or remote OPA execution. Signed OPA bundle distribution remains planned.

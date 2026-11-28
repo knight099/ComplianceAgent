@@ -1,3 +1,4 @@
+import { GET as registry, POST as approve } from "../../app/api/v1/policy-registry/route.js";
 import { GET as getReviews, POST as postReview } from "../../app/api/v1/access-reviews/route.js";
 import { buildAccessReport } from "../../lib/access-report.mjs";
 import test from "node:test";
@@ -97,6 +98,43 @@ test("dedicated logins run operations and monitoring without access to migration
   assert.deepEqual(await list(new Request(endpoint, { headers: outsideHeaders })), []);
   await organizationTransaction("assessment", "installation", async client => {
     assert.equal((await client.query("SELECT id FROM access_reviews")).rowCount, 0);
+  });
+  const registryUrl = "http://localhost/api/v1/policy-registry";
+  const publish = (definition, effectiveAt) => approve(new Request(registryUrl, {method:"POST",
+    headers:{...Object.fromEntries(req.headers),"content-type":"application/json"}, body:JSON.stringify({definition,effectiveAt})}));
+  const replay = id => registry(new Request(registryUrl + "?review=" + id, {headers:req.headers}));
+  assert.equal((await publish(policy)).status,403);
+  process.env.POLICY_APPROVERS = JSON.stringify({[org]:["runtime-reviewer"]});
+  assert.equal((await publish(policy, "2000-01-01T00:00:00Z")).status,400);
+  assert.equal((await publish(policy)).status,201);
+  assert.equal((await publish(policy)).status,409);
+  assert.equal((await (await replay(firstId)).json()).status,"NO_EFFECTIVE_REVISION");
+  const historical = await review(["reader"],new Date());
+  const historicalId = (await (await submit(historical)).json()).id;
+  const replacement = {...policy,version:"2",datasets:[{...policy.datasets[0],roles:{Marketing:"read"}}]};
+  assert.equal((await publish(replacement,new Date(Date.now()+86400000).toISOString())).status,201);
+  const playback = await (await replay(historicalId)).json();
+  assert.equal(playback.effectiveVersion,"1");
+  assert.equal(playback.approvedBy,"runtime-reviewer");
+  assert.equal(playback.decisions[0].replayed,"EXCESS_ACCESS");
+  assert.equal((await (await registry(new Request(registryUrl+"?source=runtime-source&policy=customer-data",{headers:req.headers}))).json()).version,"1");
+  const future = await review(["reader"],new Date(Date.now()+86401000));
+  const futureId=(await (await submit(future)).json()).id;
+  assert.equal((await (await replay(futureId)).json()).status,"FUTURE_COLLECTION");
+  const immediate = { ...replacement,version:"3" };
+  assert.equal((await publish(immediate)).status,201);
+  const later = await review(["reader"],new Date());
+  const laterId=(await (await submit(later)).json()).id;
+  const laterReplay=await (await replay(laterId)).json();
+  assert.equal(laterReplay.effectiveVersion,"3");
+  assert.equal(laterReplay.decisions[0].expected,"read");
+  assert.equal(laterReplay.decisions[0].recorded,"EXCESS_ACCESS");
+  assert.equal(laterReplay.decisions[0].replayed,"AS_EXPECTED");
+  assert.equal((await (await replay(historicalId)).json()).effectiveVersion,"1");
+  assert.deepEqual(await (await registry(new Request(registryUrl,{headers:outsideHeaders}))).json(),[]);
+  assert.equal((await registry(new Request(registryUrl+"?review="+historicalId,{headers:outsideHeaders}))).status,404);
+  await organizationTransaction("assessment", org, async client => {
+    await assert.rejects(client.query("DELETE FROM policy_revisions"), {code:"42501"});
   });
   const receipt = await saveEvidence({ source: "runtime-device" }, org);
   assert.equal((await evidenceById(receipt, org)).observation.source, "runtime-device");

@@ -29,12 +29,14 @@ function useReviewData(url) {
 export default function AccessReviews() {
   const [refresh, setRefresh] = useState(0);
   const [selected, setSelected] = useState("");
+  const [replayId, setReplayId] = useState("");
   const [baseline, setBaseline] = useState("");
   const index = useReviewData(endpoint + "?refresh=" + refresh);
   const runs = index.data ?? [];
   const current = runs.find(run => run.id === selected) ?? runs[0];
   const older = current ? runs.filter(run => run.source === current.source && run.policy_id === current.policy_id &&
     Date.parse(run.observed_at) < Date.parse(current.observed_at)) : [];
+  const replay = useReviewData(current && replayId === current.id && "/api/v1/policy-registry?review=" + current.id + "&refresh=" + refresh);
   const previous = older.find(run => run.id === baseline);
   const latest = useReviewData(current && endpoint + "?id=" + current.id + "&refresh=" + refresh);
   const prior = useReviewData(previous && endpoint + "?id=" + previous.id + "&refresh=" + refresh);
@@ -57,6 +59,15 @@ export default function AccessReviews() {
     {latest.data && <>
       <p>Policy {latest.data.policy.reference} · Reviewed by {latest.data.policy.reviewer} · Submitted by {current.submitted_by}</p>
       {latest.data.evaluator && <p>OPA rule {latest.data.evaluator.rule} · Revision {latest.data.evaluator.revision}</p>}
+      <button onClick={() => setReplayId(current.id)}>Replay approved policy</button>
+      {replay.error && <p role="alert">Policy replay unavailable.</p>}
+      {replay.data?.status === "FUTURE_COLLECTION" && <p>Collection time is in the future. Check the relay clock before replay.</p>}
+      {replay.data?.status === "NO_EFFECTIVE_REVISION" && <p>No registered policy was effective at collection time.</p>}
+      {replay.data?.status === "REPLAYED" && <details open>
+        <summary>Replay · Policy version {replay.data.effectiveVersion} · Approved by {replay.data.approvedBy}</summary>
+        <p>Effective {replay.data.effectiveAt} · Evaluator {replay.data.evaluatorVersion}</p>
+        {replay.data.decisions.map(row => <p key={key(row)}>{row.employeeId} · {row.resource.join(".")} · Recorded {row.recorded} · Replayed {row.replayed}</p>)}
+      </details>}
       <p>HR revision {latest.data.hrRevision} · Observed {latest.data.hrObserved}</p>
       {!latest.data.rows.length && <p>No employee and table pairs in this collection.</p>}
       {latest.data.rows.map(row => <details key={key(row)}>

@@ -100,3 +100,5 @@ Milestone 4 now includes signed access-token validation at the operator API boun
 The overview now links to configured gateway sign-in and sign-out routes. The browser qualification script checks organization membership, dashboard access with a renewed token and loss of access on logout. Run it against the pilot identity provider to record deployment-specific results. [Gateway qualification procedure](operator-guide.md#qualify-gateway-login-refresh-and-logout)
 
 Milestone 5 now supports opt-in OPA evaluation of the personal-data access outcome. The relay checks revision and parity, and Operations retains the evaluator identity. Next are a reviewed policy registry, immutable bundle distribution, effective dates and historical rule replay. [OPA setup](operator-guide.md#evaluate-an-access-review-with-open-policy-agent)
+
+The personal-data SOP registry now accepts immutable, effective-dated approvals from explicitly authorized operators. Reviewers can download the active definition and replay stored evidence in Operations with pinned v1 logic. Automatic relay distribution of signed OPA bundles and change-triggered incident evaluation remain open.
