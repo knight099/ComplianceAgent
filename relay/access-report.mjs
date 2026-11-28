@@ -1,3 +1,4 @@
+import { evaluateAccessReview } from "../lib/opa-access-review.mjs";
 import { collectSaviynt, attachGovernance } from "../connectors/saviynt/index.mjs";
 import pg from "pg";
 import { readFile } from "node:fs/promises";
@@ -31,7 +32,8 @@ try {
   const commit = await client.query("COMMIT");
   if (commit.command !== "COMMIT") throw Error("Catalog snapshot failed. Retry collection");
   if (governance) attachGovernance(report, governance);
-  console.log(JSON.stringify(report, null, 2));
+  const evaluated = process.env.OPA_ORIGIN ? await evaluateAccessReview(report, process.env.OPA_ORIGIN) : report;
+  console.log(JSON.stringify(evaluated, null, 2));
 } finally {
   await client.end();
 }

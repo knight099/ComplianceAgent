@@ -32,6 +32,7 @@ Read top down alongside the [2.0 system design](complyos-2-system-design.md). Ea
 
 - [x] Compare scoped database reads with a supplied reviewed policy, current business role, dataset classification and time-bound exception. Report excess, missing, expected and unknown access. [Report engine](../lib/access-report.mjs)
 - [ ] Ingest official regulations and company SOPs, version amendments, capture applicability and specialist approval, and publish evidence requirements and reviewed DPDP/internal control mappings.
+- [x] Run the versioned personal-data access outcome rule in an optional relay-side OPA service and retain its revision in Operations.
 - [ ] Build a policy registry and OPA evaluation with change-triggered and scheduled runs. Persist coverage, errors, stale evidence, exceptions and applicability independently.
 - [x] Track collection-health alert episodes, acknowledge them and retry signed webhook delivery. [Alerts](../lib/collection-alerts.mjs)
 - [ ] Correlate access violations into durable incidents with stable fingerprints, ownership, evidence, coverage-aware risk, prioritization and lifecycle history.

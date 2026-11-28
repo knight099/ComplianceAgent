@@ -56,6 +56,7 @@ export default function AccessReviews() {
     </>}
     {latest.data && <>
       <p>Policy {latest.data.policy.reference} · Reviewed by {latest.data.policy.reviewer} · Submitted by {current.submitted_by}</p>
+      {latest.data.evaluator && <p>OPA rule {latest.data.evaluator.rule} · Revision {latest.data.evaluator.revision}</p>}
       <p>HR revision {latest.data.hrRevision} · Observed {latest.data.hrObserved}</p>
       {!latest.data.rows.length && <p>No employee and table pairs in this collection.</p>}
       {latest.data.rows.map(row => <details key={key(row)}>

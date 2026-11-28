@@ -116,6 +116,7 @@ Check the first signed bundle or upload receipt for the enrolled device. A macOS
 - [Audit laptop encryption, check vendor coverage and install the IT collector](docs/laptop-audit.md)
 - [Run a pilot and verify an access change](docs/read-only-pilot.md)
 - [Check personal-data access against company policy](docs/operator-guide.md#review-access-against-a-company-sop)
+- [Run the personal-data access rule with Open Policy Agent](docs/operator-guide.md#evaluate-an-access-review-with-open-policy-agent)
 - [Compare Saviynt governance records with database access](docs/operator-guide.md#compare-saviynt-approvals-with-observed-access)
 - [Connect your own AI model](docs/operator-guide.md#connect-your-own-model)
 - [Configure enterprise operator API authentication](docs/operator-guide.md#use-an-enterprise-identity-provider-for-operator-apis)

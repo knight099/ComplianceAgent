@@ -275,3 +275,15 @@ python scripts/qualify-oidc-gateway.py https://complyos.example payments reviewe
 ```
 
 Complete login and any logout confirmation in the opened browser. The check starts with an empty browser context, verifies the expected organization and role, reads dashboard collection health, waits until the original access token expires and verifies a later expiry with the same session. It clicks the dashboard's sign-out link and checks that both operator APIs return 401. The session endpoint exposes the verified token expiry, organization and role to the current operator with caching disabled. The check does not print credentials, cookies or tokens. A successful run validates the gateway session at this application. Provider-wide logout and other applications' sessions require separate IdP verification.
+
+### Evaluate an access review with Open Policy Agent
+
+On the relay host, run an OPA 1.x server with the checked-in rule. Bind the pilot service to loopback. A remote deployment needs a trusted HTTPS service and access controls around its policy-management API.
+
+```sh
+opa run --server --addr=127.0.0.1:8181 policies/access-review/v1/policy.rego
+```
+
+In the relay shell set `OPA_ORIGIN=http://127.0.0.1:8181` and run the usual `node relay/access-report.mjs` command with the reviewed SOP and HR input. The relay first matches roles, grants and time-bound exceptions. It sends OPA only the expected permission, observed permission and active-exception flag for each row. The Rego rule classifies those inputs, including missing evidence. The relay requires one matching decision per row and the expected rule revision. A missing rule, outage or disagreement makes the command exit unsuccessfully before printing a report.
+
+Successful reports include the evaluator path and revision alongside the owner's SOP ID and version. Upload the JSON as usual to see both in Operations. Existing reports remain readable. Leaving `OPA_ORIGIN` unset selects the built-in evaluator. To check a deployed decision endpoint against the full outcome matrix, run `TEST_OPA_ORIGIN=http://127.0.0.1:8181 node --test tests/opa-access-review.test.mjs`. Rule distribution and publication approvals remain administrator-managed.
